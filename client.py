@@ -14,20 +14,35 @@ screen_height = display.current_h
 #load images etc
 menu_bg = pygame.image.load('menu_bg.png')
 
-class Button():
-    def __init__ (self, x, y, width, height, colour):
+class Button(): 
+    def __init__ (self, x, y, width, height, coloura, colourb, text):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.colour = colour
-        self.rect = (x, y, width, height)
+        self.coloura = coloura
+        self.colourb = colourb
+        self.text = text
+
+        self.rect = (self.x, self.y, self.width, self.height)
 
     def draw(self, window):
-        pygame.draw.rect(window, self.colour, self.rect)
+        pygame.draw.rect(window, self.coloura, self.rect)
 
     # def clicked(self):
     #     pass
+
+class CenteredButton(Button):
+    def __init__ (self, x, y, width, height, coloura, colourb, text):
+        self.x = screen_width//2 - width//2
+        self.y = y
+        self.width = width
+        self.height = height
+        self.coloura = coloura
+        self.colourb = colourb
+        self.text = text
+
+        self.rect = (self.x, self.y, self.width, self.height)
 
 class CenteredText():
     def __init__ (self, y, colour, message, size, font):
@@ -47,7 +62,14 @@ class CenteredText():
 
 def main_menu():
     window.blit(menu_bg, (0,0))
-    text1 = CenteredText(30, (0,0,0), "Menu", 100, "Arial")
+
+    #text
+    title_text = CenteredText(30, (255,255,255), "Tank PVP Game", 100, "Arial")
+    title_text.draw(window)
+
+    #buttons
+    test = CenteredButton(0, 200, 300, 100, (255,255,255),(0,0,0), "Button")
+    test.draw(window)
     
 while run:
     main_menu()
