@@ -15,7 +15,7 @@ screen_height = display.current_h
 menu_bg = pygame.image.load('menu_bg.png')
 
 class Button(): 
-    def __init__ (self, x, y, width, height, coloura, colourb, text):
+    def __init__ (self, x, y, width, height, coloura, colourb, text, font):
         self.x = x
         self.y = y
         self.width = width
@@ -23,17 +23,21 @@ class Button():
         self.coloura = coloura
         self.colourb = colourb
         self.text = text
+        self.font = pygame.font.SysFont(font, self.height - 20)
 
         self.rect = (self.x, self.y, self.width, self.height)
 
+        self.label = self.font.render(self.text, True, self.colourb)
+
     def draw(self, window):
         pygame.draw.rect(window, self.coloura, self.rect)
+        window.blit(self.label, (screen_width//2 - self.label.get_width()//2, self.y + 10))
 
     # def clicked(self):
     #     pass
 
 class CenteredButton(Button):
-    def __init__ (self, x, y, width, height, coloura, colourb, text):
+    def __init__ (self, x, y, width, height, coloura, colourb, text, font):
         self.x = screen_width//2 - width//2
         self.y = y
         self.width = width
@@ -41,8 +45,10 @@ class CenteredButton(Button):
         self.coloura = coloura
         self.colourb = colourb
         self.text = text
+        self.font = pygame.font.SysFont(font, self.height - 20)
 
         self.rect = (self.x, self.y, self.width, self.height)
+        self.label = self.font.render(self.text, True, self.colourb)
 
 class CenteredText():
     def __init__ (self, y, colour, message, size, font):
@@ -51,9 +57,8 @@ class CenteredText():
         self.colour = colour
         self.message = message
         self.size = size
-        self.font = font
 
-        self.font = pygame.font.SysFont(self.font, size)
+        self.font = pygame.font.SysFont(font, self.size)
 
         self.text = self.font.render(self.message, True, self.colour)
     
@@ -68,7 +73,7 @@ def main_menu():
     title_text.draw(window)
 
     #buttons
-    test = CenteredButton(0, 200, 300, 100, (255,255,255),(0,0,0), "Button")
+    test = CenteredButton(0, 200, 300, 100, (255,255,255),(0,0,0), "Button", "Arial")
     test.draw(window)
     
 while run:
