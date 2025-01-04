@@ -51,10 +51,6 @@ class CenteredButton(Button):
 
         self.rect = (self.x, self.y, self.width, self.height)
         self.label = self.font.render(self.text, True, self.colourb)
-    
-    def draw(self, window):
-        pygame.draw.rect(window, self.coloura, self.rect)
-        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
 
 class CenteredText():
     def __init__ (self, y, colour, message, size, font):
