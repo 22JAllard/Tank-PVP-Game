@@ -14,8 +14,23 @@ screen_height = display.current_h
 #load images etc
 menu_bg = pygame.image.load('menu_bg.png')
 
+#set some random variables
+clicked_button = "NULL"
+
+def play_menu():
+    print("play")
+
+def customise_menu():
+    print("customise")
+
+def settings_menu():
+    print("settings")
+
+def quit_menu():
+    print("exit")
+
 class Button(): 
-    def __init__ (self, x, y, width, height, coloura, colourb, text, font, size):
+    def __init__ (self, x, y, width, height, coloura, colourb, text, font, size, function):
         self.x = x
         self.y = y
         self.width = width
@@ -25,31 +40,23 @@ class Button():
         self.text = text
         self.size = size
         self.font = pygame.font.SysFont(font, self.size)
+        self.function = function
 
-        self.rect = (self.x, self.y, self.width, self.height)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.label = self.font.render(self.text, True, self.colourb)
 
     def draw(self, window):
         pygame.draw.rect(window, self.coloura, self.rect)
         window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
     
-    # def clicked(self):
-    #     pass
+    def click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                self.function()
 
 class CenteredButton(Button):
-    def __init__ (self, x, y, width, height, coloura, colourb, text, font, size):
-        self.x = screen_width//2 - width//2
-        self.y = y
-        self.width = width
-        self.height = height
-        self.coloura = coloura
-        self.colourb = colourb
-        self.text = text
-        self.size = size
-        self.font = pygame.font.SysFont(font, self.size)
-
-        self.rect = (self.x, self.y, self.width, self.height)
-        self.label = self.font.render(self.text, True, self.colourb)
+    def __init__(self, x, y, width, height, coloura, colourb, text, font, size, function):
+        super().__init__(screen_width // 2 - width // 2, y, width, height, coloura, colourb, text, font, size, function)
 
 class CenteredText():
     def __init__ (self, y, colour, message, size, font):
@@ -73,19 +80,19 @@ def main_menu():
     title_text = CenteredText(30, (255,255,255), "Tank PVP Game", 100, "Arial")
     title_text.draw(window)
 
-    #buttons #x, y, width, height, colour box, colour text, text, font
-    play_button = CenteredButton(0, 150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80)
-    play_button.draw(window)
+    global buttons
+    buttons = [
+        CenteredButton(0, 150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu),
+        CenteredButton(0, screen_height - 200, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu),
+        Button(screen_width - 150, screen_height - 150, 100, 100, (255, 255, 255), (0,0,0), "Exit", "Arial", 25, quit_menu),
+        Button(50, screen_height - 150, 100, 100, (255,255,255), (0,0,0), "Settings", "Arial", 25, settings_menu)
+    ]
 
-    customise_button = CenteredButton(0, screen_height - 200, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80)
-    customise_button.draw(window)
-
-    quit_button = Button(screen_width - 150, screen_height - 150, 100, 100, (255, 255, 255), (0,0,0), "Quit", "Arial", 25)
-    quit_button.draw(window)
-
-    settings_button = Button(50, screen_height - 150, 100, 100, (255,255,255), (0,0,0), "Settings", "Arial", 25)
-    settings_button.draw(window)
+    for button in buttons:
+        button.draw(window)
     
+    return buttons
+
 while run:
     main_menu()
 
@@ -98,6 +105,8 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        for button in buttons:
+                button.click(event)
 
     pygame.display.update()
 pygame.quit()
