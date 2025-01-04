@@ -27,7 +27,6 @@ class Button():
         self.font = pygame.font.SysFont(font, self.size)
 
         self.rect = (self.x, self.y, self.width, self.height)
-
         self.label = self.font.render(self.text, True, self.colourb)
 
     def draw(self, window):
@@ -78,7 +77,7 @@ def main_menu():
     play_button = CenteredButton(0, 150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80)
     play_button.draw(window)
 
-    customise_button = CenteredButton(0, 600, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80)
+    customise_button = CenteredButton(0, screen_height - 200, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80)
     customise_button.draw(window)
 
     quit_button = Button(screen_width - 150, screen_height - 150, 100, 100, (255, 255, 255), (0,0,0), "Quit", "Arial", 25)
