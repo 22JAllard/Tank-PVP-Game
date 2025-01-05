@@ -11,22 +11,25 @@ display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 
-#load images etc
-menu_bg = pygame.image.load('menu_bg.png')
-
-#set some random variables
-clicked_button = "NULL"
-
 def play_menu():
+    global menu; menu = play_menu
     print("play")
 
 def customise_menu():
-    print("customise")
+    global menu; menu = customise_menu
+    customise_bg = pygame.image.load('warehouse.png')
+    customise_bg = pygame.transform.scale(customise_bg, (screen_width, screen_height))
+    window.blit(customise_bg, (0,0))
+
+    customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial")
+    customise_text.draw(window)
 
 def settings_menu():
+    global menu; menu = settings_menu
     print("settings")
 
 def quit_menu():
+    global menu; menu = quit_menu
     print("exit")
 
 class Button(): 
@@ -58,22 +61,27 @@ class CenteredButton(Button):
     def __init__(self, x, y, width, height, coloura, colourb, text, font, size, function):
         super().__init__(screen_width // 2 - width // 2, y, width, height, coloura, colourb, text, font, size, function)
 
-class CenteredText():
-    def __init__ (self, y, colour, message, size, font):
-        self.x = screen_width//2
+class Text():
+    def __init__ (self, x, y, colour, message, size, font):
+        self.x = x
         self.y = y
         self.colour = colour
         self.message = message
         self.size = size
 
         self.font = pygame.font.SysFont(font, self.size)
-
         self.text = self.font.render(self.message, True, self.colour)
     
     def draw(self, window):
         window.blit(self.text, (self.x - self.text.get_width()//2, self.y)) 
 
+class CenteredText(Text):
+    def __init__(self, y, colour, message, size, font):
+        x = screen_width //2
+        super().__init__(x, y, colour, message, size, font)
+
 def main_menu():
+    menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
 
     #text
@@ -93,8 +101,9 @@ def main_menu():
     
     return buttons
 
+menu = main_menu
 while run:
-    main_menu()
+    menu()
 
     pygame.display.flip()
 
@@ -109,5 +118,6 @@ while run:
                 button.click(event)
 
     pygame.display.update()
+pygame.display.quit()
 pygame.quit()
         
