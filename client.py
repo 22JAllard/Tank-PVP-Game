@@ -58,8 +58,9 @@ class Button():
                 self.function()
 
 class CenteredButton(Button):
-    def __init__(self, x, y, width, height, coloura, colourb, text, font, size, function):
-        super().__init__(screen_width // 2 - width // 2, y, width, height, coloura, colourb, text, font, size, function)
+    def __init__(self, y, width, height, coloura, colourb, text, font, size, function):
+        x = screen_width // 2 - width // 2
+        super().__init__(x, y, width, height, coloura, colourb, text, font, size, function)
 
 class Text():
     def __init__ (self, x, y, colour, message, size, font):
@@ -90,8 +91,8 @@ def main_menu():
 
     global buttons
     buttons = [
-        CenteredButton(0, 150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu),
-        CenteredButton(0, screen_height - 200, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu),
+        CenteredButton(150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu),
+        CenteredButton(screen_height - 200, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu),
         Button(screen_width - 150, screen_height - 150, 100, 100, (255, 255, 255), (0,0,0), "Exit", "Arial", 25, quit_menu),
         Button(50, screen_height - 150, 100, 100, (255,255,255), (0,0,0), "Settings", "Arial", 25, settings_menu)
     ]
