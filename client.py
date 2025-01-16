@@ -24,6 +24,9 @@ def customise_menu():
     customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial")
     customise_text.draw(window)
 
+    colour_button = ArrowButton(screen_width//2 + 50, 200, 550, 80, (0,0,0), "Colour", "Arial", 80)
+    colour_button.draw(window)
+
 def settings_menu():
     global menu; menu = settings_menu
     print("settings")
@@ -32,24 +35,54 @@ def quit_menu():
     global menu; menu = quit_menu
     print("exit")
 
-class Button(): 
-    def __init__ (self, x, y, width, height, coloura, colourb, text, font, size, function):
+class ArrowButton():
+    def __init__ (self, x, y, width, height, text_colour, text, font, size):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.coloura = coloura
-        self.colourb = colourb
+        self.button_colour = (255,0,0)
+        self.text_colour = text_colour
+        self.text = text
+        self.size = size
+        self.font = pygame.font.SysFont(font, self.size)
+
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.label = self.font.render(self.text, True, self.text_colour)
+
+    def arrow_click(self, window):
+        pass
+
+    def draw(self, window):
+        pygame.draw.rect(window, self.button_colour, self.rect)
+
+        self.arrow_left = self.font.render("<", True, self.text_colour)
+        self.arrow_right = self.font.render(">", True, self.text_colour)
+
+        window.blit(self.arrow_left, (self.x + 10, self.y + (self.height - self.label.get_height())//2))
+        window.blit(self.arrow_right, (self.x + self.width - 10 - self.arrow_right.get_width(), self.y + (self.height - self.label.get_height())//2))
+
+        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
+    
+
+class Button(): 
+    def __init__ (self, x, y, width, height, button_colour, text_colour, text, font, size, function):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.button_colour = button_colour
+        self.text_colour = text_colour
         self.text = text
         self.size = size
         self.font = pygame.font.SysFont(font, self.size)
         self.function = function
 
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.label = self.font.render(self.text, True, self.colourb)
+        self.label = self.font.render(self.text, True, self.text_colour)
 
     def draw(self, window):
-        pygame.draw.rect(window, self.coloura, self.rect)
+        pygame.draw.rect(window, self.button_colour, self.rect)
         window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
     
     def click(self, event):
@@ -58,9 +91,9 @@ class Button():
                 self.function()
 
 class CenteredButton(Button):
-    def __init__(self, y, width, height, coloura, colourb, text, font, size, function):
+    def __init__(self, y, width, height, button_colour, text_colour, text, font, size, function):
         x = screen_width // 2 - width // 2
-        super().__init__(x, y, width, height, coloura, colourb, text, font, size, function)
+        super().__init__(x, y, width, height, button_colour, text_colour, text, font, size, function)
 
 class Text():
     def __init__ (self, x, y, colour, message, size, font):

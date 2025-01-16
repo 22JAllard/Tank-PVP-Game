@@ -1,6 +1,6 @@
 import socket
 from _thread import *
-import pickle
+import pickle 
 
 server = "172.20.10.2" #cmd ipconfig 
 port = 8888
