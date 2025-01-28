@@ -18,7 +18,7 @@ client_colour = tank_colours[colour_pos]
 
 def play_menu():
     global menu; menu = play_menu
-    print("play")
+    
 
 def customise_menu():
     global menu; menu = customise_menu
