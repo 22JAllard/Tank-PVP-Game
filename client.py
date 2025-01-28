@@ -1,6 +1,7 @@
 #client
 import pygame
 from network import Network
+from map import Map
 
 pygame.init()
 run = True
@@ -15,6 +16,16 @@ screen_height = display.current_h
 colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0)]
 client_colour = tank_colours[colour_pos]
+
+def server_connect():
+    server_connect_text = CenteredText(350, (0,0,0), "Enter server IP", 50, "Arial")
+    server_connect_text.draw(window)
+
+    entered_ip = "Enter IP"
+    entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
+    entered_ip_text.draw(window)
+
+    
 
 def play_menu():
     global menu; menu = play_menu

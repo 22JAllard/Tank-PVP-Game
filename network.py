@@ -1,5 +1,6 @@
 import socket
 import pickle
+#import class to recieve ip
 
 class Network:
     def __init__ (self):
