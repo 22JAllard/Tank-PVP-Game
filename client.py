@@ -30,14 +30,12 @@ def server_connect():
     if event.type == pygame.KEYDOWN and input_active:
         if event.key == pygame.K_RETURN:
             input_active = False
+            #try connect to said ip
         elif event.key == pygame.K_BACKSPACE:
             entered_ip = entered_ip[:-1]
-            entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
-            entered_ip_text.draw(window)
         else:
             entered_ip += event.unicode
-            entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
-            entered_ip_text.draw(window)
+        pygame.display.update
 
 def play_menu():
     global menu; menu = play_menu

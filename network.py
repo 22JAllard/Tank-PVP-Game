@@ -1,6 +1,6 @@
 import socket
 import pickle
-from client import server_connect
+#from client import server_connect
 
 class Network:
     def __init__ (self):
