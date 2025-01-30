@@ -27,15 +27,16 @@ def server_connect():
     entered_ip_text.draw(window)
 
     input_active = True
-    if event.type == pygame.KEYDOWN and input_active:
-        if event.key == pygame.K_RETURN:
-            input_active = False
-            #try connect to said ip
-        elif event.key == pygame.K_BACKSPACE:
-            entered_ip = entered_ip[:-1]
-        else:
-            entered_ip += event.unicode
-        pygame.display.update
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and input_active:
+            if event.key == pygame.K_RETURN:
+                input_active = False
+                #try connect to said ip
+            elif event.key == pygame.K_BACKSPACE:
+                entered_ip = entered_ip[:-1]
+            else:
+                entered_ip = entered_ip + str(event.unicode)
+            pygame.display.update
 
 def play_menu():
     global menu; menu = play_menu
