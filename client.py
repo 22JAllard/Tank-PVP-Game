@@ -31,7 +31,8 @@ def server_connect():
         if event.type == pygame.KEYDOWN and input_active:
             if event.key == pygame.K_RETURN:
                 input_active = False
-                #try connect to said ip
+                print (entered_ip)
+                return entered_ip
             elif event.key == pygame.K_BACKSPACE:
                 entered_ip = entered_ip[:-1]
             else:
