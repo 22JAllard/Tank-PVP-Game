@@ -2,7 +2,7 @@ import socket
 import pickle
 
 class Network:
-    def __init__ (self):
+    def __init__ (self, server_ip):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         from client import server_connect
         self.server = server_connect() #ip address of server

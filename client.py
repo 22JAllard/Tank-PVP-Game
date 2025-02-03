@@ -45,6 +45,7 @@ def play_menu():
     window.blit(menu_bg, (0,0))
 
     server_connect()
+    server_ip = server_connect(window)
 
 def customise_menu():
     global menu; menu = customise_menu
