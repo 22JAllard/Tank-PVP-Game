@@ -13,12 +13,14 @@ display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 
+input_active = True
 entered_ip = ""
 colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
 def server_connect():
+    global input_active
     server_connect_text = CenteredText(350, (0,0,0), "Enter server IP", 50, "Arial")
     server_connect_text.draw(window)
 
@@ -26,7 +28,6 @@ def server_connect():
     entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
-    input_active = True
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN and input_active:
             if event.key == pygame.K_RETURN:
