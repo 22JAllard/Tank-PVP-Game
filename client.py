@@ -15,7 +15,7 @@ screen_height = display.current_h
 
 entered_ip = ""
 colour_pos = 0
-tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0)]
+tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
 def server_connect():
@@ -99,11 +99,11 @@ class ColourButton():
         if pygame.mouse.get_pressed()[0] == 1:
             if pygame.mouse.get_pos()[0] > self.x and pygame.mouse.get_pos()[0] < (self.x + 10 + self.arrow_left.get_width()) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.arrow_left.get_width()):
                 if colour_pos == 0:
-                    colour_pos = 3
+                    colour_pos = 5
                 else:
                     colour_pos -= 1
             elif pygame.mouse.get_pos()[0] > (self.x + self.width - 10 - self.arrow_right.get_width()) and pygame.mouse.get_pos()[0] < (self.x + self.width) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.arrow_left.get_width()):
-                if colour_pos == 3:
+                if colour_pos == 5:
                     colour_pos = 0
                 else:
                     colour_pos += 1
