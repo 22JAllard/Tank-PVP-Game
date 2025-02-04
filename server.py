@@ -4,7 +4,9 @@ import pickle
 import random
 from os import path
 
-server = "172.20.10.2" #cmd ipconfig 
+host = socket.gethostname()
+server = socket.gethostbyname(host)
+print (server)
 port = 8888
 
 maplimit = 1
@@ -17,15 +19,15 @@ def loadlevel():
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-s.listen(6) #number dictates how many people can connect
-print("Server Started\nWaiting for connections...")
-
 try:
     s.bind((server,port)) #connecting server and port
 
 except socket.error as e: #in case stuff doesnt work
     print(str(e))
     exit()
+
+s.listen(6) #number dictates how many people can connect
+print("Server Started\nWaiting for connections...")
 
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
