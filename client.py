@@ -28,6 +28,8 @@ def server_connect():
     entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
+    pygame.display.update()
+
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN and input_active:
             if event.key == pygame.K_RETURN:
@@ -38,14 +40,20 @@ def server_connect():
                 entered_ip = entered_ip[:-1]
             else:
                 entered_ip = entered_ip + str(event.unicode)
-            pygame.display.update
 
 def play_menu():
     global menu; menu = play_menu
+
     menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
 
-    server_connect()
+    server_ip = server_connect()
+    if server_ip:
+        try:
+            network = Network(server_ip)
+            print("Connected to server: ", server_ip)
+        except Exception as e:
+            print("Failed to connect:", e)
 
 def customise_menu():
     global menu; menu = customise_menu

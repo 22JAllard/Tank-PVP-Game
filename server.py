@@ -7,7 +7,7 @@ from os import path
 host = socket.gethostname()
 server = socket.gethostbyname(host)
 print (server)
-port = 8888
+port = 5555
 
 maplimit = 1
 mapnumber = random.randint(1,maplimit)
@@ -32,3 +32,8 @@ print("Server Started\nWaiting for connections...")
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
     print("Connected to:", addr)
+
+    try:
+        conn.send(pickle.dumps("Connected to server"))
+    except Exception as e:
+        print("Error: ", e)
