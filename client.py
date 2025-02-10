@@ -1,7 +1,8 @@
 #client
 import pygame
 from network import Network
-from map import Map
+import pickle
+#from map import Map
 
 pygame.init()
 run = True
@@ -18,6 +19,39 @@ entered_ip = ""
 colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
+
+class Map():
+    def __init__(self, data):
+        self.tile_list= []
+        tile_size = 50
+
+        wood_block_image = pygame.image.load('0.png')
+        dirt_path_image = pygame.image.load('1.png')
+        row = 0
+        for row in data:
+            column = 0
+            for tile in row:
+                if tile == 0:
+                    img = pygame.transform.scale(wood_block_image, (tile_size, tile_size))
+                    img_rect = img.get_rect()
+                    img_rect.x = column * tile_size
+                    img_rect.y = row * tile_size
+                    tile = (img, img_rect)
+                    self.tile_list.append(tile)
+                if tile == 1:
+                    img = pygame.transform.scale(dirt_path_image, (tile_size, tile_size))
+                    img_rect = img.get_rect()
+                    img_rect.x = column * tile_size
+                    img_rect.y = row * tile_size
+                    tile = (img, img_rect)
+                    self.tile_list.append(tile)
+
+                column += 1
+            row += 1
+
+    def draw(self):
+        for tile in self.tile_list:
+            window.blit(tile[0], tile[1])
 
 def server_connect():
     global input_active
@@ -50,10 +84,30 @@ def play_menu():
     server_ip = server_connect()
     if server_ip:
         try:
+            print("Attempting to connect to server. IP: ", server_ip)
             network = Network(server_ip)
             print("Connected to server: ", server_ip)
+
+            full_data = b""
+            while True:
+                packet = network.client.recv(4096)  
+                if not packet:
+                    break  
+                full_data += packet
+
+            if full_data:
+                print(f"Received {len(full_data)} bytes")  
+                mapnumber = pickle.loads(full_data)  
+                print("Received Map Number:", mapnumber)
+            else:
+                print("No data received from server.")
+
+        except pickle.UnpicklingError:
+            print("Error: Corrupted or incomplete data received")
         except Exception as e:
             print("Failed to connect:", e)
+
+    #Map.draw()
 
 def customise_menu():
     global menu; menu = customise_menu

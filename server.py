@@ -31,9 +31,14 @@ print("Server Started\nWaiting for connections...")
 
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
-    print("Connected to:", addr)
+    print(f"Connected from: {addr}")
 
     try:
-        conn.send(pickle.dumps("Connected to server"))
+        print("Sending map number: ", mapnumber)
+        data = pickle.dumps(mapnumber)
+        conn.sendall(data)
+        print(f"Sent {len(data)} bytes")
+        conn.shutdown(socket.SHUT_WR)
+        conn.close()
     except Exception as e:
         print("Error: ", e)
