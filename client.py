@@ -21,6 +21,9 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
+def game(mapnumber):
+    print (mapnumber)
+
 class Map():
     def __init__(self, data):
         self.tile_list= []
@@ -106,7 +109,7 @@ def play_menu():
         except Exception as e:
             print("Failed to connect: ", e)
 
-        print("map nmumber data is", mapnumber)
+    game(mapnumber)
 
 def customise_menu():
     global menu; menu = customise_menu
