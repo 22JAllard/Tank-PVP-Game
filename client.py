@@ -32,22 +32,26 @@ class Map():
         wood_block_image = pygame.image.load('0.png')
         dirt_path_image = pygame.image.load('1.png')
 
-        for row_index, row in enumerate(data):
-            for column_index, tile in enumerate(row):
+        row_count = 0
+        for row in data:
+            column_count = 0
+            for tile in row:
                 if tile == 0:
                     img = pygame.transform.scale(wood_block_image, (tile_size, tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = column_index * tile_size
-                    img_rect.y = row_index * tile_size
+                    img_rect.x = column_count * tile_size
+                    img_rect.y = row_count * tile_size
                     tile = (img, img_rect)
                     self.tile_list.append(tile)
                 if tile == 1:
                     img = pygame.transform.scale(dirt_path_image, (tile_size, tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = column_index * tile_size
-                    img_rect.y = row_index * tile_size
+                    img_rect.x = column_count * tile_size
+                    img_rect.y = row_count * tile_size
                     tile = (img, img_rect)
                     self.tile_list.append(tile)
+                column_count += 1
+            row_count += 1
 
     def draw(self, window):
         for tile in self.tile_list:
