@@ -72,17 +72,12 @@ def server_connect():
                 entered_ip = entered_ip + str(event.unicode)
 
 def load_level(mapnumber):
-    level_file = f'map{mapnumber}.txt'
-    try:
-        if path.exists(level_file):
-            with open(level_file, 'rb')as m:
-                return pickle.load(m)
-        else:
-            print("Map {mapnumber} not found")
-            return None
-    except Exception as error:
-        print ("Error loading map ", error)
-        return None
+    if path.exists(f'map{mapnumber}.txt'):
+        pickle_in = open(f'map{mapnumber}.txt', 'rb')
+        map_data = pickle.load(pickle_in)
+    global game_map
+    game_map = Map(map_data)
+
 
 def play_menu():
     global menu; menu = play_menu
@@ -111,7 +106,7 @@ def play_menu():
         except Exception as e:
             print("Failed to connect: ", e)
 
-    #Map.draw()
+        print("map nmumber data is", mapnumber)
 
 def customise_menu():
     global menu; menu = customise_menu
