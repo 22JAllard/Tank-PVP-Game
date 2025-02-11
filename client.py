@@ -73,12 +73,8 @@ def server_connect():
             else:
                 entered_ip = entered_ip + str(event.unicode)
 
-def load_level(mapnumber):
-    if path.exists(f'map{mapnumber}.txt'):
-        pickle_in = open(f'map{mapnumber}.txt', 'rb')
-        map_data = pickle.load(pickle_in)
-    global game_map
-    game_map = Map(map_data)
+def load_level():
+    print("we made it here ok, celebrate friendly guy")
 
 def play_menu():
     global menu; menu = play_menu
@@ -113,6 +109,7 @@ def play_menu():
 
 def game():
     print (mapnumber)
+    load_level()
 
 def customise_menu():
     global menu; menu = customise_menu
