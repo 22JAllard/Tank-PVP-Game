@@ -15,6 +15,7 @@ display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 
+mapnumber = None
 input_active = True
 no_map_number = True
 entered_ip = ""
@@ -107,8 +108,11 @@ def play_menu():
         except Exception as error:
             print("Failed to connect: ", error)
 
-#def game():
-#    print (mapnumber)
+    if mapnumber is not None:
+        game()
+
+def game():
+    print (mapnumber)
 
 def customise_menu():
     global menu; menu = customise_menu
