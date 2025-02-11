@@ -88,24 +88,18 @@ def play_menu():
             network = Network(server_ip)
             print("Connected to server: ", server_ip)
 
-            full_data = b""
-            while True:
-                packet = network.client.recv(4096)  
-                if not packet:
-                    break  
-                full_data += packet
-
+            full_data = network.client.recv(4096)
             if full_data:
-                print(f"Received {len(full_data)} bytes")  
-                mapnumber = pickle.loads(full_data)  
-                print("Received Map Number:", mapnumber)
+                try:
+                    mapnumber = pickle.loads(full_data)  
+                    print("Received Map Number:", mapnumber)
+                except pickle.UnpicklingError:
+                    print("Error: Data is corrupted or incomplete")
             else:
                 print("No data received from server.")
 
-        except pickle.UnpicklingError:
-            print("Error: Corrupted or incomplete data received")
         except Exception as e:
-            print("Failed to connect:", e)
+            print("Failed to connect: ", e)
 
     #Map.draw()
 
