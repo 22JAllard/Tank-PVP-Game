@@ -16,13 +16,11 @@ screen_width = display.current_w
 screen_height = display.current_h
 
 input_active = True
+no_map_number = True
 entered_ip = ""
 colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
-
-def game(mapnumber):
-    print (mapnumber)
 
 class Map():
     def __init__(self, data):
@@ -81,7 +79,6 @@ def load_level(mapnumber):
     global game_map
     game_map = Map(map_data)
 
-
 def play_menu():
     global menu; menu = play_menu
 
@@ -89,12 +86,13 @@ def play_menu():
     window.blit(menu_bg, (0,0))
 
     server_ip = server_connect()
-    if server_ip:
+    global no_map_number
+    if server_ip and no_map_number:
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             network = Network(server_ip)
 
-            mapnumber = network.receive_map_number()
+            global mapnumber; mapnumber = network.receive_map_number()
             if mapnumber is not None:
                 print ("Recieved map number", mapnumber)
                 world_data = load_level(mapnumber)
@@ -106,10 +104,11 @@ def play_menu():
             else: 
                 print("Failed to receive map number :(")
 
-        except Exception as e:
-            print("Failed to connect: ", e)
+        except Exception as error:
+            print("Failed to connect: ", error)
 
-    game(mapnumber)
+#def game():
+#    print (mapnumber)
 
 def customise_menu():
     global menu; menu = customise_menu
