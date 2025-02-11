@@ -101,7 +101,7 @@ def play_menu():
             global mapnumber; mapnumber = network.receive_map_number()
             if mapnumber is not None:
                 print ("Recieved map number", mapnumber)
-                world_data = load_level(mapnumber)
+                world_data = load_level()
                 if world_data:
                     game_map = Map(world_data)
                     game_map.draw()
