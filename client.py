@@ -15,6 +15,7 @@ display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 
+clock = pygame.time.Clock()
 mapnumber = None
 input_active = True
 no_map_number = True
@@ -30,6 +31,7 @@ class Map():
 
         wood_block_image = pygame.image.load('0.png')
         dirt_path_image = pygame.image.load('1.png')
+
         for row_index, row in enumerate(data):
             for column_index, tile in enumerate(row):
                 if tile == 0:
@@ -47,7 +49,7 @@ class Map():
                     tile = (img, img_rect)
                     self.tile_list.append(tile)
 
-    def draw(self):
+    def draw(self, window):
         for tile in self.tile_list:
             window.blit(tile[0], tile[1])
 
@@ -74,7 +76,10 @@ def server_connect():
                 entered_ip = entered_ip + str(event.unicode)
 
 def load_level():
-    print("we made it here ok, celebrate friendly guy")
+    map_file = f'map{mapnumber}.txt'
+    with open(map_file, 'r') as file:
+        map_data = [list(map(int, line.split())) for line in file]
+    return map_data
 
 def play_menu():
     global menu; menu = play_menu
@@ -108,8 +113,12 @@ def play_menu():
         game()
 
 def game():
-    print (mapnumber)
-    load_level()
+    map_data = load_level()
+    game_map = Map(map_data)
+
+    game_map.draw(window)
+    pygame.display.update()
+    clock.tick(60)
 
 def customise_menu():
     global menu; menu = customise_menu
