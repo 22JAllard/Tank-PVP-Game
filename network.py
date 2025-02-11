@@ -10,47 +10,23 @@ class Network:
         self.addr = (self.server, self.port)
         self.p = self.connect()
 
-    def getP(self):
-        return self.p
-
     def connect (self):
             try:
                 self.client.connect(self.addr)
                 print("Connected successfully")
-
-                full_data = b""
-                while True:
-                    packet = self.client.recv(4096)
-                    if not packet:
-                        break
-                    full_data += packet
-                if full_data:
-                    return pickle.loads(full_data)
-                else:
-                    print("Error: No data recieved from server")
-                    return None 
-                    
-            except Exception as e:
-                 print("Connection error: ", e)
-                 return None
+                return True
+            except Exception as error:
+                print("Connection error:", error)
+                return False
             
-    def send(self, data):
+    def receive_map_number(self):
         try:
-            self.client.send(pickle.dumps(data))
-
-            full_data = b""
-            while True:
-                packet = self.client.recv(4096)
-                if not packet:
-                    break
-                full_data += packet
-
-            if full_data:
-                return pickle.loads(full_data)
+            data = self.client.recv(4096)
+            if data:
+                return pickle.loads(data)
             else:
-                print("Error: No response from server")
+                print("No data received from server")
                 return None
-        except socket.error as e:
-            print("Socket error: ", e)
+        except Exception as e:
+            print("Error receiving map number:", e)
             return None
-            

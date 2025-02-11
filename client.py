@@ -2,6 +2,7 @@
 import pygame
 from network import Network
 import pickle
+from os import path
 #from map import Map
 
 pygame.init()
@@ -75,6 +76,19 @@ def server_connect():
             else:
                 entered_ip = entered_ip + str(event.unicode)
 
+def load_level(mapnumber):
+    level_file = f'map{mapnumber}.txt'
+    try:
+        if path.exists(level_file):
+            with open(level_file, 'rb')as m:
+                return pickle.load(m)
+        else:
+            print("Map {mapnumber} not found")
+            return None
+    except Exception as error:
+        print ("Error loading map ", error)
+        return None
+
 def play_menu():
     global menu; menu = play_menu
 
@@ -86,17 +100,18 @@ def play_menu():
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             network = Network(server_ip)
-            print("Connected to server: ", server_ip)
 
-            full_data = network.client.recv(4096)
-            if full_data:
-                try:
-                    mapnumber = pickle.loads(full_data)  
-                    print("Received Map Number:", mapnumber)
-                except pickle.UnpicklingError:
-                    print("Error: Data is corrupted or incomplete")
-            else:
-                print("No data received from server.")
+            mapnumber = network.receive_map_number()
+            if mapnumber is not None:
+                print ("Recieved map number", mapnumber)
+                world_data = load_level(mapnumber)
+                if world_data:
+                    game_map = Map(world_data)
+                    game_map.draw()
+                else:
+                    print("Failed to load map data :(")
+            else: 
+                print("Failed to receive map number :(")
 
         except Exception as e:
             print("Failed to connect: ", e)
