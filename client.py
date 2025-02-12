@@ -182,8 +182,11 @@ def customise_menu():
 
     colour_button = ColourButton(screen_width//2 + 50, 200, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour)
     colour_button.draw(window)
-
     colour_button.arrow_click()
+
+    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu)
+    back_button.draw(window)
+    back_button.click(event)
 
 def settings_menu():
     global menu; menu = settings_menu
@@ -286,6 +289,7 @@ class CenteredText(Text):
         super().__init__(x, y, colour, message, size, font)
 
 def main_menu():
+    global menu; menu = main_menu
     menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
 
