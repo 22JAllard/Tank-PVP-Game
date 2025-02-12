@@ -24,30 +24,23 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
-class Map():
+class Map:
     def __init__(self, data):
         self.tile_list = []
-        self.tile_size = 10
+        self.tile_size = screen_width //50
 
-        # Load images
-        self.wood_block_image = pygame.image.load('0.png')
-        self.dirt_path_image = pygame.image.load('1.png')
+        try:
+            self.wood_block_image = pygame.image.load('0.png')
+            self.dirt_path_image = pygame.image.load('1.png')
+        except pygame.error as error:
+            print(f"Error loading images: {error}")
+            return
 
-        # Loop through each row
         for row_index, row in enumerate(data):
-            # Convert to string and remove array characters and spaces
-            row_str = str(row).replace('[', '').replace(']', '').replace(' ', '').replace(',', '')
-            
-            # Loop through each character in the row
-            for col_index, char in enumerate(row_str):
-                if char not in ['0', '1']:
-                    continue
-                    
-                # Calculate position
+            for col_index, char in enumerate(row):
                 x = col_index * self.tile_size
                 y = row_index * self.tile_size
-                
-                # Create the appropriate tile
+
                 if char == '0':
                     img = pygame.transform.scale(self.wood_block_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
@@ -90,7 +83,9 @@ def server_connect():
 def load_level():
     map_file = f'map{mapnumber}.txt'
     with open(map_file, 'r') as file:
-        map_data = [list(map(int, line.split())) for line in file]
+        map_data = [list(line.strip()) for line in file]
+    print(f"Loaded map data: {len(map_data)} rows")
+    print(f"First row sample: {map_data[0][:10]}")  # Show first 10 chars
     return map_data
 
 def play_menu():
