@@ -27,7 +27,7 @@ client_colour = tank_colours[colour_pos]
 class Map:
     def __init__(self, data):
         self.tile_list = []
-        self.tile_size = screen_width //50
+        self.tile_size = screen_height //50
 
         try:
             self.wood_block_image = pygame.image.load('0.png')
