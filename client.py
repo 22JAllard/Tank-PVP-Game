@@ -26,6 +26,13 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
+zerotank = pygame.image.load('0tank.png')
+onetank = pygame.image.load('1tank.png')
+twotank = pygame.image.load('2tank.png')
+threetank = pygame.image.load('3tank.png')
+fourtank = pygame.image.load('4tank.png')
+fivetank = pygame.image.load('5tank.png')
+
 class Map:
     def __init__(self, data):
         self.tile_list = []
