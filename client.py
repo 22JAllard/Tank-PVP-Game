@@ -8,6 +8,7 @@ from tank import Tank
 
 pygame.init()
 run = True
+network = None
 
 window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
@@ -91,7 +92,7 @@ def load_level():
 
 def play_menu():
     global menu; menu = play_menu
-    global network
+    global network; global no_map_number
 
     menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
@@ -101,6 +102,7 @@ def play_menu():
     if server_ip and no_map_number:
         try:
             print("Attempting to connect to server. IP: ", server_ip)
+            global network
             network = Network(server_ip)
 
             initial_data = network.initial_data
@@ -124,36 +126,50 @@ def play_menu():
 
 def game():
     global menu; menu = game
+    global network
     map_data = load_level()
     game_map = Map(map_data)
 
-    player = Network.initial_data["tank"]
-    Tank.colour = client_colour 
+    if not network:
+        print("No network connected")
+        return
 
-    running = True
-    while running:
-        clock.tick(60)
+    try:
+        # Load map
+        map_data = load_level()
+        game_map = Map(map_data)
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        # Get player tank from network
+        print("Initial data:", network.initial_data)  # Debug print
+        player = network.initial_data["tank"]
+        player.colour = client_colour
+        
+        running = True
+        while running:
+            clock.tick(60)
             
-        # Move the player's tank
-        player.move()
-        
-        # Send player data and get updated players
-        players = network.send(player)
-        
-        # Clear screen and draw map
-        window.fill((255, 255, 255))
-        game_map.draw(window)
-        
-        # Draw all players
-        if players:
-            for player_id, tank in players.items():
-                tank.draw(window)
-        
-        pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                
+            # Move the player's tank
+            player.move()
+            
+            # Send player data and get updated players
+            players = network.send(player)
+            
+            # Clear screen and draw map
+            window.fill((255, 255, 255))
+            game_map.draw(window)
+            
+            # Draw all players
+            if players:
+                for player_id, tank in players.items():
+                    tank.draw(window)
+            
+            pygame.display.update()
+    except Exception as e:
+        print(f"Error in game: {e}")
 
 def customise_menu():
     global menu; menu = customise_menu
