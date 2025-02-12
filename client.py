@@ -125,6 +125,7 @@ def play_menu():
         game()
 
 def game():
+    global menu; menu = game
     map_data = load_level()
     game_map = Map(map_data)
 
