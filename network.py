@@ -8,13 +8,15 @@ class Network:
         print("Connecting to server: ", self.server)
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.p = self.connect()
+        self.initial_data = self.connect()
+        self.player_id = self.initial_data["player_id"]
+        self.player = self.initial_data["tank"]
 
     def connect (self):
             try:
                 self.client.connect(self.addr)
                 print("Connected successfully")
-                return True
+                return pickle.loads(self.client.recv(2048))
             except Exception as error:
                 print("Connection error:", error)
                 return False
@@ -29,4 +31,12 @@ class Network:
                 return None
         except Exception as e:
             print("Error receiving map number:", e)
+            return None
+        
+    def send(self, data):
+        try:
+            self.client.send(pickle.dumps(data))
+            return pickle.loads(self.client.recv(2048))
+        except socket.error as e:
+            print(e)
             return None

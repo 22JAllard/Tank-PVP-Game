@@ -3,6 +3,7 @@ from _thread import *
 import pickle 
 import random
 from os import path
+from tank import Tank
 
 host = socket.gethostname()
 server = socket.gethostbyname(host)
@@ -11,6 +12,32 @@ port = 5555
 
 maplimit = 1
 mapnumber = random.randint(1,maplimit)
+players = {}
+current_id = 0
+
+player_positions = [
+
+    (2,2),
+    (45, 2),
+    (2, 45),
+    (45, 45),
+    (2, 25),
+    (25, 2)
+
+]
+
+def player_connected():
+    global current_id
+    position_index = len(players) % len(player_positions)
+    x, y = player_positions[position_index]
+    
+    # Create new tank
+    new_tank = Tank(x, y, (255, 0, 0), 40, 40)  # Default red color
+    players[current_id] = new_tank
+    
+    player_id = current_id
+    current_id += 1
+    return player_id
 
 def loadlevel():
     level_file = f'map{mapnumber}.txt'
@@ -34,12 +61,37 @@ print("Server Started\nWaiting for connections...")
 def client_thread(conn):
     try:
         print("Sending map data, map number = ", mapnumber)
-        data = pickle.dumps(mapnumber)
-        conn.sendall(data)
+
+        player_id = player_connected()
+        print(f"New player connected. ID: {player_id}")
+        
+        initial_data = {
+            "map_number": mapnumber,
+            "player_id": player_id,
+            "tank": players[player_id]
+        }
+        conn.sendall(pickle.dumps(initial_data))
+            
+
+        while True:
+            try:
+                data = pickle.loads(conn.recv(2048))
+                players[player_id] = data
+                
+                conn.sendall(pickle.dumps(players))
+            except:
+                break
+        
     except Exception as e:
         print("Error: ", e)
+
     finally:
+
+        if player_id in players:
+            del players[player_id]
+            print(f"Player {player_id} disconnected")
         conn.close()
+
 
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff

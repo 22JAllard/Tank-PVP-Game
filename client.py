@@ -3,6 +3,7 @@ import pygame
 from network import Network
 import pickle
 from os import path
+from tank import Tank
 #from map import Map
 
 pygame.init()
@@ -124,9 +125,32 @@ def game():
     map_data = load_level()
     game_map = Map(map_data)
 
-    game_map.draw(window)
-    pygame.display.update()
-    clock.tick(60)
+    player = Network.player
+    player.colour = client_colour 
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        # Move the player's tank
+        Tank.move()
+        
+        # Send player data and get all players
+        players = Network.send(player)
+        
+        # Draw everything
+        window.fill((255,255,255))  # White background
+        game_map.draw(window)
+        
+        # Draw all players
+        if players:
+            for p in players:
+                if p:  # Check if player exists
+                    p.draw(window)
+        
+        pygame.display.update()
+        clock.tick(60)
 
 def customise_menu():
     global menu; menu = customise_menu
