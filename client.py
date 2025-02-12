@@ -26,36 +26,44 @@ client_colour = tank_colours[colour_pos]
 
 class Map():
     def __init__(self, data):
-        self.tile_list= []
-        tile_size = 50
+        self.tile_list = []
+        self.tile_size = 10
 
-        wood_block_image = pygame.image.load('0.png')
-        dirt_path_image = pygame.image.load('1.png')
+        # Load images
+        self.wood_block_image = pygame.image.load('0.png')
+        self.dirt_path_image = pygame.image.load('1.png')
 
-        row_count = 0
-        for row in data:
-            column_count = 0
-            for tile in row:
-                if tile == 0:
-                    img = pygame.transform.scale(wood_block_image, (tile_size, tile_size))
+        # Loop through each row
+        for row_index, row in enumerate(data):
+            # Convert to string and remove array characters and spaces
+            row_str = str(row).replace('[', '').replace(']', '').replace(' ', '').replace(',', '')
+            
+            # Loop through each character in the row
+            for col_index, char in enumerate(row_str):
+                if char not in ['0', '1']:
+                    continue
+                    
+                # Calculate position
+                x = col_index * self.tile_size
+                y = row_index * self.tile_size
+                
+                # Create the appropriate tile
+                if char == '0':
+                    img = pygame.transform.scale(self.wood_block_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = column_count * tile_size
-                    img_rect.y = row_count * tile_size
-                    tile = (img, img_rect)
-                    self.tile_list.append(tile)
-                if tile == 1:
-                    img = pygame.transform.scale(dirt_path_image, (tile_size, tile_size))
+                    img_rect.x = x
+                    img_rect.y = y
+                    self.tile_list.append((img, img_rect))
+                elif char == '1':
+                    img = pygame.transform.scale(self.dirt_path_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = column_count * tile_size
-                    img_rect.y = row_count * tile_size
-                    tile = (img, img_rect)
-                    self.tile_list.append(tile)
-                column_count += 1
-            row_count += 1
+                    img_rect.x = x
+                    img_rect.y = y
+                    self.tile_list.append((img, img_rect))
 
     def draw(self, window):
-        for tile in self.tile_list:
-            window.blit(tile[0], tile[1])
+        for tile, rect in self.tile_list:
+            window.blit(tile, rect)
 
 def server_connect():
     global input_active
