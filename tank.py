@@ -1,5 +1,12 @@
 import pygame
 
+zerotank = pygame.image.load('0tank.png')
+onetank = pygame.image.load('1tank.png')
+twotank = pygame.image.load('2tank.png')
+threetank = pygame.image.load('3tank.png')
+fourtank = pygame.image.load('4tank.png')
+fivetank = pygame.image.load('5tank.png')
+
 class Tank:
     def __init__(self, x, y, colour, width, height):
         self.x = x
