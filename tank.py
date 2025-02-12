@@ -7,11 +7,11 @@ class Tank:
         self.width = width
         self.height = height
         self.colour = colour
-        self.rect = (x, y, width, height)
+        self.rect = pygame.Rect(x, y, width, height)
         self.vel = 3
 
     def draw(self, win):
-        pygame.draw.rect(win, self.colour, self.rect)
+        pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -31,4 +31,4 @@ class Tank:
         self.update()
         
     def update(self):
-        self.rect = (self.x, self.y, self.width, self.height)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

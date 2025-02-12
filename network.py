@@ -9,14 +9,14 @@ class Network:
         self.port = 5555
         self.addr = (self.server, self.port)
         self.initial_data = self.connect()
-        self.player_id = self.initial_data["player_id"]
-        self.player = self.initial_data["tank"]
 
     def connect (self):
             try:
                 self.client.connect(self.addr)
                 print("Connected successfully")
-                return pickle.loads(self.client.recv(2048))
+                initial_data = pickle.loads(self.client.recv(2048))
+                print("Received initial data:", initial_data)
+                return initial_data
             except Exception as error:
                 print("Connection error:", error)
                 return False
@@ -37,6 +37,6 @@ class Network:
         try:
             self.client.send(pickle.dumps(data))
             return pickle.loads(self.client.recv(2048))
-        except socket.error as e:
-            print(e)
+        except socket.error as error:
+            print(f"Send error :", error)
             return None
