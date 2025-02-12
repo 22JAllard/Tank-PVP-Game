@@ -1,4 +1,5 @@
 import pygame
+pygame.init()
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
