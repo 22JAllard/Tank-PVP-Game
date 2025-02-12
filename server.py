@@ -30,13 +30,13 @@ player_positions = [
 
 ]
 
-def player_connected():
+def player_connected(client_colour):
     global current_id
     position_index = len(players) % len(player_positions)
     x, y = player_positions[position_index]
     
     # Create new tank
-    new_tank = Tank(x, y, (255, 0, 0), 40, 40)  # Default red color
+    new_tank = Tank(x, y, client_colour, 40, 40)  # Default red color
     players[current_id] = new_tank
     
     player_id = current_id
@@ -66,7 +66,8 @@ def client_thread(conn):
     try:
         print("Sending map data, map number = ", mapnumber)
 
-        player_id = player_connected()
+        client_colour = pickle.loads(conn.recv(2048))
+        player_id = player_connected(client_colour)
         print(f"New player connected. ID: {player_id}")
         
         initial_data = {

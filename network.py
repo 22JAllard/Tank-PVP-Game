@@ -2,21 +2,20 @@ import socket
 import pickle
 
 class Network:
-    def __init__ (self, server_ip):
+    def __init__ (self, server_ip, client_colour):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = server_ip #ip address of server
         print("Connecting to server: ", self.server)
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.initial_data = self.connect()
+        self.initial_data = self.connect(client_colour)
 
-    def connect (self):
+    def connect (self, client_colour):
             try:
                 self.client.connect(self.addr)
                 print("Connected successfully")
-                initial_data = pickle.loads(self.client.recv(2048))
-                print("Received initial data:", initial_data)
-                return initial_data
+                self.client.send(pickle.dumps(client_colour))
+                return pickle.loads(self.client.recv(2048))
             except Exception as error:
                 print("Connection error:", error)
                 return False

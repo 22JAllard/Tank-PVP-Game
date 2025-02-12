@@ -103,7 +103,7 @@ def play_menu():
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             global network
-            network = Network(server_ip)
+            network = Network(server_ip, client_colour)
 
             initial_data = network.initial_data
             if initial_data:
