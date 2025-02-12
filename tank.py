@@ -18,22 +18,22 @@ class Tank:
         self.vel = 3
 
         if self.colour == (255,0,0):
-            self.colour_number = 0
+            self.image = zerotank
         elif self.colour == (0,255,0):
-            self.colour_number = 1
+            self.image = onetank
         elif self.colour == (0,0,255):
-            self.colour_number = 2
+            self.image = twotank
         elif self.colour == (255,255,0):
-            self.colour_number = 3
+            self.image = threetank
         elif self.colour == (255,127,11):
-            self.colour_number = 4
+            self.image = fourtank
         elif self.colour == (255,21,123):
-            self.colour_number = 5
+            self.image = fivetank
 
 
     def draw(self, win):
         #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
-        win.blit(f'{self.colour_number}tank.png',(self.x, self.y))
+        win.blit(self.image,(self.x, self.y))
 
     def move(self):
         keys = pygame.key.get_pressed()
