@@ -5,10 +5,14 @@ import random
 from os import path
 from tank import Tank
 
-host = socket.gethostname()
-server = socket.gethostbyname(host)
-print ("Server IP: ", server)
+server = "0.0.0.0"
 port = 5555
+
+hostname = socket.gethostname()
+addresses = socket.getaddrinfo(hostname, None)
+for addr in addresses:
+    if addr[0] == socket.AF_INET:  
+        print(f"Server IP addresses:  {addr[4][0]}")
 
 maplimit = 1
 mapnumber = random.randint(1,maplimit)
@@ -93,7 +97,9 @@ def client_thread(conn):
         conn.close()
 
 
+
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
     print(f"Connected from: {addr}")
     start_new_thread(client_thread, (conn,))
+
