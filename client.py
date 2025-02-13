@@ -1,13 +1,15 @@
 #client
 import pygame
+pygame.init()
+pygame.display.init()
+window = pygame.display.set_mode((1920,1080), pygame.FULLSCREEN)
 from network import Network
 import pickle
 from os import path
 from tank import Tank
 #from map import Map
 
-pygame.init()
-pygame.display.init()
+
 
 run = True
 network = None
@@ -16,7 +18,7 @@ network = None
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
-window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+
 pygame.display.set_caption("Tank PVP Game")
 
 clock = pygame.time.Clock()
@@ -105,38 +107,41 @@ def load_level():
 
 def play_menu():
     global menu; menu = play_menu
-    global network; global no_map_number
+    global network, no_map_number
 
-    menu_bg = pygame.image.load('menu_bg.png')
-    window.blit(menu_bg, (0,0))
+    window.fill((0,0,0))
 
     server_ip = server_connect()
     global no_map_number
+
+    if not server_ip:
+        return
+
     if server_ip and no_map_number:
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             global network
             network = Network(server_ip, client_colour)
 
-            initial_data = network.initial_data
-            if initial_data:
-                global mapnumber 
-                mapnumber = initial_data["map_number"]
-                print("Received map number", mapnumber)
-                no_map_number = False  
+            if network.connected and network.initial_data:
+                global mapnumber
+                mapnumber = network.initial_data["map_number"]
+                print(f"Connected! Map number: {mapnumber}")
+                no_map_number = False
                 
+                # Load and start game
                 world_data = load_level()
                 if world_data:
                     game_map = Map(world_data)
-                    game()  
+                    game()
                 else:
-                    print("Failed to load map data :(")
+                    print("Failed to load map data")
             else:
-                print("Failed to receive initial data :(")
-
-        except Exception as error:
-            print("Failed to connect: ", error)
-
+                print("Failed to connect to server")
+                
+        except Exception as e:
+            print(f"Error in play_menu: {e}")
+            
 def game():
     global menu; menu = game
     global network

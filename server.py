@@ -66,11 +66,16 @@ print("Server Started\nWaiting for connections...")
 def client_thread(conn):
     global players; player_id = None
     try:
-        print("Sending map data, map number = ", mapnumber)
-
-        client_colour = pickle.loads(conn.recv(2048))
+        data = conn.recv(2048)
+        if not data:
+            print("No color data received from client")
+            return
+            
+        client_colour = pickle.loads(data)
+        print(f"Received client color: {client_colour}")
+        
         player_id = player_connected(client_colour)
-        print(f"New player connected. ID: {player_id}")
+        print(f"Created player {player_id}")
         
         initial_data = {
             "map_number": mapnumber,
@@ -78,29 +83,26 @@ def client_thread(conn):
             "tank": players[player_id]
         }
         conn.sendall(pickle.dumps(initial_data))
-            
-
+        print(f"Sent initial data to player {player_id}")
+        
         while True:
             try:
-                data = pickle.loads(conn.recv(2048))
-                if data:
-                    players[player_id] = data
-                    conn.sendall(pickle.dumps(players))
-                
+                data = conn.recv(2048)
+                if not data:
+                    print(f"No data received from player {player_id}")
+                    break
+                    
+                players[player_id] = pickle.loads(data)
                 conn.sendall(pickle.dumps(players))
-            except (EOFError, ConnectionResetError):
+            except:
                 break
-            except Exception as error:
-                print(f"Error in game loop for Player{player_id}: {error}")
-        
+                
     except Exception as e:
-        print("Error: ", e)
-
+        print(f"Error handling client {player_id}: {e}")
     finally:
-
-        if player_id in players and player_id is not None:
+        if player_id is not None and player_id in players:
             del players[player_id]
-            print(f"Player {player_id} disconnected")
+            print(f"Removed player {player_id}")
         conn.close()
 
 while True:
