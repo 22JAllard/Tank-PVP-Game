@@ -177,8 +177,7 @@ def game():
             
             # Simplified player drawing
             for player_id, tank in players.items():
-                global scale
-                tank.draw(window)#
+                tank.draw(window, scale)
             
             pygame.display.update()
             

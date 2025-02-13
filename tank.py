@@ -18,7 +18,7 @@ class Tank:
         self.height = self.y
         self.colour = colour
         # self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 3
+        self.vel = 0.1
         
         self.image_path = TANK_IMAGES.get(self.colour)
     
@@ -38,8 +38,7 @@ class Tank:
         self.__dict__.update(state)
         self.load_image()
 
-
-    def draw(self, win):
+    def draw(self, win, scale):
         #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
         win.blit(self.image,(self.x, self.y))
 
@@ -67,5 +66,10 @@ class Tank:
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
 
     def scale(self, scale):
-        self.width *= scale
-        self.height *= scale
+        print(self.x, self.y, self.width, self.height)
+        print(scale)
+        self.x = scale * self.x
+        self.y = scale * self.y
+        self.width = scale
+        self.height = scale
+        
