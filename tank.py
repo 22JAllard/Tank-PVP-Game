@@ -1,12 +1,14 @@
 import pygame
 pygame.init()
 
-zerotank = pygame.image.load('0tank.png')
-onetank = pygame.image.load('1tank.png')
-twotank = pygame.image.load('2tank.png')
-threetank = pygame.image.load('3tank.png')
-fourtank = pygame.image.load('4tank.png')
-fivetank = pygame.image.load('5tank.png')
+TANK_IMAGES = {
+    (255,0,0): '0tank.png',
+    (0,255,0): '1tank.png',
+    (0,0,255): '2tank.png',
+    (255,255,0): '3tank.png',
+    (255,127,11): '4tank.png',
+    (255,21,123): '5tank.png'
+}
 
 class Tank:
     def __init__(self, x, y, colour, width, height):
@@ -17,19 +19,24 @@ class Tank:
         self.colour = colour
         self.rect = pygame.Rect(x, y, width, height)
         self.vel = 3
+        
+        self.image_path = TANK_IMAGES.get(self.colour)
+        self._load_image()
+    
+    def _load_image(self):
+        if hasattr(self, 'image_path') and self.image_path:
+            self.image = pygame.image.load(self.image_path)
+        else:
+            raise ValueError(f"No image path found for colour {self.colour}")
 
-        if self.colour == (255,0,0):
-            self.image = zerotank
-        elif self.colour == (0,255,0):
-            self.image = onetank
-        elif self.colour == (0,0,255):
-            self.image = twotank
-        elif self.colour == (255,255,0):
-            self.image = threetank
-        elif self.colour == (255,127,11):
-            self.image = fourtank
-        elif self.colour == (255,21,123):
-            self.image = fivetank
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state.pop('image', None)
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._load_image()
 
 
     def draw(self, win):
