@@ -82,7 +82,6 @@ def server_connect():
         if event.type == pygame.KEYDOWN and input_active:
             if event.key == pygame.K_RETURN:
                 input_active = False
-                print (entered_ip)
                 return entered_ip
             elif event.key == pygame.K_BACKSPACE:
                 entered_ip = entered_ip[:-1]
@@ -142,13 +141,14 @@ def game():
         menu = main_menu
         return
 
-# Get player tank from network
+#Get player tank through network
     try:
         map_data = load_level()
         game_map = Map(map_data)
         player = network.initial_data["tank"]
         player.colour = client_colour
         
+        player.shrink(screen_height)
         running = True
         # Added network.connected check
         while running and network.connected:  
@@ -157,9 +157,9 @@ def game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                    network.disconnect()  # Added disconnect call
+                    network.disconnect()
                 
-            # Move the player's tank
+          
             player.move()
             
             # Send player data and get updated players

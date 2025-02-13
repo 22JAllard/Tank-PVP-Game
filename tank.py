@@ -62,3 +62,6 @@ class Tank:
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def shrink(self, screen_height):
+        self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
