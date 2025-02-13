@@ -23,9 +23,10 @@ class Tank:
         self.image_path = TANK_IMAGES.get(self.colour)
         self._load_image()
     
-    def _load_image(self):
+    def _load_image(self, screen_height):
         if hasattr(self, 'image_path') and self.image_path:
             self.image = pygame.image.load(self.image_path)
+            self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
 

@@ -148,7 +148,7 @@ def game():
         player = network.initial_data["tank"]
         player.colour = client_colour
         
-        player.shrink(screen_height)
+        #player.shrink(screen_height)
         running = True
         # Added network.connected check
         while running and network.connected:  
