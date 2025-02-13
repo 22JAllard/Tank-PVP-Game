@@ -36,28 +36,24 @@ def player_connected(client_colour):
     x, y = player_positions[position_index]
     
     # Create new tank
-    print("a")
     new_tank = Tank(x, y, client_colour, 40, 40)  # Default red color
-    print("b")
     players[current_id] = new_tank
     
     player_id = current_id
     current_id += 1
-    
     return player_id
 
 def loadlevel():
     level_file = f'map{mapnumber}.txt'
     if path.exists(level_file):
-        with open(level_file, 'rb') as file:
-            return pickle.load(file)
+        with open(level_file, 'rb') as f:
+            return pickle.load(f)
     return None
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
     s.bind((server,port)) #connecting server and port
-
 
 except socket.error as e: #in case stuff doesnt work
     print("Bind failed..", str(e))
@@ -66,19 +62,15 @@ except socket.error as e: #in case stuff doesnt work
 s.listen(6) #number dictates how many people can connect
 print("Server Started\nWaiting for connections...")
 
+TANK_IMAGES = {}
+
 def client_thread(conn):
-    global players; player_id = None
     try:
-        data = conn.recv(2048)
-        if not data:
-            print("No color data received from client")
-            return
-            
-        client_colour = pickle.loads(data)
-        print(f"Received client color: {client_colour}")
-        
+        print("Sending map data, map number = ", mapnumber)
+
+        client_colour = pickle.loads(conn.recv(2048))
         player_id = player_connected(client_colour)
-        print(f"Created player {player_id}")
+        print(f"New player connected. ID: {player_id}")
         
         initial_data = {
             "map_number": mapnumber,
@@ -86,27 +78,28 @@ def client_thread(conn):
             "tank": players[player_id]
         }
         conn.sendall(pickle.dumps(initial_data))
-        print(f"Sent initial data to player {player_id}")
-        
+            
+
         while True:
             try:
-                data = conn.recv(2048)
-                if not data:
-                    print(f"No data received from player {player_id}")
-                    break
-                    
-                players[player_id] = pickle.loads(data)
+                data = pickle.loads(conn.recv(2048))
+                players[player_id] = data
+                
                 conn.sendall(pickle.dumps(players))
             except:
                 break
-                
+        
     except Exception as e:
-        print(f"Error handling client {player_id}: {e}")
+        print("Error: ", e)
+
     finally:
-        if player_id is not None and player_id in players:
+
+        if player_id in players:
             del players[player_id]
-            print(f"Removed player {player_id}")
+            print(f"Player {player_id} disconnected")
         conn.close()
+
+
 
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff

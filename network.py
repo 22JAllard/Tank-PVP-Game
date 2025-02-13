@@ -1,5 +1,6 @@
 import socket
 import pickle
+import pygame
 
 class Network:
     def __init__ (self, server_ip, client_colour):
@@ -8,7 +9,6 @@ class Network:
         print("Connecting to server: ", self.server)
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.connected = False
         self.initial_data = self.connect(client_colour)
 
     def connect (self, client_colour):
@@ -27,9 +27,7 @@ class Network:
                 print("No initial data received")
                 return False
                 
-            initial_data = pickle.loads(data)
-            print(f"Received initial data: {initial_data}")
-            return initial_data
+            return pickle.loads(data)
         except socket.timeout:
             print("Connection timed out")
             self.disconnect()
@@ -61,14 +59,12 @@ class Network:
             
             # Receive updated game state
             received_data = self.client.recv(2048)
-            if received_data:
-                return pickle.loads(received_data)
-            return None
-        except Exception as error:
-            print(f"Sending error: {error}")
-            self.disconnect()
-            return None
+            if not received_data:
+                print("No data received from server")
+                self.disconnect()
+                return None
                 
+            return pickle.loads(received_data)
         except socket.timeout:
             print("Send/receive timed out")
             self.disconnect()
@@ -86,5 +82,5 @@ class Network:
         self.connected = False
         try:
             self.client.close()
-        except Exception as e:
-            print(f"Error during disconnect: {e}")
+        except:
+            pass

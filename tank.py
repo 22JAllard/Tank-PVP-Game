@@ -1,6 +1,5 @@
 import pygame
 pygame.init()
-pygame.display.init()
 
 TANK_IMAGES = {
     (255,0,0): '0tank.png',
@@ -21,13 +20,12 @@ class Tank:
         self.rect = pygame.Rect(x, y, width, height)
         self.vel = 3
         
-        
         self.image_path = TANK_IMAGES.get(self.colour)
         self._load_image()
     
     def _load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
-            self.image = pygame.image.load(self.image_path).convert_alpha()
+            self.image = pygame.image.load(self.image_path)
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
 

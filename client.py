@@ -1,26 +1,21 @@
 #client
 import pygame
-pygame.init()
-pygame.display.init()
 from network import Network
 import pickle
 from os import path
 from tank import Tank
 #from map import Map
 
-
-
+pygame.init()
 run = True
 network = None
+
+window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
 #stores info about client screen size
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
-print("aaaa")
-window = pygame.display.set_mode((screen_width,screen_height), pygame.FULLSCREEN)
-print("bbbbb")
-pygame.display.set_caption("Tank PVP Game")
 
 clock = pygame.time.Clock()
 mapnumber = None
@@ -31,16 +26,12 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
-try:
-    zerotank = pygame.image.load('0tank.png').convert_alpha()
-    onetank = pygame.image.load('1tank.png').convert_alpha()
-    twotank = pygame.image.load('2tank.png').convert_alpha()
-    threetank = pygame.image.load('3tank.png').convert_alpha()
-    fourtank = pygame.image.load('4tank.png').convert_alpha()
-    fivetank = pygame.image.load('5tank.png').convert_alpha()
-except pygame.error as error:
-    print("Error loading tank graphics", error)
-    exit()
+zerotank = pygame.image.load('0tank.png')
+onetank = pygame.image.load('1tank.png')
+twotank = pygame.image.load('2tank.png')
+threetank = pygame.image.load('3tank.png')
+fourtank = pygame.image.load('4tank.png')
+fivetank = pygame.image.load('5tank.png')
 
 class Map:
     def __init__(self, data):
@@ -82,7 +73,6 @@ def server_connect():
     server_connect_text.draw(window)
 
     global entered_ip
-    entered_ip = "192.168.1.110"
     entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
@@ -180,7 +170,7 @@ def game():
                 break
             
             # Clear screen and draw map
-            window.fill((255,0,255))
+            window.fill((255, 255, 255))
             game_map.draw(window)
             
             # Simplified player drawing
