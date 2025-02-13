@@ -179,7 +179,7 @@ def game():
             
             pygame.display.update()
             
-        except Exception as e:
+    except Exception as e:
         print(f"Error in game: {e}")
     finally:  # Added cleanup in finally block
         if network:
