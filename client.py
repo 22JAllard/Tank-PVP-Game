@@ -137,47 +137,55 @@ def game():
     map_data = load_level()
     game_map = Map(map_data)
 
-    if not network:
+    if not network or not network.connected:
         print("No network connected")
+        menu = main_menu
         return
 
+# Get player tank from network
     try:
-        # Load map
         map_data = load_level()
         game_map = Map(map_data)
-        
-        # Get player tank from network
-        print("Initial data:", network.initial_data)  # Debug print
         player = network.initial_data["tank"]
         player.colour = client_colour
         
         running = True
-        while running:
+        # Added network.connected check
+        while running and network.connected:  
             clock.tick(60)
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                    network.disconnect()  # Added disconnect call
                 
             # Move the player's tank
             player.move()
             
             # Send player data and get updated players
             players = network.send(player)
+            # Added connection loss check
+            if not players:  
+                running = False
+                break
             
             # Clear screen and draw map
             window.fill((255, 255, 255))
             game_map.draw(window)
             
-            # Draw all players
-            if players:
-                for player_id, tank in players.items():
-                    tank.draw(window)
+            # Simplified player drawing
+            for player_id, tank in players.items():
+                tank.draw(window)
             
             pygame.display.update()
-    except Exception as e:
+            
+        except Exception as e:
         print(f"Error in game: {e}")
-
+    finally:  # Added cleanup in finally block
+        if network:
+            network.disconnect()
+        menu = main_menu
+    
 def customise_menu():
     global menu; menu = customise_menu
     customise_bg = pygame.image.load('warehouse.png')

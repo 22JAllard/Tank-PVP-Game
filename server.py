@@ -62,6 +62,8 @@ except socket.error as e: #in case stuff doesnt work
 s.listen(6) #number dictates how many people can connect
 print("Server Started\nWaiting for connections...")
 
+TANK_IMAGES = {}
+
 def client_thread(conn):
     try:
         print("Sending map data, map number = ", mapnumber)
