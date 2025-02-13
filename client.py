@@ -7,15 +7,17 @@ from tank import Tank
 #from map import Map
 
 pygame.init()
+pygame.display.init()
+
 run = True
 network = None
-
-window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
 #stores info about client screen size
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
+window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+pygame.display.set_caption("Tank PVP Game")
 
 clock = pygame.time.Clock()
 mapnumber = None
@@ -26,12 +28,16 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 
-zerotank = pygame.image.load('0tank.png').convert_alpha()
-onetank = pygame.image.load('1tank.png').convert_alpha()
-twotank = pygame.image.load('2tank.png').convert_alpha()
-threetank = pygame.image.load('3tank.png').convert_alpha()
-fourtank = pygame.image.load('4tank.png').convert_alpha()
-fivetank = pygame.image.load('5tank.png').convert_alpha()
+try:
+    zerotank = pygame.image.load('0tank.png').convert_alpha()
+    onetank = pygame.image.load('1tank.png').convert_alpha()
+    twotank = pygame.image.load('2tank.png').convert_alpha()
+    threetank = pygame.image.load('3tank.png').convert_alpha()
+    fourtank = pygame.image.load('4tank.png').convert_alpha()
+    fivetank = pygame.image.load('5tank.png').convert_alpha()
+except pygame.error as error:
+    print("Error loading tank graphics", error)
+    exit()
 
 class Map:
     def __init__(self, data):

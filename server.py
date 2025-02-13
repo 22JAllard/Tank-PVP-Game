@@ -18,7 +18,6 @@ maplimit = 1
 mapnumber = random.randint(1,maplimit)
 players = {}
 current_id = 0
-player_id = None
 
 player_positions = [
 
@@ -47,14 +46,15 @@ def player_connected(client_colour):
 def loadlevel():
     level_file = f'map{mapnumber}.txt'
     if path.exists(level_file):
-        with open(level_file, 'rb') as f:
-            return pickle.load(f)
+        with open(level_file, 'rb') as file:
+            return pickle.load(file)
     return None
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 try:
     s.bind((server,port)) #connecting server and port
+
 
 except socket.error as e: #in case stuff doesnt work
     print("Bind failed..", str(e))
@@ -63,9 +63,8 @@ except socket.error as e: #in case stuff doesnt work
 s.listen(6) #number dictates how many people can connect
 print("Server Started\nWaiting for connections...")
 
-TANK_IMAGES = {}
-
 def client_thread(conn):
+    global players; player_id = None
     try:
         print("Sending map data, map number = ", mapnumber)
 
@@ -84,18 +83,22 @@ def client_thread(conn):
         while True:
             try:
                 data = pickle.loads(conn.recv(2048))
-                players[player_id] = data
+                if data:
+                    players[player_id] = data
+                    conn.sendall(pickle.dumps(players))
                 
                 conn.sendall(pickle.dumps(players))
-            except:
+            except (EOFError, ConnectionResetError):
                 break
+            except Exception as error:
+                print(f"Error in game loop for Player{player_id}: {error}")
         
     except Exception as e:
         print("Error: ", e)
 
     finally:
 
-        if player_id in players:
+        if player_id in players and player_id is not None:
             del players[player_id]
             print(f"Player {player_id} disconnected")
         conn.close()
