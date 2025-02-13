@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+pygame.display.init()
 
 TANK_IMAGES = {
     (255,0,0): '0tank.png',
@@ -19,6 +20,7 @@ class Tank:
         self.colour = colour
         self.rect = pygame.Rect(x, y, width, height)
         self.vel = 3
+        
         
         self.image_path = TANK_IMAGES.get(self.colour)
         self._load_image()

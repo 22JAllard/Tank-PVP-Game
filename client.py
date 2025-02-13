@@ -17,7 +17,9 @@ network = None
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
+print("aaaa")
 window = pygame.display.set_mode((screen_width,screen_height), pygame.FULLSCREEN)
+print("bbbbb")
 pygame.display.set_caption("Tank PVP Game")
 
 clock = pygame.time.Clock()
@@ -80,6 +82,7 @@ def server_connect():
     server_connect_text.draw(window)
 
     global entered_ip
+    entered_ip = "192.168.1.110"
     entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
