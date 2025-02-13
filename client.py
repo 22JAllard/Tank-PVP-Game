@@ -170,7 +170,7 @@ def game():
                 break
             
             # Clear screen and draw map
-            window.fill((255, 255, 255))
+            window.fill((0, 0, 0))
             game_map.draw(window)
             
             # Simplified player drawing
