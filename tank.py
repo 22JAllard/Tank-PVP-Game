@@ -18,14 +18,14 @@ class Tank:
         self.height = self.y
         self.colour = colour
         # self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 0.1
+        self.vel = 1
         
         self.image_path = TANK_IMAGES.get(self.colour)
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
             self.image = pygame.image.load(self.image_path)
-            #self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
+
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
 
@@ -40,6 +40,7 @@ class Tank:
 
     def draw(self, win, scale):
         #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
+        self.image = pygame.transform.scale(self.image, (scale *(0.6), scale))
         win.blit(self.image,(self.x, self.y))
 
     def move(self):
@@ -72,4 +73,3 @@ class Tank:
         self.y = scale * self.y
         self.width = scale
         self.height = scale
-        
