@@ -36,7 +36,7 @@ def player_connected(client_colour):
     x, y = player_positions[position_index]
     
     # Create new tank
-    new_tank = Tank(x, y, client_colour, 40, 40)  # Default red color
+    new_tank = Tank(x, y, client_colour)  # Default red color
     players[current_id] = new_tank
     
     player_id = current_id

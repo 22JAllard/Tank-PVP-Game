@@ -16,6 +16,7 @@ window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
+scale = screen_height//50
 
 clock = pygame.time.Clock()
 mapnumber = None
@@ -149,6 +150,7 @@ def game():
         player.colour = client_colour
         
         #player.shrink(screen_height)
+        player.scale(scale)
         running = True
         # Added network.connected check
         while running and network.connected:  
@@ -175,7 +177,8 @@ def game():
             
             # Simplified player drawing
             for player_id, tank in players.items():
-                tank.draw(window)
+                global scale
+                tank.draw(window)#
             
             pygame.display.update()
             

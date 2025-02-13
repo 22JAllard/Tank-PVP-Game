@@ -11,22 +11,21 @@ TANK_IMAGES = {
 }
 
 class Tank:
-    def __init__(self, x, y, colour, width, height):
+    def __init__(self, x, y, colour):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.width = self.x
+        self.height = self.y
         self.colour = colour
-        self.rect = pygame.Rect(x, y, width, height)
+        # self.rect = pygame.Rect(x, y, width, height)
         self.vel = 3
         
         self.image_path = TANK_IMAGES.get(self.colour)
-        self._load_image()
     
-    def _load_image(self, screen_height):
+    def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
             self.image = pygame.image.load(self.image_path)
-            self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
+            #self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
 
@@ -37,7 +36,7 @@ class Tank:
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self._load_image()
+        self.load_image()
 
 
     def draw(self, win):
@@ -66,3 +65,7 @@ class Tank:
 
     def shrink(self, screen_height):
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
+
+    def scale(self, scale):
+        self.width *= scale
+        self.height *= scale
