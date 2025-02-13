@@ -25,7 +25,7 @@ class Tank:
     
     def _load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
-            self.image = pygame.image.load(self.image_path)
+            self.image = pygame.image.load(self.image_path).convert_alpha()
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
 

@@ -18,6 +18,7 @@ maplimit = 1
 mapnumber = random.randint(1,maplimit)
 players = {}
 current_id = 0
+player_id = None
 
 player_positions = [
 
@@ -99,10 +100,7 @@ def client_thread(conn):
             print(f"Player {player_id} disconnected")
         conn.close()
 
-
-
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
     print(f"Connected from: {addr}")
     start_new_thread(client_thread, (conn,))
-
