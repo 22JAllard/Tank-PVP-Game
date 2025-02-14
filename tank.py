@@ -45,8 +45,17 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-    def move(self):
+    def move(self, map_grid):
         keys = pygame.key.get_pressed()
+
+        for tile in map_grid:
+
+                if tile[0].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+                    dx =0
+                if tile[0].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+                    if self.vel_y < 0: 
+                        dy = tile[0].bottom - self.rect.top
+                        self.vel_y=0
 
         if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
             self.rotation = 135
@@ -67,7 +76,6 @@ class Tank:
             self.rotation = 225
             self.x -= self.vel
             self.y -= self.vel
-
 
         elif keys[pygame.K_LEFT]:
             self.x -= self.vel
