@@ -89,7 +89,8 @@ class Tank:
 
         
 
-        self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
+        #self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
+        self.collision_rect = self.rect.move(dx, dy)
 
         self.scaled_x = self.collision_rect[0]//scale 
         self.scaled_y = self.collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
