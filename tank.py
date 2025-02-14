@@ -12,16 +12,16 @@ TANK_IMAGES = {
 
 class Tank:
     def __init__(self, x, y, colour):
+
         self.x = x
         self.y = y
-        self.width = self.x
-        self.height = self.y
+        self.width = 50  
+        self.height = 50  
         self.colour = colour
-        
         self.vel = 1
         self.rotation = 0
-        
         self.image_path = TANK_IMAGES.get(self.colour)
+        self.rect = pygame.Rect(x, y, self.width, self.height)
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -47,53 +47,60 @@ class Tank:
 
     def move(self, map_grid):
         keys = pygame.key.get_pressed()
+        dx = 0
+        dy = 0
 
         if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
             self.rotation = 135
-            self.x += self.vel
-            self.y -= self.vel
+            dx = self.vel
+            dy = -self.vel
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
             self.rotation = 45
-            self.x += self.vel
-            self.y += self.vel
+            dx = self.vel
+            dy = self.vel
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
             self.rotation = 315
-            self.x -= self.vel
-            self.y += self.vel
+            dx = -self.vel
+            dy = self.vel
 
         elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
             self.rotation = 225
-            self.x -= self.vel
-            self.y -= self.vel
+            dx = -self.vel
+            dy = -self.vel
 
         elif keys[pygame.K_LEFT]:
-            self.x -= self.vel
+            dx = -self.vel
             self.rotation = 270
 
         elif keys[pygame.K_RIGHT]:
-            self.x += self.vel
+            dx = self.vel
             self.rotation = 90
 
         elif keys[pygame.K_UP]:
-            self.y -= self.vel
+            dy = -self.vel
             self.rotation = 180
 
         elif keys[pygame.K_DOWN]:
-            self.y += self.vel
+            dy = self.vel
             self.rotation = 0
+
+        originalx = self.x
+        originaly = self.y
+
+        self.x += dx
+        self.y += dy
 
         collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
 
-        for tile in map_grid:
+        for tile_img, tile_rect in map_grid:
 
-                if tile[1].colliderect(collision_rect):
-                    self.vel =0
-                if tile[1].colliderect(collision_rect):
-                    if self.vel < 0: 
-                        self.vel = tile[1].bottom - self.rect.top
-                        self.vel = 0
+                if tile_rect.colliderect(collision_rect):
+                    if self.is_solid_tile((tile_img, tile_rect)):
+                        self.x = originalx
+                        self.y = originaly
+                        break
 
         self.update()
         
@@ -109,3 +116,11 @@ class Tank:
         self.width = scale
         self.height = scale
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+    
+    def is_solid_tile(self, tile):
+        try:
+            color = tile[0].get_at((0, 0))
+            return color[0] > 100
+        
+        except:
+            return False
