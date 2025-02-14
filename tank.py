@@ -48,17 +48,6 @@ class Tank:
     def move(self, map_grid):
         keys = pygame.key.get_pressed()
 
-        collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
-
-        for tile in map_grid:
-
-                if tile[0].colliderect(collision_rect):
-                    self.vel =0
-                if tile[0].colliderect(collision_rect):
-                    if self.vel_y < 0: 
-                        self.vel = tile[0].bottom - self.rect.top
-                        self.vel_y=0
-
         if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
             self.rotation = 135
             self.x += self.vel
@@ -94,6 +83,17 @@ class Tank:
         elif keys[pygame.K_DOWN]:
             self.y += self.vel
             self.rotation = 0
+
+        collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
+
+        for tile in map_grid:
+
+                if tile[1].colliderect(collision_rect):
+                    self.vel =0
+                if tile[1].colliderect(collision_rect):
+                    if self.vel < 0: 
+                        self.vel = tile[1].bottom - self.rect.top
+                        self.vel = 0
 
         self.update()
         
