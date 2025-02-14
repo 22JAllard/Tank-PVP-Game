@@ -19,7 +19,7 @@ class Tank:
         self.colour = colour
         # self.rect = pygame.Rect(x, y, width, height)
         self.vel = 1
-        print("velocity", self.vel)
+        self.rotation = 0
         
         self.image_path = TANK_IMAGES.get(self.colour)
     
@@ -42,24 +42,49 @@ class Tank:
     def draw(self, win, scale):
         #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
         self.image = pygame.transform.scale(self.image, (scale *(0.6), scale))
+        self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
     def move(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LEFT]:
-            self.x -= self.vel
-            print(self.x)
-
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
+            self.rotation = 135
             self.x += self.vel
-            print(self.x)
-        if keys[pygame.K_UP]:
             self.y -= self.vel
-            print(self.y)
-        if keys[pygame.K_DOWN]:
+
+        elif keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
+            self.rotation = 45
+            self.x += self.vel
             self.y += self.vel
-            print(self.y)
+
+        elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
+            self.rotation = 315
+            self.x -= self.vel
+            self.y += self.vel
+
+        elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
+            self.rotation = 225
+            self.x -= self.vel
+            self.y -= self.vel
+
+
+        elif keys[pygame.K_LEFT]:
+            self.x -= self.vel
+            self.rotation = 270
+
+        elif keys[pygame.K_RIGHT]:
+            self.x += self.vel
+            self.rotation = 90
+
+        elif keys[pygame.K_UP]:
+            self.y -= self.vel
+            self.rotation = 180
+
+        elif keys[pygame.K_DOWN]:
+            self.y += self.vel
+            self.rotation = 0
+
         self.update()
         
     def update(self):
