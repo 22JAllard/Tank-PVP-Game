@@ -17,7 +17,7 @@ class Tank:
         self.width = self.x
         self.height = self.y
         self.colour = colour
-        # self.rect = pygame.Rect(x, y, width, height)
+        
         self.vel = 1
         self.rotation = 0
         
@@ -108,3 +108,4 @@ class Tank:
         self.y = scale * self.y
         self.width = scale
         self.height = scale
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
