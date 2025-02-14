@@ -95,7 +95,6 @@ class Tank:
         collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
 
         for tile_img, tile_rect in map_grid:
-
                 if tile_rect.colliderect(collision_rect):
                     if self.is_solid_tile((tile_img, tile_rect)):
                         self.x = originalx
