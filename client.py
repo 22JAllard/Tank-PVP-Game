@@ -26,6 +26,7 @@ entered_ip = ""
 colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
+wall_rects = []
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -46,6 +47,7 @@ class Map:
             print(f"Error loading images: {error}")
             return
 
+        global wall_rects
         for row_index, row in enumerate(data):
             for col_index, char in enumerate(row):
                 x = col_index * self.tile_size
@@ -57,6 +59,8 @@ class Map:
                     img_rect.x = x
                     img_rect.y = y
                     self.tile_list.append((img, img_rect))
+                    wall_rects.append(img_rect)
+
                 elif char == '1':
                     img = pygame.transform.scale(self.dirt_path_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
@@ -162,7 +166,7 @@ def game():
                     network.disconnect()
                 
             map_grid = game_map.tile_list 
-            player.move(map_grid, scale)
+            player.move(map_grid, scale, wall_rects)
             
             # Send player data and get updated players
             players = network.send(player)
