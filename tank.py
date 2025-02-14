@@ -45,7 +45,7 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-    def move(self, map_grid):
+    def move(self, map_grid, scale):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
@@ -94,12 +94,8 @@ class Tank:
 
         collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
 
-        for tile_img, tile_rect in map_grid:
-                if tile_rect.colliderect(collision_rect):
-                    if self.is_solid_tile((tile_img, tile_rect)):
-                        self.x = originalx
-                        self.y = originaly
-                        break
+        self.scaled_x = collision_rect[0]//scale 
+        self.scaled_y = collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
 
         self.update()
         
