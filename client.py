@@ -166,7 +166,7 @@ def game():
                     network.disconnect()
                 
             map_grid = game_map.tile_list 
-            player.move(map_grid, scale, wall_rects)
+            player.move(map_grid, scale, wall_rects, window)
             
             # Send player data and get updated players
             players = network.send(player)

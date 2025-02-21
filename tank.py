@@ -18,11 +18,13 @@ class Tank:
         self.width = 50  
         self.height = 50  
         self.colour = colour
-        self.vel = 1
+        self.vel = 2
         self.rotation = 0
         self.image_path = TANK_IMAGES.get(self.colour)
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.wall_rects = []
+        self.bullet_x = self.x
+        self.bullet_y = self.y
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -46,7 +48,23 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-    def move(self, map_grid, scale, wall_rects):
+            
+    def tank_fire(self, win,scale):
+        self.bullet_x = self.x
+        self.bullet_y = self.y
+        pygame.draw.circle(win, (255,255,255), (self.bullet_x, self.bullet_y), 2, 2)
+        pygame.display.flip()
+        # self.bullet = pygame.rect(self.bullet_x, self.bullet_y, 2, 2)
+        # pygame.draw.rect(win,(255,255,255),self.bullet)
+        #win.blit(self.bullet, (self.bullet_x, self.bullet_y))
+        #pygame.draw.rect(win, (255,255,255), self.rect)
+
+        print(self.x, self.y)
+        print(self.bullet_x, self.bullet_y)
+
+        print("fired")
+
+    def move(self, map_grid, scale, wall_rects, win):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
@@ -87,7 +105,8 @@ class Tank:
             dy = self.vel
             self.rotation = 0
 
-        
+        if keys[pygame.K_f]:
+            self.tank_fire(win, scale)
 
         #self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
         self.collision_rect = self.rect.move(dx, dy)
@@ -118,7 +137,7 @@ class Tank:
         self.height = scale
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
     
-    def is_solid_tile(self, tile):
+    def is_solid_tile(self, tile,):
         try:
             color = tile[0].get_at((0, 0))
             return color[0] > 100
