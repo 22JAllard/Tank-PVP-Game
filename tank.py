@@ -55,10 +55,29 @@ class Tank:
         pygame.draw.circle(win, self.colour, (self.bullet_x, self.bullet_y), 2, 2)
         pygame.display.flip()
 
-        print(scale)
-        print(self.width, self.height)
-        print(self.x, self.y)
-        print(self.bullet_x, self.bullet_y)
+        bullet_speed = 1
+        bullet_diagonal_speed = (bullet_speed ** 2 + bullet_speed ** 2) ** 0.5
+
+        if self.rotation == 0:
+            self.bullet_y += bullet_speed
+        elif self.rotation == 45:
+            self.bullet_x += bullet_diagonal_speed
+            self.bullet_y += bullet_diagonal_speed
+        elif self.rotation == 90:
+            self.bullet_x += bullet_speed
+        elif self.rotation == 135:
+            self.bullet_x += bullet_diagonal_speed
+            self.bullet_y -= bullet_diagonal_speed
+        elif self.rotation == 180:
+            self.bullet_y -= bullet_speed
+        elif self.rotation == 225:
+            self.bullet_x -= bullet_diagonal_speed
+            self.bullet_y -= bullet_diagonal_speed
+        elif self.rotation == 270:
+            self.bullet_x -= bullet_speed
+        elif self.rotation == 315:
+            self.bullet_x -= bullet_diagonal_speed
+            self.bullet_y += bullet_diagonal_speed
 
         print("fired")
 
