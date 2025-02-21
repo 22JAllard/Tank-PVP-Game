@@ -15,7 +15,7 @@ class Tank:
 
         self.x = x
         self.y = y
-        self.width = 50  
+        self.width = 30  
         self.height = 50  
         self.colour = colour
         self.vel = 2
@@ -23,12 +23,14 @@ class Tank:
         self.image_path = TANK_IMAGES.get(self.colour)
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.wall_rects = []
-        self.bullet_x = self.x
-        self.bullet_y = self.y
+        self.bullet_x = x
+        self.bullet_y = y
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
             self.image = pygame.image.load(self.image_path)
+            self.width = self.image.get_width()
+            self.height = self.image.get_height()
 
         else:
             raise ValueError(f"No image path found for colour {self.colour}")
@@ -50,15 +52,11 @@ class Tank:
 
             
     def tank_fire(self, win,scale):
-        self.bullet_x = self.x
-        self.bullet_y = self.y
-        pygame.draw.circle(win, (255,255,255), (self.bullet_x, self.bullet_y), 2, 2)
+        pygame.draw.circle(win, self.colour, (self.bullet_x, self.bullet_y), 2, 2)
         pygame.display.flip()
-        # self.bullet = pygame.rect(self.bullet_x, self.bullet_y, 2, 2)
-        # pygame.draw.rect(win,(255,255,255),self.bullet)
-        #win.blit(self.bullet, (self.bullet_x, self.bullet_y))
-        #pygame.draw.rect(win, (255,255,255), self.rect)
 
+        print(scale)
+        print(self.width, self.height)
         print(self.x, self.y)
         print(self.bullet_x, self.bullet_y)
 
@@ -73,37 +71,53 @@ class Tank:
             self.rotation = 135
             dx = self.vel
             dy = -self.vel
+            self.bullet_x = self.x +scale
+            self.bullet_y = self.y 
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
             self.rotation = 45
             dx = self.vel
             dy = self.vel
+            self.bullet_x = self.x + scale
+            self.bullet_y = self.y + scale
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
             self.rotation = 315
             dx = -self.vel
             dy = self.vel
+            self.bullet_x = self.x 
+            self.bullet_y = self.y + scale
 
         elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
             self.rotation = 225
             dx = -self.vel
             dy = -self.vel
+            self.bullet_x = self.x
+            self.bullet_y = self.y
 
         elif keys[pygame.K_LEFT]:
             dx = -self.vel
             self.rotation = 270
+            self.bullet_x = self.x 
+            self.bullet_y = self.y + scale * 0.3
 
         elif keys[pygame.K_RIGHT]:
             dx = self.vel
             self.rotation = 90
+            self.bullet_x = self.x + scale
+            self.bullet_y = self.y + scale * 0.3
 
         elif keys[pygame.K_UP]:
             dy = -self.vel
             self.rotation = 180
+            self.bullet_x = self.x + scale * 0.3
+            self.bullet_y = self.y 
 
         elif keys[pygame.K_DOWN]:
             dy = self.vel
             self.rotation = 0
+            self.bullet_x = self.x + scale * 0.3
+            self.bullet_y = self.y +scale
 
         if keys[pygame.K_f]:
             self.tank_fire(win, scale)
@@ -133,7 +147,7 @@ class Tank:
     def scale(self, scale):
         self.x = scale * self.x
         self.y = scale * self.y
-        self.width = scale
+        self.width = scale * 0.6
         self.height = scale
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
     
