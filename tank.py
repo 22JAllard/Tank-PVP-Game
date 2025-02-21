@@ -56,9 +56,9 @@ class Tank:
         pygame.display.flip()
 
         bullet_speed = 1
-        bullet_diagonal_speed = (bullet_speed ** 2 + bullet_speed ** 2) ** 0.5
+        bullet_diagonal_speed = (bullet_speed ** 2 + bullet_speed ** 2) ** 0.5 #1 should be hypotenuse, and x/y less than 1
 
-        if self.rotation == 0:
+        if self.rotation == 0: 
             self.bullet_y += bullet_speed
         elif self.rotation == 45:
             self.bullet_x += bullet_diagonal_speed
