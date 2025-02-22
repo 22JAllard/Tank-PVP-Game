@@ -79,8 +79,6 @@ class Tank:
             self.bullet_x -= bullet_diagonal_speed
             self.bullet_y += bullet_diagonal_speed
 
-        print("fired")
-
     def move(self, map_grid, scale, wall_rects, win):
         keys = pygame.key.get_pressed()
         dx = 0
