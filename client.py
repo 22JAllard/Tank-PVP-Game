@@ -5,15 +5,12 @@ import pickle
 from os import path
 from tank import Tank
 #from map import Map
-import threading
 
 pygame.init()
 run = True
 network = None
 
 window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-
-clock = pygame.time.Clock()
 
 #stores info about client screen size
 display = pygame.display.Info()
@@ -169,7 +166,7 @@ def game():
                     network.disconnect()
                 
             map_grid = game_map.tile_list 
-            player.move(map_grid, scale, wall_rects, window)
+            player.move(map_grid, scale, wall_rects)
             
             # Send player data and get updated players
             players = network.send(player)

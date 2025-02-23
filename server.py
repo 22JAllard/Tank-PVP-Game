@@ -4,7 +4,6 @@ import pickle
 import random
 from os import path
 from tank import Tank
-import threading
 
 server = "0.0.0.0"
 port = 5555
