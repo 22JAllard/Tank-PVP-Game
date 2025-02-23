@@ -5,12 +5,15 @@ import pickle
 from os import path
 from tank import Tank
 #from map import Map
+import threading
 
 pygame.init()
 run = True
 network = None
 
 window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+
+clock = pygame.time.Clock()
 
 #stores info about client screen size
 display = pygame.display.Info()

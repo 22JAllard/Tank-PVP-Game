@@ -1,5 +1,7 @@
 import pygame
 pygame.init()
+import threading
+clock = pygame.time.Clock()
 
 TANK_IMAGES = {
     (255,0,0): '0tank.png',
@@ -25,6 +27,8 @@ class Tank:
         self.wall_rects = []
         self.bullet_x = x
         self.bullet_y = y
+        self.bullet_x_start = x
+        self.bullet_y_start = y
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -50,14 +54,7 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-            
-    def tank_fire(self, win,scale):
-        pygame.draw.circle(win, self.colour, (self.bullet_x, self.bullet_y), 2, 2)
-        pygame.display.flip()
-
-        bullet_speed = 1
-        bullet_diagonal_speed = (bullet_speed ** 2 + bullet_speed ** 2) ** 0.5 #1 should be hypotenuse, and x/y less than 1
-
+    def firing(self, bullet_speed, bullet_diagonal_speed, win):
         if self.rotation == 0: 
             self.bullet_y += bullet_speed
         elif self.rotation == 45:
@@ -78,6 +75,26 @@ class Tank:
         elif self.rotation == 315:
             self.bullet_x -= bullet_diagonal_speed
             self.bullet_y += bullet_diagonal_speed
+        print(self.firetime)
+        pygame.draw.circle(win, self.colour, (self.bullet_x, self.bullet_y), 2, 2)
+        pygame.display.update()
+        self.firetime -=1
+
+    def tank_fire(self, win,scale):
+        self.firetime = 100
+        self.bullet_x = self.bullet_x_start
+        self.bullet_y = self.bullet_y_start
+        print("hello")
+
+        bullet_speed = 2
+        bullet_diagonal_speed = ((2 ** 0.5) ** -2) * bullet_speed #1 should be hypotenuse, and x/y less than 1
+
+        if self.firetime > 0:
+            self.firing(bullet_speed, bullet_diagonal_speed, win)
+
+        else:
+            self.bullet_x = self.bullet_x_start
+            self.bullet_y = self.bullet_y_start
 
     def move(self, map_grid, scale, wall_rects, win):
         keys = pygame.key.get_pressed()
@@ -95,48 +112,49 @@ class Tank:
             self.rotation = 45
             dx = self.vel
             dy = self.vel
-            self.bullet_x = self.x + scale
-            self.bullet_y = self.y + scale
+            self.bullet_x_start = self.x + scale
+            self.bullet_y_start = self.y + scale
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
             self.rotation = 315
             dx = -self.vel
             dy = self.vel
-            self.bullet_x = self.x 
-            self.bullet_y = self.y + scale
+            self.bullet_x_start = self.x 
+            self.bullet_y_start = self.y + scale
 
         elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
             self.rotation = 225
             dx = -self.vel
             dy = -self.vel
-            self.bullet_x = self.x
-            self.bullet_y = self.y
+            self.bullet_x_start = self.x
+            self.bullet_y_start = self.y
 
         elif keys[pygame.K_LEFT]:
             dx = -self.vel
             self.rotation = 270
-            self.bullet_x = self.x 
-            self.bullet_y = self.y + scale * 0.3
+            self.bullet_x_start = self.x 
+            self.bullet_y_start = self.y + scale * 0.3
 
         elif keys[pygame.K_RIGHT]:
             dx = self.vel
             self.rotation = 90
-            self.bullet_x = self.x + scale
-            self.bullet_y = self.y + scale * 0.3
+            self.bullet_x_start = self.x + scale
+            self.bullet_y_start = self.y + scale * 0.3
 
         elif keys[pygame.K_UP]:
             dy = -self.vel
             self.rotation = 180
-            self.bullet_x = self.x + scale * 0.3
-            self.bullet_y = self.y 
+            self.bullet_x_start = self.x + scale * 0.3
+            self.bullet_y_start = self.y 
 
         elif keys[pygame.K_DOWN]:
             dy = self.vel
             self.rotation = 0
-            self.bullet_x = self.x + scale * 0.3
-            self.bullet_y = self.y +scale
+            self.bullet_x_start = self.x + scale * 0.3
+            self.bullet_y_start = self.y +scale
 
         if keys[pygame.K_f]:
+            
             self.tank_fire(win, scale)
 
         #self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
