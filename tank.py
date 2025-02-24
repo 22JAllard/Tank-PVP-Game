@@ -22,7 +22,6 @@ class Tank:
         self.rotation = 0
         self.image_path = TANK_IMAGES.get(self.colour)
         self.rect = pygame.Rect(x, y, self.width, self.height)
-        self.wall_rects = []
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -46,7 +45,7 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-    def move(self, map_grid, scale, wall_rects):
+    def move(self, map_grid, scale):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
@@ -87,29 +86,26 @@ class Tank:
             dy = self.vel
             self.rotation = 0
 
-        
+        originalx = self.x
+        originaly = self.y
 
-        #self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
-        self.collision_rect = self.rect.move(dx, dy)
+        self.x += dx
+        self.y += dy
 
-        self.scaled_x = self.collision_rect[0]//scale 
-        self.scaled_y = self.collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
+        collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
 
-        if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
-            self.x += dx
-            self.y += dy
-
-        # print(map_grid[:1])
+        self.scaled_x = collision_rect[0]//scale 
+        self.scaled_y = collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
 
         
-        # for i in range(0,50):
-        #     map_numerical_grid = map_grid[i][1][:1]//scale
-        #     print(map_numerical_grid)
 
         self.update()
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def shrink(self, screen_height):
+        self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
 
     def scale(self, scale):
         self.x = scale * self.x
