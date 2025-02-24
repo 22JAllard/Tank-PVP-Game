@@ -78,7 +78,10 @@ def client_thread(conn):
     try:
         print("Sending map data, map number = ", mapnumber)
 
-        client_colour = pickle.loads(conn.recv(2048))
+        colour_and_scale_data = pickle.loads(conn.recv(2048))
+        client_colour = colour_and_scale_data(0)
+        client_scale = colour_and_scale_data(1)
+        print(client_colour, client_scale)
         player_id = player_connected(client_colour)
         print(f"New player connected. ID: {player_id}")
         

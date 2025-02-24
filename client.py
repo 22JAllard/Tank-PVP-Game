@@ -115,7 +115,7 @@ def play_menu():
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             global network
-            network = Network(server_ip, client_colour)
+            network = Network(server_ip, client_colour, scale)
 
             initial_data = network.initial_data
             if initial_data:
@@ -169,6 +169,8 @@ def game():
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
             #add something for checking for tank firing 
+            player.fired()
+
             
             # Send player data and get updated players
             players = network.send(player)

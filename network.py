@@ -3,15 +3,15 @@ import pickle
 import pygame
 
 class Network:
-    def __init__ (self, server_ip, client_colour):
+    def __init__ (self, server_ip, client_colour, scale):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = server_ip #ip address of server
         print("Connecting to server: ", self.server)
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.initial_data = self.connect(client_colour)
+        self.initial_data = self.connect(client_colour, scale)
 
-    def connect (self, client_colour):
+    def connect (self, client_colour, scale):
         try:
             self.client.connect(self.addr)
             self.client.settimeout(5.0)  # 5 second timeout
@@ -19,7 +19,7 @@ class Network:
             print("Connected successfully")
             
             # Send client color
-            self.client.send(pickle.dumps(client_colour))
+            self.client.send(pickle.dumps(client_colour, scale))
             
             # Receive initial data
             data = self.client.recv(2048)

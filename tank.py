@@ -46,7 +46,7 @@ class Tank:
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x, self.y))
 
-    def move(self, map_grid, scale):
+    def move(self, map_grid, scale, wall_rects):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
@@ -121,12 +121,15 @@ class Tank:
         self.update()
 
     def fired(self):
+        
         #wait for client to press f
         #return something to client which can then bounce to server through network to make a new bullet instance
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_f]:
-            self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour)
-            return self.fire_data
+        print(self.bullet_x_start, self.bullet_y_start)
+        if keys[pygame.K_f] and self.bullet_x_start is not None and self.bullet_y_start is not None:
+            print("fired in tank py")
+            #self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
+            #return self.fire_data
 
         
     def update(self):
