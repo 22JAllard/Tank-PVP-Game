@@ -55,37 +55,57 @@ class Tank:
             self.rotation = 135
             dx = self.vel
             dy = -self.vel
+            self.bullet_x = self.x +scale
+            self.bullet_y = self.y 
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
             self.rotation = 45
             dx = self.vel
             dy = self.vel
+            self.bullet_x_start = self.x + scale
+            self.bullet_y_start = self.y + scale
 
         elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
             self.rotation = 315
             dx = -self.vel
             dy = self.vel
+            self.bullet_x_start = self.x 
+            self.bullet_y_start = self.y + scale
 
         elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
             self.rotation = 225
             dx = -self.vel
             dy = -self.vel
+            self.bullet_x_start = self.x
+            self.bullet_y_start = self.y
 
         elif keys[pygame.K_LEFT]:
             dx = -self.vel
             self.rotation = 270
+            self.bullet_x_start = self.x 
+            self.bullet_y_start = self.y + scale * 0.3
 
         elif keys[pygame.K_RIGHT]:
             dx = self.vel
             self.rotation = 90
+            self.bullet_x_start = self.x + scale
+            self.bullet_y_start = self.y + scale * 0.3
 
         elif keys[pygame.K_UP]:
             dy = -self.vel
             self.rotation = 180
+            self.bullet_x_start = self.x + scale * 0.3
+            self.bullet_y_start = self.y 
 
         elif keys[pygame.K_DOWN]:
             dy = self.vel
             self.rotation = 0
+            self.bullet_x_start = self.x + scale * 0.3
+            self.bullet_y_start = self.y +scale
+
+        elif keys[pygame.K_f]:
+            pass
+            #tell server to make a new bullet
 
         originalx = self.x
         originaly = self.y

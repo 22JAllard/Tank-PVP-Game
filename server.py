@@ -18,6 +18,7 @@ for addr in addresses:
 maplimit = 1
 mapnumber = random.randint(1,maplimit)
 players = {}
+bullets = {}
 current_id = 0
 
 player_positions = [
