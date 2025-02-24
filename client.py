@@ -4,6 +4,7 @@ from network import Network
 import pickle
 from os import path
 from tank import Tank
+from bullet import Bullet
 #from map import Map
 
 pygame.init()

@@ -49,6 +49,7 @@ class Bullet:
             self.firetime -= 1
 
 #scale?
+    
 
 #update?
     def update(self,win):

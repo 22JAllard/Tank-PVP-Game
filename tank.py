@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+from bullet import Bullet
 
 TANK_IMAGES = {
     (255,0,0): '0tank.png',
