@@ -103,9 +103,7 @@ class Tank:
             self.bullet_x_start = self.x + scale * 0.3
             self.bullet_y_start = self.y +scale
 
-        elif keys[pygame.K_f]:
-            pass
-            #tell server to make a new bullet
+        
 
         originalx = self.x
         originaly = self.y
@@ -121,6 +119,15 @@ class Tank:
         
 
         self.update()
+
+    def fired(self):
+        #wait for client to press f
+        #return something to client which can then bounce to server through network to make a new bullet instance
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_f]:
+            self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour)
+            return self.fire_data
+
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

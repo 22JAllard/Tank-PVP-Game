@@ -168,10 +168,11 @@ def game():
                 
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
+            #add something for checking for tank firing 
             
             # Send player data and get updated players
             players = network.send(player)
-            # Added connection loss check
+            #send something about a bullet being fired??
             if not players:  
                 running = False
                 break
@@ -180,9 +181,10 @@ def game():
             window.fill((0, 0, 0))
             game_map.draw(window)
             
-            # Simplified player drawing
+            #  player drawing
             for player_id, tank in players.items():
                 tank.draw(window, scale)
+                #probably add a bullet.draw or smth or the sorts?
             
             pygame.display.update()
             

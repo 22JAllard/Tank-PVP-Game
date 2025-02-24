@@ -45,6 +45,14 @@ def player_connected(client_colour):
     current_id += 1
     return player_id
 
+def tank_fired():
+    #similar to player_connected
+    #called when a tank has fired (f key press)
+    #create a new instance of the bullet class, 
+    # ^which will start at the tanks bulletx/y pos, be the same colour as the tank, and connected to the firing tank using their player id
+
+    pass
+
 def loadlevel():
     level_file = f'map{mapnumber}.txt'
     if path.exists(level_file):
@@ -86,6 +94,7 @@ def client_thread(conn):
             try:
                 data = pickle.loads(conn.recv(2048))
                 players[player_id] = data
+                #add to send bullet data here?
                 
                 conn.sendall(pickle.dumps(players))
             except:
