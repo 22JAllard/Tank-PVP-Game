@@ -4,7 +4,7 @@ pygame.init()
 #bullet class
 
 class Bullet:
-    def __init__(self, x, y, colour, angle):
+    def __init__(self, x, y, colour, angle, player):
         self.x = x
         self.y = y
         self.radius = 3
@@ -13,6 +13,7 @@ class Bullet:
         self.bullet_diagonal_speed = ((2 ** 0.5) ** -2) * self.bullet_speed #1 should be hypotenuse, and x/y less than 1
         self.firetime = 100
         self.angle = angle #known as rotation in the tank class
+        self.player = player
 
 
 #draw function
@@ -49,7 +50,7 @@ class Bullet:
             self.firetime -= 1
 
 #scale?
-    
+
 
 #update?
     def update(self,win):
