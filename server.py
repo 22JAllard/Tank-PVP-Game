@@ -75,7 +75,7 @@ print("Server Started\nWaiting for connections...")
 
 TANK_IMAGES = {}
 
-def client_thread(conn):
+def client_thread(self, conn):
     
     try:
         print("Sending map data, map number = ", mapnumber)
@@ -84,7 +84,7 @@ def client_thread(conn):
         client_colour = colour_and_scale_data[0] #this bits new and above below
         client_scale = colour_and_scale_data[1]#
         print(client_colour, client_scale)#
-        player_id = player_connected(client_colour)
+        player_id = player_connected(client_colour, self.scale)
         print(f"New player connected. ID: {player_id}")
         
         initial_data = {
