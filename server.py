@@ -32,13 +32,13 @@ player_positions = [
 
 ]
 
-def player_connected(client_colour):
+def player_connected(client_colour, scale):
     global current_id
     position_index = len(players) % len(player_positions)
     x, y = player_positions[position_index]
     
     # Create new tank
-    new_tank = Tank(x, y, client_colour)  
+    new_tank = Tank(x, y, client_colour, scale)  
     players[current_id] = new_tank
     
     player_id = current_id

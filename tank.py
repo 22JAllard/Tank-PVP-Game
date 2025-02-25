@@ -12,7 +12,7 @@ TANK_IMAGES = {
 }
 
 class Tank:
-    def __init__(self, x, y, colour):
+    def __init__(self, x, y, colour, scale):
 
         self.x = x
         self.y = y
@@ -23,6 +23,9 @@ class Tank:
         self.rotation = 0
         self.image_path = TANK_IMAGES.get(self.colour)
         self.rect = pygame.Rect(x, y, self.width, self.height)
+        self.scale = scale
+        self.bullet_x_start = self.x + scale * 0.3
+        self.bullet_y_start = self.y +scale
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -138,7 +141,7 @@ class Tank:
     def shrink(self, screen_height):
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
 
-    def scale(self, scale):
+    def scalee(self, scale):
         self.x = scale * self.x
         self.y = scale * self.y
         self.width = scale
