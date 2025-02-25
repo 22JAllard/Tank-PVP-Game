@@ -15,7 +15,7 @@ class Network:
         try:
             print("1")
             self.client.connect(self.addr)
-            self.client.settimeout(6.0)  # 5 second timeout
+            self.client.settimeout(5.0)  # 5 second timeout
             self.connected = True
             print("Connected successfully")
             
