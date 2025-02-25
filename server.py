@@ -43,6 +43,7 @@ def player_connected(client_colour):
     
     player_id = current_id
     current_id += 1
+    print(player_id)
     return player_id
 
 def tank_fired():
@@ -75,6 +76,7 @@ print("Server Started\nWaiting for connections...")
 TANK_IMAGES = {}
 
 def client_thread(conn):
+    
     try:
         print("Sending map data, map number = ", mapnumber)
 
