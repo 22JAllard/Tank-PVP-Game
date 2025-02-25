@@ -13,33 +13,38 @@ class Network:
 
     def connect (self, client_colour, scale):
         try:
+            print("1")
             self.client.connect(self.addr)
-            self.client.settimeout(5.0)  # 5 second timeout
+            self.client.settimeout(6.0)  # 5 second timeout
             self.connected = True
             print("Connected successfully")
             
-            # Send client color
-            self.client.send(pickle.dumps(client_colour, scale))
+            print("2")
+            # Send client colour
+            colour_and_scale = (client_colour, scale)
+            self.client.send(pickle.dumps(colour_and_scale)) ####THE ISSUE WAS SCALE IS THE PROTOCOL
             
+            print("3")
             # Receive initial data
-            data = self.client.recv(2048)
+            data = self.client.recv(4096)
             if not data:
                 print("No initial data received")
                 return False
-                
+
+            print("4")
             return pickle.loads(data)
         except socket.timeout:
             print("Connection timed out")
             self.disconnect()
             return False
         except Exception as error:
-            print("Connection error:", error)
+            print("Connection error:", error)#
             self.disconnect()
             return False
             
     def receive_map_number(self):
         try:
-            data = self.client.recv(4096)
+            data = self.client.recv(8192)
             if data:
                 return pickle.loads(data)
             else:
@@ -58,7 +63,7 @@ class Network:
             self.client.send(pickle.dumps(data))
             
             # Receive updated game state
-            received_data = self.client.recv(2048)
+            received_data = self.client.recv(4096)
             if not received_data:
                 print("No data received from server")
                 self.disconnect()
