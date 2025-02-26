@@ -149,20 +149,17 @@ def game():
 
 #Get player tank through network
     try:
-        print("0")
         map_data = load_level()
         game_map = Map(map_data) #
         player = network.initial_data["tank"]
         player.colour = client_colour
         
-        print("1")
         #player.shrink(screen_height)
         global scale
         scale = int(scale)
         player.scalee(scale)
         running = True
         #Add network.connected check
-        print("2")
         while running and network.connected:  
             clock.tick(60)
             

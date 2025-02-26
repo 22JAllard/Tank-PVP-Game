@@ -25,7 +25,8 @@ class Tank:
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.scale = scale
         self.bullet_x_start = self.x + scale * 0.3
-        self.bullet_y_start = self.y +scale
+        self.bullet_y_start = self.y + scale
+        self.fireable = True
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -128,12 +129,11 @@ class Tank:
         #wait for client to press f
         #return something to client which can then bounce to server through network to make a new bullet instance
         keys = pygame.key.get_pressed()
-        print(self.bullet_x_start, self.bullet_y_start)
-        if keys[pygame.K_f] and self.bullet_x_start is not None and self.bullet_y_start is not None:
+        if keys[pygame.K_f] and self.bullet_x_start is not None and self.bullet_y_start is not None and self.fireable == True:
             print("fired in tank py")
-            #self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
-            #return self.fire_data
-
+            self.fireable = False
+            self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
+            return self.fire_data
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
