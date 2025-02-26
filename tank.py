@@ -115,12 +115,14 @@ class Tank:
         self.x += dx
         self.y += dy
 
-        collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
+        self.collision_rect = pygame.Rect(self.rect.x, self.rect.y, self.width, self.height)
 
-        self.scaled_x = collision_rect[0]//scale 
-        self.scaled_y = collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
+        self.scaled_x = self.collision_rect[0]//scale 
+        self.scaled_y = self.collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
 
-        
+        if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
+            self.x += dx
+            self.y += dy
 
         self.update()
 
