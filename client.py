@@ -192,7 +192,6 @@ def game():
             
             pygame.display.update()
             
-        print("3")
     except Exception as e:
         print(f"Error in game: {e}")
     finally:  # Added cleanup in finally block
