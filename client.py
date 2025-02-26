@@ -149,15 +149,20 @@ def game():
 
 #Get player tank through network
     try:
+        print("0")
         map_data = load_level()
         game_map = Map(map_data) #
         player = network.initial_data["tank"]
         player.colour = client_colour
         
+        print("1")
         #player.shrink(screen_height)
-        player.scale(scale)
+        global scale
+        scale = int(scale)
+        player.scalee(scale)
         running = True
-        # Added network.connected check
+        #Add network.connected check
+        print("2")
         while running and network.connected:  
             clock.tick(60)
             
@@ -190,6 +195,7 @@ def game():
             
             pygame.display.update()
             
+        print("3")
     except Exception as e:
         print(f"Error in game: {e}")
     finally:  # Added cleanup in finally block
