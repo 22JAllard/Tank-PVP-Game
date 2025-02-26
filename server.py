@@ -83,8 +83,8 @@ def client_thread(self):
         colour_and_scale_data = pickle.loads(conn.recv(2048))#
         client_colour = colour_and_scale_data[0] #this bits new and above below
         client_scale = colour_and_scale_data[1]#
-        print(client_colour, client_scale)#
-        player_id = player_connected(client_colour, self.scale)
+        print(client_colour, client_scale)##this is printed fine
+        player_id = player_connected(client_colour, client_scale) 
         print(f"New player connected. ID: {player_id}")
         
         initial_data = {
