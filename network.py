@@ -18,6 +18,7 @@ class Network:
             self.client.settimeout(5.0)  # 5 second timeout
             self.connected = True
             print("Connected successfully")
+
             
             print("2")
             # Send client colour

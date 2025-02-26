@@ -75,8 +75,8 @@ print("Server Started\nWaiting for connections...")
 
 TANK_IMAGES = {}
 
-def client_thread(self, conn):
-    
+def client_thread(self):
+    print("A")
     try:
         print("Sending map data, map number = ", mapnumber)
 
