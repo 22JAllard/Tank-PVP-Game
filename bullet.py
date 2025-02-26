@@ -19,9 +19,11 @@ class Bullet:
 #draw function
     def draw(self, win):
         pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius, self.radius)
+        print("Bullet: draw function")
 
 #move function
     def move(self):
+        print("Bullet: move function")
         if self.angle == 0: 
             self.y += self.bullet_speed
         elif self.angle == 45:
@@ -45,6 +47,7 @@ class Bullet:
 
 #lifetime function
     def firetimer(self):
+        print("Bullet: firetimer function")
         if self.firetime > 0:
             self.move()
             self.firetime -= 1
