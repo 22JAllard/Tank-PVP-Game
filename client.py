@@ -121,7 +121,7 @@ def play_menu():
             if initial_data:
                 global mapnumber 
                 mapnumber = initial_data["map_number"]
-                print("Selected map ", mapnumber)
+                print("Selected map", mapnumber)
                 no_map_number = False  
                 
                 world_data = load_level()
