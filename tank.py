@@ -127,8 +127,8 @@ class Tank:
         
         #wait for client to press f
         #return something to client which can then bounce to server through network to make a new bullet instance
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_f] and self.bullet_x_start is not None and self.bullet_y_start is not None and self.fireable == True:
+
+        if self.fireable == True:
             print("fired in tank py")
             self.fireable = False
             self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss

@@ -76,7 +76,6 @@ print("Server Started\nWaiting for connections...")
 TANK_IMAGES = {}
 
 def client_thread(self):
-    print("A")
     try:
         print("Sending map data, map number = ", mapnumber)
 
@@ -100,8 +99,11 @@ def client_thread(self):
                 data = pickle.loads(conn.recv(2048))
                 players[player_id] = data
                 #add to send bullet data here?
+                #? bullets[bullet_id] = data
+                # how to differentiate data?
                 
                 conn.sendall(pickle.dumps(players))
+                #? conn.sendall(pickle.dumps(bullets))
             except:
                 break
         

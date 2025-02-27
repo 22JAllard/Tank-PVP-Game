@@ -170,12 +170,17 @@ def game():
                 
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
+
             #add something for checking for tank firing 
-            fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-            
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_f]:
+                fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
+                print("fire data", fire_data)
             
             # Send player data and get updated players
+                bullets = network.send(fire_data)
             players = network.send(player)
+
             #send something about a bullet being fired??
             if not players:  
                 running = False

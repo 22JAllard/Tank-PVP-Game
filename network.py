@@ -86,3 +86,31 @@ class Network:
             self.client.close()
         except:
             pass
+
+    def send_bullet(self, data):
+        print("network, made it into send_bullet function")
+        if not self.connected:
+            return None
+            
+        try:
+            # Send bullet data
+            self.client.send(pickle.dumps(data))
+            print("made it into the try loop")
+            received_data = self.client.recv(4096)
+            if not received_data:
+                print("No data received from server")
+                self.disconnect()
+                return None
+
+        except socket.timeout:
+            print("Send/receive timed out")
+            self.disconnect()
+            return None
+        except socket.error as error:
+            print(f"Send error:", error)
+            self.disconnect()
+            return None
+        except Exception as error:
+            print(f"Unexpected error:", error)
+            self.disconnect()
+            return None
