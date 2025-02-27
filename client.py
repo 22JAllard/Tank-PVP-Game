@@ -186,7 +186,7 @@ def game():
                 
             
             # Send player data and get updated players
-                bullets = network.send(fire_data)
+                bullets = network.send_bullet(fire_data)
             players = network.send(player)
 
             #send something about a bullet being fired??
