@@ -99,8 +99,7 @@ def load_level():
     map_file = f'map{mapnumber}.txt'
     with open(map_file, 'r') as file:
         map_data = [list(line.strip()) for line in file]
-    print(f"Loaded map data: {len(map_data)} rows")
-    print(f"First row sample: {map_data[0][:10]}")  # Show first 10 chars
+    print(f"Loaded map data")
     return map_data
 
 def play_menu():
@@ -122,7 +121,7 @@ def play_menu():
             if initial_data:
                 global mapnumber 
                 mapnumber = initial_data["map_number"]
-                print("Received map number", mapnumber)
+                print("Selected map ", mapnumber)
                 no_map_number = False  
                 
                 world_data = load_level()
