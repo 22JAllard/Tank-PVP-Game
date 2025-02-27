@@ -29,6 +29,7 @@ tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255
 client_colour = tank_colours[colour_pos]
 wall_rects = []
 bullet_fireable = True
+map_unloaded = True
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -124,7 +125,12 @@ def play_menu():
                 print("Selected map", mapnumber)
                 no_map_number = False  
                 
-                world_data = load_level()
+                global map_unloaded
+                if map_unloaded:
+                    map_unloaded = False
+                    global world_data
+                    world_data = load_level()
+                
                 if world_data:
                     game_map = Map(world_data)
                     game()  
@@ -139,7 +145,7 @@ def play_menu():
 def game():
     global menu; menu = game
     global network
-    map_data = load_level()
+    map_data = world_data
     game_map = Map(map_data)
 
     if not network or not network.connected:
@@ -149,7 +155,7 @@ def game():
 
 #Get player tank through network
     try:
-        map_data = load_level()
+        #map_data = load_level()
         game_map = Map(map_data) #
         player = network.initial_data["tank"]
         player.colour = client_colour
