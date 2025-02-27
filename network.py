@@ -88,14 +88,13 @@ class Network:
             pass
 
     def send_bullet(self, data):
-        print("network, made it into send_bullet function")
         if not self.connected:
             return None
             
         try:
             # Send bullet data
             self.client.send(pickle.dumps(data))
-            print("made it into the try loop")
+            print(data)
             received_data = self.client.recv(4096)
             if not received_data:
                 print("No data received from server")
