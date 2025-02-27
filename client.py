@@ -172,7 +172,7 @@ def game():
             player.move(map_grid, scale, wall_rects)
             #add something for checking for tank firing 
             fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-
+            
             
             # Send player data and get updated players
             players = network.send(player)

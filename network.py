@@ -13,26 +13,22 @@ class Network:
 
     def connect (self, client_colour, scale):
         try:
-            print("1")
             self.client.connect(self.addr)
             self.client.settimeout(5.0)  # 5 second timeout
             self.connected = True
             print("Connected successfully")
 
             
-            print("2")
             # Send client colour
             colour_and_scale = (client_colour, scale)
             self.client.send(pickle.dumps(colour_and_scale)) ####THE ISSUE WAS SCALE IS THE PROTOCOL
             
-            print("3")
             # Receive initial data
             data = self.client.recv(4096)
             if not data:
                 print("No initial data received")
                 return False
 
-            print("4")
             return pickle.loads(data)
         except socket.timeout:
             print("Connection timed out")
