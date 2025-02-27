@@ -345,6 +345,7 @@ def main_menu():
 
 menu = main_menu
 while run:
+    clock.tick(60)
     menu()
 
     pygame.display.flip()
