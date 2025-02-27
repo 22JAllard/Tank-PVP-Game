@@ -28,6 +28,7 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 wall_rects = []
+bullet_fireable = True
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -158,24 +159,27 @@ def game():
         global scale
         scale = int(scale)
         player.scalee(scale)
-        running = True
+        running  =True
         #Add network.connected check
-        while running and network.connected:  
-            clock.tick(60)
+        while network.connected and running:
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                     network.disconnect()
-                
+                    
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
 
             #add something for checking for tank firing 
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_f]:
+            global bullet_fireable
+            if keys[pygame.K_f] and bullet_fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 print("fire data", fire_data)
+                bullet_fireable = False
+
+                
             
             # Send player data and get updated players
                 bullets = network.send(fire_data)

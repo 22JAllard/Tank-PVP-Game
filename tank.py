@@ -128,10 +128,8 @@ class Tank:
         #wait for client to press f
         #return something to client which can then bounce to server through network to make a new bullet instance
 
-        if self.fireable == True:
-            self.fireable = False
-            self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
-            return self.fire_data
+        self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
+        return self.fire_data
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
