@@ -155,7 +155,6 @@ def game():
 
 #Get player tank through network
     try:
-        #map_data = load_level()
         game_map = Map(map_data) #
         player = network.initial_data["tank"]
         player.colour = client_colour
