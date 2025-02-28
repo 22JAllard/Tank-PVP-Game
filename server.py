@@ -34,14 +34,14 @@ player_positions = [
 
 def player_connected(client_colour, scale):
     global current_id
-    position_index = len(players) % len(player_positions)
-    x, y = player_positions[position_index]
+    position_index = len(players) % len(player_positions) #working out which position to give the new tank
+    x, y = player_positions[position_index] #where the tank spawns
     
     # Create new tank
     new_tank = Tank(x, y, client_colour, scale)  
-    players[current_id] = new_tank
+    players[current_id] = new_tank #stores the new tank data in the servers player array. as a tuple with x co-ordinate, y co-ordinate, the colour, and the scale value for the client
     
-    player_id = current_id
+    player_id = current_id #which number is the player
     current_id += 1
     print(player_id)
     return player_id
@@ -84,6 +84,7 @@ def client_thread(self):
         client_scale = colour_and_scale_data[1]#
         print(client_colour, client_scale)##this is printed fine
         player_id = player_connected(client_colour, client_scale) 
+        #something which calls the bullet function
         print(f"New player connected. ID: {player_id}")
         
         initial_data = {
