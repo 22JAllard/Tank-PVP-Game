@@ -46,7 +46,7 @@ def player_connected(client_colour, scale):
     print(player_id)
     return player_id
 
-def tank_fired():
+def tank_fired(): #only run if fire_data being sent is not none
     #similar to player_connected
     #called when a tank has fired (f key press)
     #create a new instance of the bullet class, 
