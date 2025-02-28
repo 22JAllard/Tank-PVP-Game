@@ -51,6 +51,7 @@ def tank_fired(client_colour): #only run if fire_data being sent is not none
     #create a new instance of the bullet class, 
     # ^which will start at the tanks bulletx/y pos, be the same colour as the tank, and connected to the firing tank using their player id
 
+    # print(recieved data) #smth like that just to check that data is recieved correctly, then do stuff with it
     pass
 
     #new_bullet = Bullet(x, y, client_colour, client_angle)
