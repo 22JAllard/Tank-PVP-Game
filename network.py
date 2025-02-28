@@ -35,7 +35,7 @@ class Network:
             self.disconnect()
             return False
         except Exception as error:
-            print("Connection error:", error)#
+            print("Connection error:", error)
             self.disconnect()
             return False
             
