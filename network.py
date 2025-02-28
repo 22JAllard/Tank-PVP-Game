@@ -94,7 +94,7 @@ class Network:
         try:
             # Send bullet data
             self.client.send(pickle.dumps(data))
-            print(data)
+            print("Sending fire data:", data)
             received_data = self.client.recv(4096)
             if not received_data:
                 print("No data received from server")

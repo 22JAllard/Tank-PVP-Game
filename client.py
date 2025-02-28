@@ -163,7 +163,7 @@ def game():
         global scale
         scale = int(scale)
         player.scalee(scale)
-        running  =True
+        running = True
         #Add network.connected check
         while network.connected and running:
             
@@ -180,10 +180,7 @@ def game():
             global bullet_fireable
             if keys[pygame.K_f] and bullet_fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-                print("fire data", fire_data)
-                bullet_fireable = False
-
-                
+                bullet_fireable = False                
             
             # Send player data and get updated players
                 bullets = network.send_bullet(fire_data)
