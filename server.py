@@ -105,6 +105,7 @@ def client_thread(self):
                 #? bullets[bullet_id] = data
                 # how to differentiate data?
                 
+                
                 conn.sendall(pickle.dumps(players))
                 #? conn.sendall(pickle.dumps(bullets))
             except:

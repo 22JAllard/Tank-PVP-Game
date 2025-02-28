@@ -116,12 +116,12 @@ def play_menu():
         try:
             print("Attempting to connect to server. IP: ", server_ip)
             global network
-            network = Network(server_ip, client_colour, scale)
+            network = Network(server_ip, client_colour, scale) #creates a new instance of the network class, also where the connecting stuff is
 
             initial_data = network.initial_data
             if initial_data:
                 global mapnumber 
-                mapnumber = initial_data["map_number"]
+                mapnumber = initial_data["map_number"] #searching the recieved data from the server for the value with "map_number"
                 print("Selected map", mapnumber)
                 no_map_number = False  
                 

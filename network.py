@@ -25,6 +25,7 @@ class Network:
             
             # Receive initial data
             data = self.client.recv(4096)
+            print(pickle.loads(data))
             if not data:
                 print("No initial data received")
                 return False
