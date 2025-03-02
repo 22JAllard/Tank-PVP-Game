@@ -103,14 +103,14 @@ class Network:
                 return None
 
         except socket.timeout:
-            print("Send/receive timed out")
+            print("Send/receive timed out (bullet)")
             self.disconnect()
             return None
         except socket.error as error:
-            print(f"Send error:", error)
+            print(f"Send error (bullet):", error)
             self.disconnect()
             return None
         except Exception as error:
-            print(f"Unexpected error:", error)
+            print(f"Unexpected error (bullet):", error)
             self.disconnect()
             return None
