@@ -14,7 +14,7 @@ class Network:
     def connect (self, client_colour, scale):
         try:
             self.client.connect(self.addr)
-            self.client.settimeout(5.0)  # 5 second timeout
+            self.client.settimeout(10.0)  #10 second timeout
             self.connected = True
             print("Connected successfully")
 
@@ -58,15 +58,18 @@ class Network:
             
         try:
             # Send player data
+            print("Sending player data")
             self.client.send(pickle.dumps(data))
-            
-            # Receive updated game state
+            self.client.setblocking(True)
             received_data = self.client.recv(4096)
+
+
             if not received_data:
                 print("No data received from server")
                 self.disconnect()
                 return None
-                
+            print("Recieved updated players")
+  
             return pickle.loads(received_data)
         except socket.timeout:
             print("Send/receive timed out")
@@ -77,9 +80,10 @@ class Network:
             self.disconnect()
             return None
         except Exception as error:
-            print(f"Unexpected error:", error)
+            print(f"Unexpected error: {error}")
             self.disconnect()
             return None
+
         
     def disconnect(self):
         self.connected = False

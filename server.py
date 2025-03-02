@@ -77,11 +77,12 @@ print("Server Started\nWaiting for connections...")
 
 TANK_IMAGES = {}
 
-def client_thread(self):
+def client_thread(conn):
+    global players, current_id
     try:
         print("Sending map data, map number = ", mapnumber)
 
-        colour_and_scale_data = pickle.loads(conn.recv(2048))#
+        colour_and_scale_data = pickle.loads(conn.recv(4096))#
         client_colour = colour_and_scale_data[0] #this bits new and above below
         client_scale = colour_and_scale_data[1]#
         print("Connected clients colour: ",client_colour)
@@ -99,20 +100,28 @@ def client_thread(self):
 
         while True:
             try:
-                data = pickle.loads(conn.recv(2048))
-                players[player_id] = data
+                conn.setblocking(True)
+
+                data = conn.recv(4096)
+                if not data:
+                    print(f"Client {player_id} sent empty data, closing the connection")
+                    break
+                players[player_id] = pickle.loads(data)
+
                 #add to send bullet data here?
                 #? bullets[bullet_id] = data
                 # how to differentiate data?
-                
-                
                 conn.sendall(pickle.dumps(players))
                 #? conn.sendall(pickle.dumps(bullets))
-            except:
+            except ConnectionError as e:
+                print(f"Connection error for {player_id}: {e}")
+                break
+            except Exception as e:
+                print(f"Unexpected error for {player_id}: {e}")
                 break
         
     except Exception as e:
-        print("Error: ", e)
+        print("Initial connection error: ", e)
 
     finally:
 
