@@ -102,7 +102,7 @@ def client_thread(conn):
             try:
                 conn.setblocking(True)
 
-                data = conn.recv(4096)
+                data = conn.recv(4096) #just all the tank pos
                 if not data:
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
