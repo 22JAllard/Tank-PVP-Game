@@ -106,13 +106,21 @@ def client_thread(conn):
                 if not data:
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
-                players[player_id] = pickle.loads(data)
+                recieved_data = pickle.loads(data)
+                if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
+                    bullet_data = recieved_data[1] #might need to be a [1:]??
+                    bullet_id = f"{player_id}_{len(bullets)}"
+                    print(f"Recieved bullet data from {player_id}: {bullet_data}")
+                else:
+                    players[player_id] = recieved_data
+                    print(f"Receied tank data from {player_id}")
 
-                #add to send bullet data here?
-                #? bullets[bullet_id] = data
-                # how to differentiate data?
-                conn.sendall(pickle.dumps(players))
-                #? conn.sendall(pickle.dumps(bullets))
+                response_data = {
+                    "players": players,
+                    "bullets": bullets
+                }
+                conn.sendall(pickle.dumps(response_data))
+
             except ConnectionError as e:
                 print(f"Connection error for {player_id}: {e}")
                 break

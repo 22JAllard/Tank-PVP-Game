@@ -51,7 +51,7 @@ class Network:
             print("Error receiving map number:", e)
             return None
         
-    def send(self, data):
+    def send(self, data): #sends tank
         if not self.connected:
             return None
             
@@ -67,7 +67,7 @@ class Network:
                 self.disconnect()
                 return None
   
-            return pickle.loads(received_data)
+            return pickle.loads(received_data) #contains both tanks and bullets
         except socket.timeout:
             print("Send/receive timed out")
             self.disconnect()
@@ -95,14 +95,15 @@ class Network:
             
         try:
             # Send bullet data
-            data = ("Bullet", data)
-            self.client.send(pickle.dumps(data))
-            print("Sending fire data:", data)
+            bullet_data = ("Bullet", data)
+            self.client.send(pickle.dumps(bullet_data))
+            print("Sending bullet data:", bullet_data)
             received_data = self.client.recv(4096)
             if not received_data:
                 print("No data received from server")
                 self.disconnect()
                 return None
+            return pickle.loads(received_data)
 
         except socket.timeout:
             print("Send/receive timed out (bullet)")
