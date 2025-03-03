@@ -25,7 +25,6 @@ class Network:
             
             # Receive initial data
             data = self.client.recv(4096)
-            print(pickle.loads(data))
             if not data:
                 print("No initial data received")
                 return False
@@ -96,6 +95,7 @@ class Network:
             
         try:
             # Send bullet data
+            data = ("Bullet", data)
             self.client.send(pickle.dumps(data))
             print("Sending fire data:", data)
             received_data = self.client.recv(4096)
