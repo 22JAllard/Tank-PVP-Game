@@ -58,7 +58,6 @@ class Network:
             
         try:
             # Send player data
-            print("Sending player data")
             self.client.send(pickle.dumps(data))
             self.client.setblocking(True)
             received_data = self.client.recv(4096)
@@ -68,7 +67,6 @@ class Network:
                 print("No data received from server")
                 self.disconnect()
                 return None
-            print("Recieved updated players")
   
             return pickle.loads(received_data)
         except socket.timeout:
