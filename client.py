@@ -198,7 +198,7 @@ def game():
             #  player drawing
             
             for player_id, tank in players.items():
-                print(tank)
+                
                 tank.draw(window, scale)
                 #probably add a bullet.draw or smth or the sorts?
             
