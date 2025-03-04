@@ -144,8 +144,7 @@ def play_menu():
 
 def game():
     global menu; menu = game
-    global network
-    global players
+    global players, scale, world_data, wall_rects, network
     map_data = world_data
     game_map = Map(map_data)
 
@@ -153,6 +152,9 @@ def game():
         print("No network connected")
         menu = main_menu
         return
+    
+    if 'players' not in globals():
+        players={}
 
 #Get player tank through network
     try:
@@ -176,15 +178,12 @@ def game():
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
 
-                
+
             
             
 
             #send something about a bullet being fired??
-            if not players:  
-                running = False
-                break
-            
+
             # Clear screen and draw map
             window.fill((0, 0, 0))
             game_map.draw(window)
