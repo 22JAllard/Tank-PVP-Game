@@ -145,6 +145,7 @@ def play_menu():
 def game():
     global menu; menu = game
     global network
+    global players
     map_data = world_data
     game_map = Map(map_data)
 
@@ -175,16 +176,9 @@ def game():
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
 
-            #add something for checking for tank firing 
-            keys = pygame.key.get_pressed()
-            global bullet_fireable
-            if keys[pygame.K_f] and bullet_fireable:
-                fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-                bullet_fireable = False                
+                
             
-            # Send player data and get updated players
-                bullets = network.send_bullet(fire_data)
-            players = network.send(player)
+            
 
             #send something about a bullet being fired??
             if not players:  
@@ -196,11 +190,32 @@ def game():
             game_map.draw(window)
             
             #  player drawing
-            
+           
+            bullets = []
             for player_id, tank in players.items():
-                
+                print(tank)
                 tank.draw(window, scale)
                 #probably add a bullet.draw or smth or the sorts?
+
+                        #add something for checking for tank firing 
+                keys = pygame.key.get_pressed()
+
+                if keys[pygame.K_f] and tank.fireable:
+                    fire_data = tank.fired() #this then needs to be sent to the server to make a new instance of bullet
+                    if fire_data:
+                        bullet_x, bullet_y, angle, colour = fire_data
+                        bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
+                    bullet_fireable = False
+
+            for bullet in bullets[:]:
+                bullet.draw(window)
+                bullet.firetimer()
+                if bullet.firetime <= 0:
+                    bullets.remove(bullet)
+
+# Send player data and get updated players
+            bullets = network.send_bullet(fire_data)
+            players = network.send(player)
             
             pygame.display.update()
             

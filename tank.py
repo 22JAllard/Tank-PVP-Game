@@ -27,6 +27,7 @@ class Tank:
         self.bullet_x_start = self.x + scale * 0.3
         self.bullet_y_start = self.y + scale
         self.fireable = True
+        self.load_image()
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
