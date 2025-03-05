@@ -192,8 +192,8 @@ def game():
            
             bullets = []
             for player_id, tank in players.items():
-                print(tank)
-                tank.draw(window, scale)
+                drawtanks = list(tank.values())
+                drawtanks.draw(window, scale)
                 #probably add a bullet.draw or smth or the sorts?
 
                         #add something for checking for tank firing 
@@ -204,6 +204,7 @@ def game():
                     if fire_data:
                         bullet_x, bullet_y, angle, colour = fire_data
                         bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
+                        bullets = network.send_bullet(fire_data)
                     bullet_fireable = False
 
             for bullet in bullets[:]:
@@ -213,7 +214,7 @@ def game():
                     bullets.remove(bullet)
 
 # Send player data and get updated players
-            bullets = network.send_bullet(fire_data)
+            
             players = network.send(player)
             
             pygame.display.update()
