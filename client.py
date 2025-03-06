@@ -178,10 +178,6 @@ def game():
             map_grid = game_map.tile_list 
             player.move(map_grid, scale, wall_rects)
 
-
-            
-            
-
             #send something about a bullet being fired??
 
             # Clear screen and draw map
@@ -189,23 +185,23 @@ def game():
             game_map.draw(window)
             
             #  player drawing
-           
+            print("1", players)
+            if 'players' in players:
+                print("2", players)
+                for player_id, tank in players['players'].items():
+                    print("3", players)
+                    tank.draw(window, scale)
+                    print(f"Drawing tank for player {player_id}: {tank}")
+
             bullets = []
-            for player_id, tank in players.items():
-                drawtanks = list(tank.values())
-                drawtanks.draw(window, scale)
-                #probably add a bullet.draw or smth or the sorts?
+            keys = pygame.key.get_pressed()
 
-                        #add something for checking for tank firing 
-                keys = pygame.key.get_pressed()
-
-                if keys[pygame.K_f] and tank.fireable:
-                    fire_data = tank.fired() #this then needs to be sent to the server to make a new instance of bullet
-                    if fire_data:
-                        bullet_x, bullet_y, angle, colour = fire_data
-                        bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
-                        bullets = network.send_bullet(fire_data)
-                    bullet_fireable = False
+            if keys[pygame.K_f] and player.fireable:
+                fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
+                if fire_data:
+                    bullet_x, bullet_y, angle, colour = fire_data
+                    bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
+                    bullets = network.send_bullet(fire_data)
 
             for bullet in bullets[:]:
                 bullet.draw(window)
@@ -216,7 +212,6 @@ def game():
 # Send player data and get updated players
             
             players = network.send(player)
-            
             pygame.display.update()
             
     except Exception as e:
