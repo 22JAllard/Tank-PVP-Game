@@ -188,7 +188,7 @@ def game():
             if 'players' in players:
                 for player_id, tank in players['players'].items():
                     tank.draw(window, scale)
-                    print(f"Drawing tank for player {player_id}: {tank}")
+                    # print(f"Drawing tank for player {player_id}: {tank}")
             
             #seems to just be drawing bullet as the tank? and even when there is no bullet. Also completely messes up the drawing of the tank so its ###
             # if 'bullets' in players is not None:
@@ -206,11 +206,12 @@ def game():
                     bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
                     bullets = network.send_bullet(fire_data)
 
-            for bullet in bullets[:]:
-                bullet.draw(window)
-                bullet.firetimer()
-                if bullet.firetime <= 0:
-                    bullets.remove(bullet)
+            for bullet in bullets:
+                print("bullets: ", bullets)
+                #bullet.draw(window)
+                #bullet.firetimer()
+                #if bullet.firetime <= 0:
+                #    bullets.remove(bullet)
 
 # Send player data and get updated players
             
