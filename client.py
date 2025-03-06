@@ -185,13 +185,16 @@ def game():
             game_map.draw(window)
             
             #  player drawing
-            print("1", players)
             if 'players' in players:
-                print("2", players)
                 for player_id, tank in players['players'].items():
-                    print("3", players)
                     tank.draw(window, scale)
                     print(f"Drawing tank for player {player_id}: {tank}")
+            
+            #seems to just be drawing bullet as the tank? and even when there is no bullet. Also completely messes up the drawing of the tank so its ###
+            # if 'bullets' in players is not None:
+            #     for player_id, bullet in players['players'].items():
+            #         bullet.draw(window, scale)
+            #         print(f"Drawing bullet for player {player_id}: {tank}")
 
             bullets = []
             keys = pygame.key.get_pressed()
