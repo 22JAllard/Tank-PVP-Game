@@ -15,7 +15,7 @@ for addr in addresses:
     if addr[0] == socket.AF_INET:  
         print(f"Server IP addresses:  {addr[4][0]}")
 
-maplimit = 1
+maplimit = 2
 mapnumber = random.randint(1,maplimit)
 players = {}
 bullets = {}
