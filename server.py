@@ -17,6 +17,7 @@ for addr in addresses:
 
 maplimit = 2
 mapnumber = random.randint(1,maplimit)
+print("Selected map number", mapnumber)
 players = {}
 bullets = {}
 current_id = 0
