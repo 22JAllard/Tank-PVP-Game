@@ -111,7 +111,7 @@ def client_thread(conn):
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
                     bullet_id = f"{player_id}_{len(bullets)}"
-                    print(f"Recieved bullet data from {player_id}: {bullet_data}")
+                    print(f"Recieved bullet data from {player_id}: {bullet_data}") ####
                 else:
                     players[player_id] = recieved_data
                     print(f"Receied tank data from {player_id}")
