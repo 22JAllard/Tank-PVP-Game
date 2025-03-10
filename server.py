@@ -46,16 +46,16 @@ def player_connected(client_colour, scale):
     current_id += 1
     return player_id
 
-def tank_fired(client_colour): #only run if fire_data being sent is not none
-    #similar to player_connected
-    #called when a tank has fired (f key press)
-    #create a new instance of the bullet class, 
-    # ^which will start at the tanks bulletx/y pos, be the same colour as the tank, and connected to the firing tank using their player id
-
-    # print(recieved data) #smth like that just to check that data is recieved correctly, then do stuff with it
-    pass
-
-    #new_bullet = Bullet(x, y, client_colour, client_angle)
+def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not none
+    if player_id in players:
+        tank = players[player_id]
+        bullet_x, bullet_y, bullet_angle, bullet_colour = bullet_data
+        new_bullet = Bullet(bullet_x, bullet_y, bullet_colour, bullet_angle)
+        bullet_id = f"{player_id}_{len(bullets)}"
+        bullets[bullet_id] = new_bullet
+        print(f"Created new bullet {bullet_id} for player {player_id}")
+        return bullet_id
+    return None
 
 def loadlevel():
     level_file = f'map{mapnumber}.txt'
@@ -108,13 +108,13 @@ def client_thread(conn):
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
                 recieved_data = pickle.loads(data)
+
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
-                    bullet_id = f"{player_id}_{len(bullets)}"
-                    print(f"Recieved bullet data from {player_id}: {bullet_data}") ####
+                    tank_fired(player_id, bullet_data)
                 else:
                     players[player_id] = recieved_data
-                    print(f"Receied tank data from {player_id}")
+                    #print(f"Receied tank data from {player_id}")
 
                 response_data = {
                     "players": players,
@@ -136,10 +136,11 @@ def client_thread(conn):
 
         if player_id in players:
             del players[player_id]
+            bullets_removing = [bid for bid in bullets if bid.startswith(f"{player_id}_")]
+            for bid in bullets_removing:
+                del bullets[bid]
             print(f"Player {player_id} disconnected")
         conn.close()
-
-
 
 while True:
     conn, addr = s.accept() #accept incoming connections, store stuff
