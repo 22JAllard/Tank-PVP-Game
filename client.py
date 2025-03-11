@@ -201,6 +201,7 @@ def game():
 
             if keys[pygame.K_f] and player.fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
+                print("Fire data: ", fire_data)
                 player.fireable = False
                 if fire_data:
                     try:
@@ -212,12 +213,13 @@ def game():
                         print("Invalid fire_data format")
 
             for bullet in list(bullets):
-                print(bullet)
-                print("bullets: ", bullets)
-                bullet.draw(window)
-                bullet.firetimer()
-                if bullet.firetime <= 0:
-                   bullets.remove(bullet)
+                if hasattr(bullet, 'draw'):
+                    bullet.draw(window)
+                    bullet.firetimer()
+                    if bullet.firetime <= 0:
+                        bullets.remove(bullet)
+                else:
+                    bullets.remove(bullet)
 
 # Send player data and get updated players
             
