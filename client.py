@@ -220,6 +220,7 @@ def game():
                         bullets.remove(bullet)
                 else:
                     bullets.remove(bullet)
+                    pass
 
 # Send player data and get updated players
             
