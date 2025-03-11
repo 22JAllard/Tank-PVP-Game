@@ -208,13 +208,16 @@ def game():
                         bullet_x, bullet_y, angle, colour = fire_data
                         new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
                         bullets.append(new_bullet)
-                        bullets = network.send_bullet(fire_data)
+                        network_reponse = network.send_bullet(fire_data)
+                        if network_reponse and 'bullets' in network_reponse:
+                            bullets = list(network_reponse['bullets'].values())
                     except ValueError:
                         print("Invalid fire_data format")
 
             for bullet in list(bullets):
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)
+                    print(bullet)
                     bullet.firetimer()
                     if bullet.firetime <= 0:
                         bullets.remove(bullet)
