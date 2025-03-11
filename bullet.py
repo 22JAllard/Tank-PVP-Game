@@ -49,4 +49,8 @@ class Bullet:
             self.move()
             self.firetime -= 1
 
-
+    def check_fireable(self):
+        if self.firetimer == 100:
+            return True
+        else:
+            return False

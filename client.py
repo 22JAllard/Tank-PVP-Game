@@ -28,7 +28,7 @@ colour_pos = 0
 tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
 client_colour = tank_colours[colour_pos]
 wall_rects = []
-bullet_fireable = True
+fireable = False
 map_unloaded = True
 
 zerotank = pygame.image.load('0tank.png')
@@ -199,10 +199,12 @@ def game():
             bullets = []
             keys = pygame.key.get_pressed()
 
-            if keys[pygame.K_f] and player.fireable:
+            global fireable
+            if keys[pygame.K_f]:
+                fireable = bullet.checkfireable()
+            if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 print("Fire data: ", fire_data)
-                player.fireable = False
                 if fire_data:
                     try:
                         bullet_x, bullet_y, angle, colour = fire_data
