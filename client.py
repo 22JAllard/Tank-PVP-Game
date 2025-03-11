@@ -201,7 +201,8 @@ def game():
 
             global fireable
             if keys[pygame.K_f]:
-                fireable = bullet.checkfireable()
+                #fireable = bullet.checkfireable()
+                pass
             if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 print("Fire data: ", fire_data)
