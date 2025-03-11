@@ -203,16 +203,21 @@ def game():
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 player.fireable = False
                 if fire_data:
-                    bullet_x, bullet_y, angle, colour = fire_data
-                    bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
-                    bullets = network.send_bullet(fire_data)
+                    try:
+                        bullet_x, bullet_y, angle, colour = fire_data
+                        new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
+                        bullets.append(new_bullet)
+                        bullets = network.send_bullet(fire_data)
+                    except ValueError:
+                        print("Invalid fire_data format")
 
-            for bullet in bullets:
+            for bullet in list(bullets):
+                print(bullet)
                 print("bullets: ", bullets)
-                #bullet.draw(window)
-                #bullet.firetimer()
-                #if bullet.firetime <= 0:
-                #    bullets.remove(bullet)
+                bullet.draw(window)
+                bullet.firetimer()
+                if bullet.firetime <= 0:
+                   bullets.remove(bullet)
 
 # Send player data and get updated players
             
