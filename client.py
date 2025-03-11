@@ -201,6 +201,7 @@ def game():
 
             if keys[pygame.K_f] and player.fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
+                player.fireable = False
                 if fire_data:
                     bullet_x, bullet_y, angle, colour = fire_data
                     bullets.append(Bullet(bullet_x, bullet_y, angle, colour))
