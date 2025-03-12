@@ -202,10 +202,9 @@ def game():
             global fireable
             if keys[pygame.K_f]:
                 fireable = player.check_fireable()
-                pass
+                print("fireable: ", fireable)
             if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-                print("Fire data: ", fire_data)
                 if fire_data:
                     try:
                         bullet_x, bullet_y, angle, colour = fire_data
@@ -220,7 +219,6 @@ def game():
             for bullet in list(bullets):
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)
-                    print(bullet)
                     bullet.firetimer()
                     if bullet.firetime <= 0:
                         bullets.remove(bullet)
