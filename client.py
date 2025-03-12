@@ -216,15 +216,19 @@ def game():
                     except ValueError:
                         print("Invalid fire_data format")
 
+            bullets_remove = []
             for bullet in list(bullets):
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)
-                    bullet.firetimer()
-                    if bullet.firetime <= 0:
+                    if not bullet.firetimer():
                         bullets.remove(bullet)
                 else:
                     bullets.remove(bullet)
                     pass
+            
+            for bullet in bullets_remove:
+                if bullet in bullets:
+                    bullets.remove(bullet)
 
 # Send player data and get updated players
             
