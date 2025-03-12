@@ -28,6 +28,7 @@ class Tank:
         self.bullet_y_start = self.y + scale
         self.fireable = True
         self.load_image()
+        self.firetimer = 100
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -151,4 +152,10 @@ class Tank:
             return color[0] > 100
         
         except:
+            return False
+        
+    def check_fireable(self):
+        if self.firetimer == 100:
+            return True
+        else:
             return False
