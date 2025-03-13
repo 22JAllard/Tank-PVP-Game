@@ -47,7 +47,13 @@ def player_connected(client_colour, scale):
     return player_id
 
 def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not none
+    print("Player ID, ", player_id, "\n PLayers: ", players)
     if player_id in players:
+        for bullet_id in bullets:
+            if bullet_id.startswith(f"{player_id}_"):
+                print(f"Player {player_id} already has an active bullet: ", bullet_id)
+                return None
+            
         tank = players[player_id]
         bullet_x, bullet_y, bullet_angle, bullet_colour = bullet_data
         new_bullet = Bullet(bullet_x, bullet_y, bullet_colour, bullet_angle)
