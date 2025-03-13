@@ -110,6 +110,10 @@ def play_menu():
     menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
 
+    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, play_menu)
+    back_button.draw(window)
+    back_button.click(event)
+
     server_ip = server_connect()
     global no_map_number
     if server_ip and no_map_number:
