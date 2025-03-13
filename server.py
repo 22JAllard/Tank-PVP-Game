@@ -60,7 +60,7 @@ def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not
         bullet_id = f"{player_id}_{len(bullets)}"
         bullets[bullet_id] = new_bullet
         print(f"Created new bullet {bullet_id} for player {player_id}")
-        new_bullet.move()
+        #new_bullet.move()
         return bullet_id
     return None
 

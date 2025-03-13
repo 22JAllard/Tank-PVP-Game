@@ -224,15 +224,19 @@ def game():
             for bullet in list(bullets):
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)
+                    bullet.move()
+                    pygame.display.update()
+                    
                     if not bullet.firetimer():
                         bullets.remove(bullet)
                 else:
                     bullets.remove(bullet)
                     pass
+
+            
             
             for bullet in bullets_remove:
-                if bullet in bullets:
-                    bullets.remove(bullet)
+                bullets.remove(bullet)
 
 # Send player data and get updated players
             
