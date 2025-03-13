@@ -103,7 +103,7 @@ def load_level():
     print(f"Loaded map data")
     return map_data
 
-def play_menu():
+def play_menu(): #ip entering screen
     global menu; menu = play_menu
     global network; global no_map_number
 
