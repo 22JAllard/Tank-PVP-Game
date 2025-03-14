@@ -4,7 +4,7 @@ pygame.init()
 #bullet class
 
 class Bullet:
-    def __init__(self, x, y, colour, angle, ):
+    def __init__(self, x, y, colour, angle, bullet_id = None):
         self.x = x
         self.y = y
         self.radius = 3
@@ -14,6 +14,7 @@ class Bullet:
         self.firetime = 100
         self.angle = angle #known as rotation in the tank class
         #self.player = player
+        self.id = bullet_id
 
 
 #draw function
@@ -50,7 +51,6 @@ class Bullet:
 #lifetime function
     def firetimer(self):
         if self.firetime > 0:
-            self.move()
             self.firetime -= 0.1
         return self.firetime > 0
 
