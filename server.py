@@ -56,8 +56,8 @@ def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not
             
         tank = players[player_id]
         bullet_x, bullet_y, bullet_angle, bullet_colour = bullet_data
-        bullet_id = f"{player_id}_{len(bullets)}"
         new_bullet = Bullet(bullet_x, bullet_y, bullet_colour, bullet_angle)
+        bullet_id = f"{player_id}_{len(bullets)}"
         bullets[bullet_id] = new_bullet
         print(f"Created new bullet {bullet_id} for player {player_id}")
         #new_bullet.move()

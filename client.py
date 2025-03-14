@@ -211,24 +211,12 @@ def game():
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 if fire_data:
                     try:
-                        global server_bullet
                         bullet_x, bullet_y, angle, colour = fire_data
                         new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
                         bullets.append(new_bullet)
                         network_reponse = network.send_bullet(fire_data)
                         if network_reponse and 'bullets' in network_reponse:
-                            server_bullets = list(network_reponse['bullets'].values())
-                            print(server_bullets)
-                            # print(server_bullet, bullet_id)
-                            for server_bullet, bullet_id in enumerate(server_bullets): #here
-                            # for server_bullet, bullet_id in server_bullets:
-                                for local_bullet in bullets:
-                                    if hasattr(local_bullet, 'id') and local_bullet.id == bullet_id:
-                                        local_bullet.x = server_bullet.x
-                                        local_bullet.y = server_bullet.y
-                                        break
-                                else:
-                                    bullets.append(server_bullet)
+                            bullets = list(network_reponse['bullets'].values())
                     except ValueError:
                         print("Invalid fire_data format")
 
