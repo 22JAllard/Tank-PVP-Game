@@ -127,7 +127,8 @@ def client_thread(conn):
                     "players": players,
                     "bullets": bullets
                 }
-                conn.sendall(pickle.dumps(response_data))
+                print(response_data)
+                conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
 
             except ConnectionError as e:
                 print(f"Connection error for {player_id}: {e}")

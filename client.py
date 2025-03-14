@@ -221,6 +221,7 @@ def game():
                         print("Invalid fire_data format")
 
             bullets_remove = []
+            print("Bullets: ", bullets)
             for bullet in list(bullets):
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)

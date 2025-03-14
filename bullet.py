@@ -24,7 +24,6 @@ class Bullet:
 #move function
     def move(self):
         #print("welcome to bullet move")
-        print("bullet pos", self.x, self.y)
         if self.angle == 0: 
             self.y += self.bullet_speed
         elif self.angle == 45:
