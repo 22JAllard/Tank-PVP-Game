@@ -174,6 +174,7 @@ def game():
 
         local_bullets = []
         last_fired_time = 0
+        fire_cooldown = 1000
 
         #Add network.connected check
         while network.connected and running:
@@ -219,7 +220,7 @@ def game():
             network_response = network.send(player)
             if not network_response:
                 network_bullets = []
-            elif network_response and 'bullets' in network_response:
+            elif 'bullets' in network_response:
                 network_bullets = list(network_response['bullets'].values())
             else:
                 network_bullets = []
@@ -227,13 +228,12 @@ def game():
             all_bullets = local_bullets + network_bullets
 
             bullets_remove = []
-            for bullet in all_bullets:
+            for bullet in all_bullets[:]:
                 if bullet.firetime > 0:
                     bullet.move()
                     bullet.draw(window)
                     if not bullet.firetimer():
                         bullets_remove.append(bullet)
-                    pygame.display.update()
                 else:
                     bullets_remove.append(bullet)
                                 
@@ -246,7 +246,6 @@ def game():
 
 # Send player data and get updated players
             
-            players = network.send(player)
             pygame.display.update()
             
     except Exception as e:

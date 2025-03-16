@@ -5,13 +5,13 @@ pygame.init()
 
 class Bullet:
     def __init__(self, x, y, colour, angle, ):
-        self.x = x
-        self.y = y
+        self.x = float(x)
+        self.y = float(y)
         self.radius = 3
         self.colour = colour
         self.bullet_speed = 2
         self.bullet_diagonal_speed = ((2 ** 0.5) ** -2) * self.bullet_speed #1 should be hypotenuse, and x/y less than 1
-        self.firetime = 100
+        self.firetime = 180
         self.angle = angle #known as rotation in the tank class
         #self.player = player
 
@@ -19,7 +19,11 @@ class Bullet:
 #draw function
     def draw(self, win):
         if self.firetime > 0:
-            pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
+            try:
+                pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
+            except TypeError as e:
+                print(f"Error drawing bullet - colour: {self.colour}, pos: ({self.x}, {self.y}), error: {e}")
+
 
 #move function
     def move(self):
