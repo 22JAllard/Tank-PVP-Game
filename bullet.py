@@ -9,7 +9,7 @@ class Bullet:
         self.y = y
         self.radius = 3
         self.colour = colour
-        self.bullet_speed = 1
+        self.bullet_speed = 2
         self.bullet_diagonal_speed = ((2 ** 0.5) ** -2) * self.bullet_speed #1 should be hypotenuse, and x/y less than 1
         self.firetime = 100
         self.angle = angle #known as rotation in the tank class
@@ -49,8 +49,9 @@ class Bullet:
 #lifetime function
     def firetimer(self):
         if self.firetime > 0:
-            self.firetime -= 0.1
-        return self.firetime > 0
+            self.firetime -= 1
+            return True
+        return False
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.radius, self.radius)

@@ -173,9 +173,11 @@ def game():
         running = True
 
         local_bullets = []
+        last_fired_time = 0
 
         #Add network.connected check
         while network.connected and running:
+            current_time = pygame.time.get_ticks()
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -199,7 +201,7 @@ def game():
             keys = pygame.key.get_pressed()
 
             global fireable
-            if keys[pygame.K_f]:
+            if keys[pygame.K_f] and (current_time - last_fired_time > 500):
                 fireable = player.check_fireable()
             if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
@@ -209,6 +211,7 @@ def game():
                         new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
                         local_bullets.append(new_bullet)
                         network.send_bullet(fire_data) #
+                        last_fired_time = current_time
                         
                     except ValueError:
                         print("Invalid fire_data format")
@@ -228,7 +231,8 @@ def game():
                 if bullet.firetime > 0:
                     bullet.move()
                     bullet.draw(window)
-                    bullet.firetimer()
+                    if not bullet.firetimer():
+                        bullets_remove.append(bullet)
                     pygame.display.update()
                 else:
                     bullets_remove.append(bullet)
@@ -236,6 +240,9 @@ def game():
             for bullet in bullets_remove:
                 if bullet in local_bullets:
                     local_bullets.remove(bullet)
+
+            if network_response:
+                players = network_response
 
 # Send player data and get updated players
             
