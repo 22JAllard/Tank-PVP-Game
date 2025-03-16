@@ -87,6 +87,7 @@ TANK_IMAGES = {}
 
 def client_thread(conn):
     global players, current_id
+    sent_bullets = set()
     try:
         print("Sending map data, map number = ", mapnumber)
 
@@ -123,12 +124,16 @@ def client_thread(conn):
                     players[player_id] = recieved_data
                     #print(f"Receied tank data from {player_id}")
 
+                response_bullets = {bid: bullet for bid, bullet in bullets.items() 
+                                  if bid not in sent_bullets}
+
                 response_data = {
                     "players": players,
-                    "bullets": bullets
+                    "bullets": response_bullets
                 }
                 print(response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
+                sent_bullets.update(response_bullets.keys())
 
             except ConnectionError as e:
                 print(f"Connection error for {player_id}: {e}")
