@@ -230,9 +230,11 @@ def game():
             bullets_remove = []
             for bullet in all_bullets[:]:
                 if bullet.firetime > 0:
+                    print(bullet.firetime)
                     bullet.move()
                     bullet.draw(window)
-                    if not bullet.firetimer():
+                    bullet.firetimer()
+                    if not bullet.firetime <= 0:
                         bullets_remove.append(bullet)
                 else:
                     bullets_remove.append(bullet)
