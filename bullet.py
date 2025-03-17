@@ -50,7 +50,7 @@ class Bullet:
     def firetimer(self):
         if self.firetime > 0:
             self.move()
-            self.firetime -= 0.1
+            self.firetime -= 1
         return self.firetime > 0
 
     def update(self):

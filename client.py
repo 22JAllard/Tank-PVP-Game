@@ -212,7 +212,7 @@ def game():
                 if fire_data:
                     try:
                         bullet_x, bullet_y, angle, colour = fire_data
-                        new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
+                        new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
                         bullets.append(new_bullet)
                         network_reponse = network.send_bullet(fire_data)
                         if network_reponse and 'bullets' in network_reponse:
@@ -226,18 +226,18 @@ def game():
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window)
                     bullet.move()
+                    bullet.firetimer()
+                    print("Bullet firetime", bullet.firetime)
                     pygame.display.update()
                     
-                    if not bullet.firetimer():
-                        bullets.remove(bullet)
+                    if bullet.firetime <= 0:
+                        bullets_remove.append(bullet)
                 else:
-                    bullets.remove(bullet)
-                    pass
+                    bullets_remove.append(bullet)
 
-            
-            
             for bullet in bullets_remove:
-                bullets.remove(bullet)
+                if bullet in bullets:
+                    bullets.remove(bullet)
 
 # Send player data and get updated players
             
