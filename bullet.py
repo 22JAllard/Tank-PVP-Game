@@ -27,33 +27,35 @@ class Bullet:
 
 #move function
     def move(self):
+        if self.firetime > 0:
         #print("welcome to bullet move")
-        if self.angle == 0: 
-            self.y += self.bullet_speed
-        elif self.angle == 45:
-            self.x += self.bullet_diagonal_speed
-            self.y += self.bullet_diagonal_speed
-        elif self.angle == 90:
-            self.x += self.bullet_speed
-        elif self.angle == 135:
-            self.x += self.bullet_diagonal_speed
-            self.y -= self.bullet_diagonal_speed
-        elif self.angle == 180:
-            self.y -= self.bullet_speed
-        elif self.angle == 225:
-            self.x -= self.bullet_diagonal_speed
-            self.y -= self.bullet_diagonal_speed
-        elif self.angle == 270:
-            self.x -= self.bullet_speed
-        elif self.angle == 315:
-            self.x -= self.bullet_diagonal_speed
-            self.y += self.bullet_diagonal_speed
+            if self.angle == 0: 
+                self.y += self.bullet_speed
+            elif self.angle == 45:
+                self.x += self.bullet_diagonal_speed
+                self.y += self.bullet_diagonal_speed
+            elif self.angle == 90:
+                self.x += self.bullet_speed
+            elif self.angle == 135:
+                self.x += self.bullet_diagonal_speed
+                self.y -= self.bullet_diagonal_speed
+            elif self.angle == 180:
+                self.y -= self.bullet_speed
+            elif self.angle == 225:
+                self.x -= self.bullet_diagonal_speed
+                self.y -= self.bullet_diagonal_speed
+            elif self.angle == 270:
+                self.x -= self.bullet_speed
+            elif self.angle == 315:
+                self.x -= self.bullet_diagonal_speed
+                self.y += self.bullet_diagonal_speed
         #self.draw()
 
 #lifetime function
     def firetimer(self):
         if self.firetime > 0:
             self.firetime -= 1
+        return self.firetime
 
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.radius, self.radius)

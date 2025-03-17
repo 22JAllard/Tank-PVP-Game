@@ -202,7 +202,7 @@ def game():
             keys = pygame.key.get_pressed()
 
             global fireable
-            if keys[pygame.K_f] and (current_time - last_fired_time > 500):
+            if keys[pygame.K_f] and (int(current_time - last_fired_time) > 1000):
                 fireable = player.check_fireable()
             if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
@@ -229,12 +229,17 @@ def game():
 
             bullets_remove = []
             for bullet in all_bullets[:]:
-                if bullet.firetime > 0:
-                    print(bullet.firetime)
+                print("1")
+                if isinstance(bullet.firetime, int) and bullet.firetime > 0:
+                    print("2")
                     bullet.move()
+                    print("3")
                     bullet.draw(window)
+                    print("B")
                     bullet.firetimer()
+                    print("C")
                     if not bullet.firetime <= 0:
+                        print("d")
                         bullets_remove.append(bullet)
                 else:
                     bullets_remove.append(bullet)
