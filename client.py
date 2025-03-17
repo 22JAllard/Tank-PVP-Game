@@ -171,14 +171,8 @@ def game():
         scale = int(scale)
         player.scalee(scale)
         running = True
-
-        local_bullets = []
-        last_fired_time = 0
-        fire_cooldown = 1000
-
         #Add network.connected check
         while network.connected and running:
-            current_time = pygame.time.get_ticks()
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -198,61 +192,56 @@ def game():
             if 'players' in players:
                 for player_id, tank in players['players'].items():
                     tank.draw(window, scale)
+                    # print(f"Drawing tank for player {player_id}: {tank}")
+            
+            #seems to just be drawing bullet as the tank? and even when there is no bullet. Also completely messes up the drawing of the tank so its ###
+            # if 'bullets' in players is not None:
+            #     for player_id, bullet in players['players'].items():
+            #         bullet.draw(window, scale)
+            #         print(f"Drawing bullet for player {player_id}: {tank}")
 
+            bullets = []
             keys = pygame.key.get_pressed()
 
             global fireable
-            if keys[pygame.K_f] and (int(current_time - last_fired_time) > 1000):
+            if keys[pygame.K_f]:
                 fireable = player.check_fireable()
+                print("fireable: ", fireable)
             if fireable:
                 fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                 if fire_data:
                     try:
                         bullet_x, bullet_y, angle, colour = fire_data
                         new_bullet = Bullet(bullet_x, bullet_y, angle, colour)
-                        local_bullets.append(new_bullet)
-                        network.send_bullet(fire_data) #
-                        last_fired_time = current_time
-                        
+                        bullets.append(new_bullet)
+                        network_reponse = network.send_bullet(fire_data)
+                        if network_reponse and 'bullets' in network_reponse:
+                            bullets = list(network_reponse['bullets'].values())
                     except ValueError:
                         print("Invalid fire_data format")
 
-            network_response = network.send(player)
-            if not network_response:
-                network_bullets = []
-            elif 'bullets' in network_response:
-                network_bullets = list(network_response['bullets'].values())
-            else:
-                network_bullets = []
-
-            all_bullets = local_bullets + network_bullets
-
             bullets_remove = []
-            for bullet in all_bullets[:]:
-                print("1")
-                if isinstance(bullet.firetime, int) and bullet.firetime > 0:
-                    print("2")
-                    bullet.move()
-                    print("3")
+            print("Bullets: ", bullets)
+            for bullet in list(bullets):
+                if hasattr(bullet, 'draw'):
                     bullet.draw(window)
-                    print("B")
-                    bullet.firetimer()
-                    print("C")
-                    if not bullet.firetime <= 0:
-                        print("d")
-                        bullets_remove.append(bullet)
+                    bullet.move()
+                    pygame.display.update()
+                    
+                    if not bullet.firetimer():
+                        bullets.remove(bullet)
                 else:
-                    bullets_remove.append(bullet)
-                                
-            for bullet in bullets_remove:
-                if bullet in local_bullets:
-                    local_bullets.remove(bullet)
+                    bullets.remove(bullet)
+                    pass
 
-            if network_response:
-                players = network_response
+            
+            
+            for bullet in bullets_remove:
+                bullets.remove(bullet)
 
 # Send player data and get updated players
             
+            players = network.send(player)
             pygame.display.update()
             
     except Exception as e:
