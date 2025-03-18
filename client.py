@@ -193,6 +193,7 @@ def game():
             window.fill((0, 0, 0))
             game_map.draw(window)
             
+            print(players)
             #  player drawing
             if 'players' in players:
                 for player_id, tank in players['players'].items():
@@ -232,7 +233,6 @@ def game():
                 last_fire = False
 
             bullets_remove = []
-            print("Bullets: ", bullets)
             for bullet in bullets[:]:
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
                     bullet.draw(window)
