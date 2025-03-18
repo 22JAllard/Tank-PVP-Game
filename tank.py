@@ -157,6 +157,4 @@ class Tank:
             return False
         
     def check_fireable(self):
-        if self.firetimer <= 0:
-            return True
-        return False
+        return self.firetimer <= 0

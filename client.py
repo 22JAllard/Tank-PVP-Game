@@ -210,26 +210,24 @@ def game():
 
             global fireable
             if keys[pygame.K_f] and not last_fire:
-                fireable = player.check_fireable()
-                print("fireable: ", fireable)
-            if fireable:
-                fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-                if fire_data:
-                    try:
-                        bullet_x, bullet_y, angle, colour = fire_data
-                        new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
-                        bullets.append(new_bullet)
-                        print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
-                        network_reponse = network.send_bullet(fire_data)
-                        if network_reponse and 'bullets' in network_reponse:
-                            server_bullets = list(network_reponse['bullets'].values())
-                            for bullet in server_bullets:
-                                if bullet not in bullets:
-                                    bullets.append(bullet)
-                                    print("Added server bullet", bullet)
-                    except ValueError:
-                        print("Invalid fire_data format")
-                last_fire = True
+                if player.check_fireable():
+                    fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
+                    if fire_data:
+                        try:
+                            bullet_x, bullet_y, angle, colour = fire_data
+                            new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
+                            bullets.append(new_bullet)
+                            print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
+                            network_reponse = network.send_bullet(fire_data)
+                            if network_reponse and 'bullets' in network_reponse:
+                                server_bullets = list(network_reponse['bullets'].values())
+                                for bullet in server_bullets:
+                                    if bullet not in bullets:
+                                        bullets.append(bullet)
+                                        print("Added server bullet", bullet)
+                        except ValueError:
+                            print("Invalid fire_data format")
+                    last_fire = True
             elif not keys[pygame.K_f]:
                 last_fire = False
 
