@@ -160,6 +160,8 @@ def game():
     if 'players' not in globals():
         players={}
 
+    bullets = []
+
 #Get player tank through network
     try:
         game_map = Map(map_data) #
@@ -200,7 +202,7 @@ def game():
             #         bullet.draw(window, scale)
             #         print(f"Drawing bullet for player {player_id}: {tank}")
 
-            bullets = []
+            
             keys = pygame.key.get_pressed()
 
             global fireable
@@ -216,16 +218,18 @@ def game():
                         bullets.append(new_bullet)
                         network_reponse = network.send_bullet(fire_data)
                         if network_reponse and 'bullets' in network_reponse:
-                            bullets = list(network_reponse['bullets'].values())
+                            server_bullets = list(network_reponse['bullets'].values())
+                            for bullet in server_bullets:
+                                if bullet not in bullets:
+                                    bullets.append(bullet)
                     except ValueError:
                         print("Invalid fire_data format")
 
             bullets_remove = []
             print("Bullets: ", bullets)
-            for bullet in list(bullets):
-                if hasattr(bullet, 'draw'):
+            for bullet in bullets[:]:
+                if hasattr(bullet, 'draw') and bullet.firetime > 0:
                     bullet.draw(window)
-                    bullet.move()
                     bullet.firetimer()
                     print("Bullet firetime", bullet.firetime)
                     pygame.display.update()
