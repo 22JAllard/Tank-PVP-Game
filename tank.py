@@ -28,7 +28,8 @@ class Tank:
         self.bullet_y_start = self.y + scale
         self.fireable = True
         self.load_image()
-        self.firetimer = 100
+        self.firetimer = 0
+        self.fire_cooldown = 60
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
@@ -126,15 +127,16 @@ class Tank:
         self.update()
 
     def fired(self):
-        
-        #wait for client to press f
-        #return something to client which can then bounce to server through network to make a new bullet instance
-
-        self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour) #needs to have a value for bullet start poss
-        return self.fire_data
+        if self.check_fireable():
+            self.fire_data = (self.bullet_x_start, self.bullet_y_start, self.rotation, self.colour)
+            self.firetimer = self.fire_cooldown
+            return self.fire_data
+        return None
         
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        if self.firetimer > 0:
+            self.firetimer -= 1
 
     def shrink(self, screen_height):
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
@@ -155,7 +157,6 @@ class Tank:
             return False
         
     def check_fireable(self):
-        if self.firetimer == 100:
+        if self.firetimer <= 0:
             return True
-        else:
-            return False
+        return False

@@ -30,6 +30,8 @@ client_colour = tank_colours[colour_pos]
 wall_rects = []
 fireable = False
 map_unloaded = True
+bullets = []
+last_fire = False
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -161,6 +163,7 @@ def game():
         players={}
 
     bullets = []
+    last_fire = []
 
 #Get player tank through network
     try:
@@ -206,7 +209,7 @@ def game():
             keys = pygame.key.get_pressed()
 
             global fireable
-            if keys[pygame.K_f]:
+            if keys[pygame.K_f] and not last_fire:
                 fireable = player.check_fireable()
                 print("fireable: ", fireable)
             if fireable:
@@ -216,14 +219,19 @@ def game():
                         bullet_x, bullet_y, angle, colour = fire_data
                         new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
                         bullets.append(new_bullet)
+                        print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
                         network_reponse = network.send_bullet(fire_data)
                         if network_reponse and 'bullets' in network_reponse:
                             server_bullets = list(network_reponse['bullets'].values())
                             for bullet in server_bullets:
                                 if bullet not in bullets:
                                     bullets.append(bullet)
+                                    print("Added server bullet", bullet)
                     except ValueError:
                         print("Invalid fire_data format")
+                last_fire = True
+            elif not keys[pygame.K_f]:
+                last_fire = False
 
             bullets_remove = []
             print("Bullets: ", bullets)
