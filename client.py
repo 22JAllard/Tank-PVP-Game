@@ -79,11 +79,11 @@ class Map:
 
 def server_connect():
     global input_active
-    server_connect_text = CenteredText(350, (0,0,0), "Enter server IP", 50, "Arial")
+    server_connect_text = CenteredText(350, (255,255,255), "Enter server IP", 50, "Arial")
     server_connect_text.draw(window)
 
     global entered_ip
-    entered_ip_text = CenteredText(400, (0,0,0), entered_ip, 30, "Arial")
+    entered_ip_text = CenteredText(400, (255,255,255), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
     pygame.display.update()
