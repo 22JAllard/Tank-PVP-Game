@@ -32,6 +32,7 @@ fireable = False
 map_unloaded = True
 bullets = []
 last_fire = False
+username = "Type to enter username"
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -260,13 +261,32 @@ def customise_menu():
     customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial")
     customise_text.draw(window)
 
-    colour_button = ColourButton(screen_width//2 + 50, 200, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour)
+    #enter username stuff, exact same way that ip is entered, except initially says "Type to enter username..." or smth and then is replaced as typing starts 
+    enter_username()
+
+    colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour)
     colour_button.draw(window)
     colour_button.arrow_click()
 
     back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu)
     back_button.draw(window)
     back_button.click(event)
+
+def enter_username(): #just needs to be modified so that when the user starts typing it clears the Type to enter username... text
+    global username
+    username_text = CenteredText(200, (0,0,0), username, 50, "Arial")
+    username_text.draw(window)
+
+    global input_active
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and input_active:
+            if event.key == pygame.K_RETURN:
+                input_active = False
+                return username
+            elif event.key == pygame.K_BACKSPACE:
+                username = username[:-1]
+            else:
+                username = username + str(event.unicode)
 
 def settings_menu():
     global menu; menu = settings_menu
