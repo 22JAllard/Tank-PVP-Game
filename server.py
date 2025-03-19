@@ -66,7 +66,8 @@ def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not
         bullet_id = f"{player_id}_{len(bullets)}"
         print("h")
         bullets[bullet_id] = new_bullet
-        print(f"Created new bullet {bullet_id} for player {player_id}")
+        # print(f"Created new bullet {bullet_id} for player {player_id}")
+        print(f"Added bullet {bullet_id} for player {player_id}, bullets now: {bullets.keys()}")
         #new_bullet.move()
         return bullet_id
     return None
@@ -133,8 +134,9 @@ def client_thread(conn):
                     players[player_id] = recieved_data
                     #print(f"Receied tank data from {player_id}")
 
-
-                response_bullets = {bid: bullet for bid, bullet in bullets.items() 
+                # print("sent bullets: ", sent_bullets)
+                print(f"Player {player_id}, bullets: {bullets.keys()}, sent_bullets: {sent_bullets}")
+                response_bullets = {bid: bullet for bid, bullet in bullets.items() #bid= bullet id
                                   if bid not in sent_bullets}
                 # print(response_bullets)
 
@@ -143,6 +145,7 @@ def client_thread(conn):
                     "bullets": response_bullets
                 }
                 # print(response_data)
+                print(f"Sending to {player_id}: {response_data['bullets'].keys()}")
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
                 sent_bullets.update(response_bullets.keys())
 

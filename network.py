@@ -1,6 +1,7 @@
 import socket
 import pickle
 import pygame
+import threading
 
 class Network:
     def __init__ (self, server_ip, client_colour, scale):
@@ -9,7 +10,10 @@ class Network:
         print("Connecting to server: ", self.server)
         self.port = 5555
         self.addr = (self.server, self.port)
+        self.known_bullets = set()
         self.initial_data = self.connect(client_colour, scale)
+        if self.connected:
+            threading.Thread(target=self.recieve_updates, daemon=True).start()
 
     def connect (self, client_colour, scale):
         try:
@@ -39,6 +43,25 @@ class Network:
             self.disconnect()
             return False
             
+    def recieve_updates(self):
+        while self.connected:
+            try:
+                received_data = self.client.recv(8192)
+                if not received_data:
+                    print("Server disconnected")
+                    self.disconnect()
+                    break
+                received = pickle.loads(received_data)
+                new_bullets = {bid: bullet for bid, bullet in received["bullets"].items()
+                             if bid not in self.known_bullets}
+                if new_bullets:
+                    print(f"Client received new bullets: {new_bullets.keys()}")
+                self.known_bullets.update(new_bullets.keys())
+            except Exception as e:
+                print(f"Receive error: {e}")
+                self.disconnect()
+                break
+
     def receive_map_number(self):
         try:
             data = self.client.recv(8192)
@@ -58,16 +81,17 @@ class Network:
         try:
             # Send player data
             self.client.send(pickle.dumps(data))
-            self.client.setblocking(True)
-            received_data = self.client.recv(4096)
+            return True
+            # self.client.setblocking(True)
+            # received_data = self.client.recv(4096)
 
 
-            if not received_data:
-                print("No data received from server")
-                self.disconnect()
-                return None
+            # if not received_data:
+            #     print("No data received from server")
+            #     self.disconnect()
+            #     return None
   
-            return pickle.loads(received_data) #contains both tanks and bullets
+            # return pickle.loads(received_data) #contains both tanks and bullets
         except socket.timeout:
             print("Send/receive timed out")
             self.disconnect()
@@ -97,12 +121,15 @@ class Network:
             # Send bullet data
             bullet_data = ("Bullet", data)
             self.client.send(pickle.dumps(bullet_data))
-            received_data = self.client.recv(4096)
-            if not received_data:
-                print("No data received from server")
-                self.disconnect()
-                return None
-            return pickle.loads(received_data)
+            # received_data = self.client.recv(4096)
+            # received = pickle.loads(received_data)
+            # print(f"Client received: {received['bullets'].keys()}")
+            return True
+            # if not received_data:
+            #     print("No data received from server")
+            #     self.disconnect()
+            #     return None
+            # return pickle.loads(received_data)
 
         except socket.timeout:
             print("Send/receive timed out (bullet)")

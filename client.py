@@ -165,7 +165,7 @@ def game():
     if 'players' not in globals():
         players={}
 
-    bullets = []
+    bullets = {}
     last_fire = []
 
 #Get player tank through network
@@ -195,9 +195,18 @@ def game():
             # Clear screen and draw map
             window.fill((0, 0, 0))
             game_map.draw(window)
+
+            #send player data and get latest tank data
+            network.send(player)
+            latest_data = network.get_latest_data()  #get continuous updates
+            if latest_data:
+                players = latest_data["players"]  #update players from server
+                #sync bullets with server data
+                server_bullets = latest_data["bullets"]
+                bullets = server_bullets  #replace local bullets with server's authoritative list
             
             #  player drawing
-            if 'players' in players:
+            if players:
                 for player_id, tank in players['players'].items():
                     tank.draw(window, scale)
             
@@ -210,22 +219,25 @@ def game():
                     if fire_data:
                         try:
                             bullet_x, bullet_y, angle, colour = fire_data
-                            new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
-                            bullets.append(new_bullet)
-                            print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
-                            network_reponse = network.send_bullet(fire_data)
-                            if network_reponse and 'bullets' in network_reponse:
-                                server_bullets = list(network_reponse['bullets'].values())
-                                for bullet in server_bullets:
-                                    if bullet not in bullets:
-                                        bullets.append(bullet)
-                                        print("Added server bullet", bullet)
+                            # new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
+                            # bullets.append(new_bullet)
+                            print(f"New bullet created locally at ({bullet_x}, {bullet_y}) with angle {angle}")
+                            network.send_bullet(fire_data)
+                            # network_reponse = network.send_bullet(fire_data)
+                            # print(network_reponse)
+                            # if network_reponse and 'bullets' in network_reponse:
+                            #     server_bullets = list(network_reponse['bullets'].values())
+                            #     for bullet in server_bullets:
+                            #         if bullet not in bullets:
+                            #             bullets.append(bullet)
+                            #             print("Added server bullet", bullet)
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
             elif not keys[pygame.K_f]:
                 last_fire = False
 
+            #update and draw bullets
             bullets_remove = []
             for bullet in bullets[:]:
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
