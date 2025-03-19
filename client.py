@@ -272,7 +272,7 @@ def customise_menu():
     back_button.draw(window)
     back_button.click(event)
 
-def enter_username(): #just needs to be modified so that when the user starts typing it clears the Type to enter username... text
+def enter_username(): 
     global username
     username_text = CenteredText(200, (0,0,0), username, 50, "Arial")
     username_text.draw(window)
@@ -280,7 +280,9 @@ def enter_username(): #just needs to be modified so that when the user starts ty
     global input_active
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN and input_active:
-            if event.key == pygame.K_RETURN:
+            if username == "Type to enter username":
+                username = ""
+            elif event.key == pygame.K_RETURN:
                 input_active = False
                 return username
             elif event.key == pygame.K_BACKSPACE:
