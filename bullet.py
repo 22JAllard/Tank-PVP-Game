@@ -9,9 +9,9 @@ class Bullet:
         self.y = y
         self.radius = 3
         self.colour = colour
-        self.bullet_speed = 1
+        self.bullet_speed = 4
         self.bullet_diagonal_speed = ((2 ** 0.5) ** -2) * self.bullet_speed #1 should be hypotenuse, and x/y less than 1
-        self.firetime = 100
+        self.firetime = 60
         self.angle = angle #known as rotation in the tank class
         #self.player = player
 
