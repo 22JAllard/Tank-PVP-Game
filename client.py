@@ -31,6 +31,7 @@ wall_rects = []
 fireable = False
 map_unloaded = True
 bullets = []
+send_data = {}
 last_fire = False
 username = "Type to enter username"
 saved = False
@@ -172,6 +173,10 @@ def game():
     try:
         game_map = Map(map_data) #
         player = network.initial_data["tank"]
+        # print("PLAYER: ",player)
+        # send_data = player
+        send_data['players'] = player
+        print(send_data)
         player.colour = client_colour
         
         #player.shrink(screen_height)
@@ -196,10 +201,11 @@ def game():
             window.fill((0, 0, 0))
             game_map.draw(window)
             
-            #  player drawing
-            if 'players' in players:
-                for player_id, tank in players['players'].items():
-                    tank.draw(window, scale)
+            # #  player drawing
+            # if 'players' in players:
+            #     # print(players)
+            #     for player_id, tank in players['players'].items():
+            #         tank.draw(window, scale)
             
             keys = pygame.key.get_pressed()
 
@@ -209,22 +215,25 @@ def game():
                     fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                     if fire_data:
                         try:
-                            bullet_x, bullet_y, angle, colour = fire_data
-                            new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
-                            bullets.append(new_bullet)
-                            print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
-                            network_reponse = network.send_bullet(fire_data)
-                            if network_reponse and 'bullets' in network_reponse:
-                                server_bullets = list(network_reponse['bullets'].values())
-                                for bullet in server_bullets:
-                                    if bullet not in bullets:
-                                        bullets.append(bullet)
-                                        print("Added server bullet", bullet)
+                            # bullet_x, bullet_y, angle, colour = fire_data
+                            # new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
+                            # bullets.append(new_bullet)
+                            # print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
+                            # network_reponse = network.send_bullet(fire_data)
+                            # if network_reponse and 'bullets' in network_reponse:
+                            #     server_bullets = list(network_reponse['bullets'].values())
+                            #     for bullet in server_bullets:
+                            #         if bullet not in bullets:
+                            #             bullets.append(bullet)
+                            #             print("Added server bullet", bullet)
+                            # send_data = players
+                            send_data["bullets"] = fire_data
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
             elif not keys[pygame.K_f]:
                 last_fire = False
+                # send_data = players
 
             bullets_remove = []
             for bullet in bullets[:]:
@@ -243,8 +252,12 @@ def game():
                     bullets.remove(bullet)
 
 # Send player data and get updated players
-            
-            players = network.send(player)
+
+            # print("Send_data = ",send_data)
+            # print(player)
+            print("Sending data: ",send_data)
+            players = network.send(send_data)
+            # print(players)
             pygame.display.update()
             
     except Exception as e:

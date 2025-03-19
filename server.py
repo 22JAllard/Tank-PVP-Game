@@ -116,6 +116,7 @@ def client_thread(conn):
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
                 recieved_data = pickle.loads(data)
+                print("Received data = ",recieved_data)
 
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
@@ -127,13 +128,16 @@ def client_thread(conn):
                 response_bullets = {bid: bullet for bid, bullet in bullets.items() 
                                   if bid not in sent_bullets}
 
+                # send_bullets = bullets
+                # print("Send_bullets: ", send_bullets)
                 response_data = {
                     "players": players,
                     "bullets": response_bullets
                 }
-                print(response_data)
+                # print(response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
                 sent_bullets.update(response_bullets.keys())
+
 
             except ConnectionError as e:
                 print(f"Connection error for {player_id}: {e}")
@@ -156,6 +160,7 @@ def client_thread(conn):
         conn.close()
 
 while True:
+
     conn, addr = s.accept() #accept incoming connections, store stuff
     print(f"Connected from: {addr}")
     start_new_thread(client_thread, (conn,))

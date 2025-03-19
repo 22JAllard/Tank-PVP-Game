@@ -29,6 +29,7 @@ class Network:
                 print("No initial data received")
                 return False
 
+            print("initial data", pickle.loads(data))
             return pickle.loads(data)
         except socket.timeout:
             print("Connection timed out")
@@ -57,9 +58,11 @@ class Network:
             
         try:
             # Send player data
+            # print("Sending data, ", data)
             self.client.send(pickle.dumps(data))
             self.client.setblocking(True)
             received_data = self.client.recv(4096)
+            # print("Received_data = ", pickle.loads(received_data))
 
 
             if not received_data:
@@ -89,30 +92,31 @@ class Network:
         except:
             pass
 
-    def send_bullet(self, data):
-        if not self.connected:
-            return None
+    # def send_bullet(self, data):
+    #     if not self.connected:
+    #         return None
             
-        try:
-            # Send bullet data
-            bullet_data = ("Bullet", data)
-            self.client.send(pickle.dumps(bullet_data))
-            received_data = self.client.recv(4096)
-            if not received_data:
-                print("No data received from server")
-                self.disconnect()
-                return None
-            return pickle.loads(received_data)
+    #     try:
+    #         # Send bullet data
+    #         bullet_data = ("Bullet", data)
+    #         self.client.send(pickle.dumps(bullet_data))
+    #         received_data = self.client.recv(4096)
+    #         # print("Bullet received data = ", pickle.loads(received_data))
+    #         if not received_data:
+    #             print("No data received from server")
+    #             self.disconnect()
+    #             return None
+    #         return pickle.loads(received_data)
 
-        except socket.timeout:
-            print("Send/receive timed out (bullet)")
-            self.disconnect()
-            return None
-        except socket.error as error:
-            print(f"Send error (bullet):", error)
-            self.disconnect()
-            return None
-        except Exception as error:
-            print(f"Unexpected error (bullet):", error)
-            self.disconnect()
-            return None
+    #     except socket.timeout:
+    #         print("Send/receive timed out (bullet)")
+    #         self.disconnect()
+    #         return None
+    #     except socket.error as error:
+    #         print(f"Send error (bullet):", error)
+    #         self.disconnect()
+    #         return None
+    #     except Exception as error:
+    #         print(f"Unexpected error (bullet):", error)
+    #         self.disconnect()
+    #         return None
