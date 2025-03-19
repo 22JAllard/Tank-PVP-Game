@@ -6,6 +6,7 @@ from os import path
 from tank import Tank
 from bullet import Bullet
 #from map import Map
+import time
 
 pygame.init()
 run = True
@@ -198,15 +199,22 @@ def game():
 
             #send player data and get latest tank data
             network.send(player)
+            time.sleep(0.05)
             latest_data = network.get_latest_data()  #get continuous updates
-            print("Latest data recieved: ", latest_data)
+            # print("Latest data recieved: ", latest_data)
             if latest_data:
-                print(latest_data)
+                # print(latest_data)
                 players = latest_data["players"]  #update players from server
                 #sync bullets with server data
-                server_bullets = latest_data["bullets"]
-                bullets = server_bullets  #replace local bullets with server's authoritative list
-                print(f"Bullets assigned: {bullets.keys()}")
+                # bullets = latest_data["bullets"]
+                # # bullets = server_bullets  #replace local bullets with server's authoritative list
+                # print(f"Bullets assigned: {bullets.keys()}")
+                if "bullets" in latest_data:
+                    bullets = latest_data["bullets"]
+                    print(f"Bullets in game loop: {bullets.keys()}")
+                else:
+                    print("No bullets key in latest_data")
+                    bullets = {}
             
             #  player drawing
             if players:
@@ -224,7 +232,7 @@ def game():
                             bullet_x, bullet_y, angle, colour = fire_data
                             # new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
                             # bullets.append(new_bullet)
-                            print(f"New bullet created locally at ({bullet_x}, {bullet_y}) with angle {angle}")
+                            # print(f"New bullet created locally at ({bullet_x}, {bullet_y}) with angle {angle}")
                             network.send_bullet(fire_data)
                             # network_reponse = network.send_bullet(fire_data)
                             # print(network_reponse)
@@ -234,16 +242,19 @@ def game():
                             #         if bullet not in bullets:
                             #             bullets.append(bullet)
                             #             print("Added server bullet", bullet)
+                            latest_data = network.get_latest_data()
+                            if latest_data and "bullets" in latest_data:
+                                bullets = latest_data["bullets"]
                         except ValueError:
                             print("Invalid fire_data format")
-                    last_fire = True
+                        last_fire = True
             elif not keys[pygame.K_f]:
                 last_fire = False
 
             #update and draw bullets
             bullets_remove = []
             for bullet_id, bullet in bullets.items():
-                print(f"Processing bullet {bullet_id}: x={bullet.x}, y={bullet.y}, firetime={bullet.firetime}")
+                # print(f"Processing bullet {bullet_id}: x={bullet.x}, y={bullet.y}, firetime={bullet.firetime}")
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
                     bullet.draw(window)
                     bullet.firetimer(wall_rects)

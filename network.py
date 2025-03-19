@@ -143,15 +143,22 @@ class Network:
             # Send bullet data
             bullet_data = ("Bullet", data)
             self.client.send(pickle.dumps(bullet_data))
-            # received_data = self.client.recv(4096)
-            # received = pickle.loads(received_data)
-            # print(f"Client received: {received['bullets'].keys()}")
+            buffer = b""
+            while True:
+                data = self.client.recv(8192)
+                if not data:
+                    print("No data received from server (bullet)")
+                    self.disconnect()
+                    return None
+                buffer += data
+                try:
+                    received = pickle.loads(buffer)
+                    self.latest_data = received  # Update immediately
+                    print(f"Send_bullet received: {received}")
+                    break
+                except pickle.UnpicklingError:
+                    continue  # Wait for complete data
             return True
-            # if not received_data:
-            #     print("No data received from server")
-            #     self.disconnect()
-            #     return None
-            # return pickle.loads(received_data)
 
         except socket.timeout:
             print("Send/receive timed out (bullet)")
