@@ -203,11 +203,11 @@ def game():
                 players = latest_data["players"]  #update players from server
                 #sync bullets with server data
                 server_bullets = latest_data["bullets"]
-                bullets = server_bullets  #replace local bullets with server's authoritative list
+                # bullets = server_bullets  #replace local bullets with server's authoritative list
             
             #  player drawing
             if players:
-                for player_id, tank in players['players'].items():
+                for player_id, tank in players.items():
                     tank.draw(window, scale)
             
             keys = pygame.key.get_pressed()
@@ -239,14 +239,14 @@ def game():
 
             #update and draw bullets
             bullets_remove = []
-            for bullet in bullets[:]:
+            for bullet_id, bullet in bullets.items():
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
                     bullet.draw(window)
                     bullet.firetimer(wall_rects)
                     pygame.display.update()
                     
                     if bullet.firetime <= 0:
-                        bullets_remove.append(bullet)
+                        bullets_remove.append(bullet_id)
                 else:
                     bullets_remove.append(bullet)
 
