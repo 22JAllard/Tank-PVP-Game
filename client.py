@@ -282,6 +282,7 @@ def enter_username():
         if event.type == pygame.KEYDOWN and input_active:
             if username == "Type to enter username":
                 username = ""
+                username = username + str(event.unicode)
             elif event.key == pygame.K_RETURN:
                 input_active = False
                 return username
