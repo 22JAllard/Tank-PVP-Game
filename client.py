@@ -33,6 +33,8 @@ map_unloaded = True
 bullets = []
 last_fire = False
 username = "Type to enter username"
+saved = False
+save_button_colour = (255,255,255)
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -260,8 +262,7 @@ def customise_menu():
 
     customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial")
     customise_text.draw(window)
-
-    #enter username stuff, exact same way that ip is entered, except initially says "Type to enter username..." or smth and then is replaced as typing starts 
+ 
     enter_username()
 
     colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour)
@@ -271,6 +272,10 @@ def customise_menu():
     back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu)
     back_button.draw(window)
     back_button.click(event)
+
+    save_button = Button(screen_width//2 + 50, screen_height - 125, 150, 60, save_button_colour, (0,0,0), "Save", "Arial", 35, save_preferences, customise_menu)
+    save_button.draw(window)
+    save_button.click(event)
 
 def enter_username(): 
     global username
@@ -290,6 +295,26 @@ def enter_username():
                 username = username[:-1]
             else:
                 username = username + str(event.unicode)
+
+def save_preferences():
+    global save_button_colour, saved
+    with open('preferences.txt', 'r') as file:
+        records = file.readlines()
+    with open('preferences.txt', 'w') as file:
+        for line in records:
+            saved_user = line.split(',')[0].strip()
+            if saved_user == username:
+                file.write(f'{username}, {client_colour}\n')
+                save_button_colour = (0,255,0)
+                saved = True
+            else:
+                file.write(line)
+    if not saved:
+        print(f"Saving Preferences...\nUsername: {username}, Colour: {client_colour}")
+        with open('preferences.txt', 'a') as file:
+            file.write(f'{username}, {client_colour}\n')
+            save_button_colour = (0,255,0)
+            saved = True
 
 def settings_menu():
     global menu; menu = settings_menu
