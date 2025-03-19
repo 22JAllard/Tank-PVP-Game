@@ -1,1 +1,2 @@
 A, (255, 0, 0)
+Type to enter username, (255, 0, 0)
