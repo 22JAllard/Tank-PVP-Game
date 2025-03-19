@@ -47,27 +47,19 @@ def player_connected(client_colour, scale):
     return player_id
 
 def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not none
-    print("a")
     #print("Player ID, ", player_id, "\n PLayers: ", players)
     if player_id in players:
-        print("b")
         for bullet_id in bullets:
-            print("c")
-            # if bullet_id.startswith(f"{player_id}_"):
-            #     #print(f"Player {player_id} already has an active bullet: ", bullet_id)
-            #     return None
-        print("d")
+            if bullet_id.startswith(f"{player_id}_"):
+                #print(f"Player {player_id} already has an active bullet: ", bullet_id)
+                return None
+            
         tank = players[player_id]
-        print("e")
         bullet_x, bullet_y, bullet_angle, bullet_colour = bullet_data
-        print("f")
         new_bullet = Bullet(bullet_x, bullet_y, bullet_colour, bullet_angle)
-        print("g")
         bullet_id = f"{player_id}_{len(bullets)}"
-        print("h")
         bullets[bullet_id] = new_bullet
-        # print(f"Created new bullet {bullet_id} for player {player_id}")
-        print(f"Added bullet {bullet_id} for player {player_id}, bullets now: {bullets.keys()}")
+        print(f"Created new bullet {bullet_id} for player {player_id}")
         #new_bullet.move()
         return bullet_id
     return None
@@ -124,28 +116,22 @@ def client_thread(conn):
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
                 recieved_data = pickle.loads(data)
-                # print(recieved_data)
 
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
-                    print(bullet_data)
                     tank_fired(player_id, bullet_data)
                 else:
                     players[player_id] = recieved_data
                     #print(f"Receied tank data from {player_id}")
 
-                # print("sent bullets: ", sent_bullets)
-                print(f"Player {player_id}, bullets: {bullets.keys()}, sent_bullets: {sent_bullets}")
-                response_bullets = {bid: bullet for bid, bullet in bullets.items() #bid= bullet id
+                response_bullets = {bid: bullet for bid, bullet in bullets.items() 
                                   if bid not in sent_bullets}
-                # print(response_bullets)
 
                 response_data = {
                     "players": players,
                     "bullets": response_bullets
                 }
-                # print(response_data)
-                print(f"Sending to {player_id}: {response_data['bullets'].keys()}")
+                print(response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
                 sent_bullets.update(response_bullets.keys())
 
