@@ -47,6 +47,7 @@ class Network:
             return False
             
     def receive_updates(self):
+        buffer = b""
         while True:
             if not self.connected:
                 break
@@ -56,16 +57,27 @@ class Network:
                     print("Server disconnected")
                     self.disconnect()
                     break
-                received = pickle.loads(received_data)
-                new_bullets = {bid: bullet for bid, bullet in received["bullets"].items()
-                             if bid not in self.known_bullets}
-                if new_bullets:
-                    print(f"Client received new bullets: {new_bullets.keys()}")
-                self.known_bullets.update(new_bullets.keys())
-                self.latest_data = received
-            except Exception as e:
-                print(f"Receive error: {e}")
-                self.disconnect()
+                buffer += received_data
+                while True:
+                    try:
+                        received = pickle.loads(received_data)
+                        buffer = b""
+                        new_bullets = {bid: bullet for bid, bullet in received["bullets"].items()
+                                    if bid not in self.known_bullets}
+                        if new_bullets:
+                            print(f"Client received new bullets: {new_bullets.keys()}")
+                        self.known_bullets.update(new_bullets.keys())
+                        self.latest_data = received
+                        break
+                    except pickle.UnpicklingError:
+                        break
+                    except Exception as e:
+                        print(f"Receive error: {e}")
+                        self.disconnect()
+                        break
+            except socket.error as e:
+                print("Socket errror:", e)
+                self.disconnect
                 break
 
     def get_latest_data(self):  

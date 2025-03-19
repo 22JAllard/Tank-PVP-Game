@@ -199,11 +199,14 @@ def game():
             #send player data and get latest tank data
             network.send(player)
             latest_data = network.get_latest_data()  #get continuous updates
+            print("Latest data recieved: ", latest_data)
             if latest_data:
+                print(latest_data)
                 players = latest_data["players"]  #update players from server
                 #sync bullets with server data
                 server_bullets = latest_data["bullets"]
-                # bullets = server_bullets  #replace local bullets with server's authoritative list
+                bullets = server_bullets  #replace local bullets with server's authoritative list
+                print(f"Bullets assigned: {bullets.keys()}")
             
             #  player drawing
             if players:
@@ -240,23 +243,24 @@ def game():
             #update and draw bullets
             bullets_remove = []
             for bullet_id, bullet in bullets.items():
+                print(f"Processing bullet {bullet_id}: x={bullet.x}, y={bullet.y}, firetime={bullet.firetime}")
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
                     bullet.draw(window)
                     bullet.firetimer(wall_rects)
-                    pygame.display.update()
+                    # pygame.display.update()
                     
                     if bullet.firetime <= 0:
                         bullets_remove.append(bullet_id)
                 else:
-                    bullets_remove.append(bullet)
+                    bullets_remove.append(bullet_id)
 
-            for bullet in bullets_remove:
-                if bullet in bullets:
-                    bullets.remove(bullet)
+            for bullet_id in bullets_remove:
+                if bullet_id in bullets:
+                    del bullets[bullet_id]
 
 # Send player data and get updated players
             
-            players = network.send(player)
+            # players = network.send(player)
             pygame.display.update()
             
     except Exception as e:
