@@ -273,6 +273,10 @@ def customise_menu():
     back_button.draw(window)
     back_button.click(event)
 
+    load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, (255,255,255), (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu)
+    load_button.draw(window)
+    load_button.click(event)
+
     save_button = Button(screen_width//2 + 50, screen_height - 125, 150, 60, save_button_colour, (0,0,0), "Save", "Arial", 35, save_preferences, customise_menu)
     save_button.draw(window)
     save_button.click(event)
@@ -295,6 +299,9 @@ def enter_username():
                 username = username[:-1]
             else:
                 username = username + str(event.unicode)
+
+def load_preferences():
+    print("loading preferences")
 
 def save_preferences():
     global save_button_colour, saved
