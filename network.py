@@ -96,6 +96,7 @@ class Network:
     #     if not self.connected:
     #         return None
             
+<<<<<<< HEAD
     #     try:
     #         # Send bullet data
     #         bullet_data = ("Bullet", data)
@@ -107,6 +108,18 @@ class Network:
     #             self.disconnect()
     #             return None
     #         return pickle.loads(received_data)
+=======
+        try:
+            # Send bullet data
+            bullet_data = ("Bullet", data)
+            self.client.send(pickle.dumps(bullet_data))
+            received_data = self.client.recv(4096)
+            if not received_data:
+                print("No data received from server")
+                self.disconnect()
+                return None
+            return pickle.loads(received_data)
+>>>>>>> 746f84841987cf91e8867704d9b0cdf338c35540
 
     #     except socket.timeout:
     #         print("Send/receive timed out (bullet)")
