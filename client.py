@@ -200,33 +200,12 @@ def game():
             # Clear screen and draw map
             window.fill((0, 0, 0))
             game_map.draw(window)
-<<<<<<<<< Temporary merge branch 1
-
-            #send player data and get latest tank data
-            network.send(player)
-            time.sleep(0.05)
-            latest_data = network.get_latest_data()  #get continuous updates
-            # print("Latest data recieved: ", latest_data)
-            if latest_data:
-                # print(latest_data)
-                players = latest_data["players"]  #update players from server
-                #sync bullets with server data
-                # bullets = latest_data["bullets"]
-                # # bullets = server_bullets  #replace local bullets with server's authoritative list
-                # print(f"Bullets assigned: {bullets.keys()}")
-                if "bullets" in latest_data:
-                    bullets = latest_data["bullets"]
-                    print(f"Bullets in game loop: {bullets.keys()}")
-                else:
-                    print("No bullets key in latest_data")
-                    bullets = {}
-=========
->>>>>>>>> Temporary merge branch 2
             
-            #  player drawing
-            if 'players' in players:
-                for player_id, tank in players['players'].items():
-                    tank.draw(window, scale)
+            # #  player drawing
+            # if 'players' in players:
+            #     # print(players)
+            #     for player_id, tank in players['players'].items():
+            #         tank.draw(window, scale)
             
             keys = pygame.key.get_pressed()
 
@@ -236,35 +215,19 @@ def game():
                     fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
                     if fire_data:
                         try:
-                            bullet_x, bullet_y, angle, colour = fire_data
-<<<<<<<<< Temporary merge branch 1
+                            # bullet_x, bullet_y, angle, colour = fire_data
                             # new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
                             # bullets.append(new_bullet)
-                            # print(f"New bullet created locally at ({bullet_x}, {bullet_y}) with angle {angle}")
-                            network.send_bullet(fire_data)
+                            # print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
                             # network_reponse = network.send_bullet(fire_data)
-                            # print(network_reponse)
                             # if network_reponse and 'bullets' in network_reponse:
                             #     server_bullets = list(network_reponse['bullets'].values())
                             #     for bullet in server_bullets:
                             #         if bullet not in bullets:
                             #             bullets.append(bullet)
                             #             print("Added server bullet", bullet)
-                            latest_data = network.get_latest_data()
-                            if latest_data and "bullets" in latest_data:
-                                bullets = latest_data["bullets"]
-=========
-                            new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
-                            bullets.append(new_bullet)
-                            print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
-                            network_reponse = network.send_bullet(fire_data)
-                            if network_reponse and 'bullets' in network_reponse:
-                                server_bullets = list(network_reponse['bullets'].values())
-                                for bullet in server_bullets:
-                                    if bullet not in bullets:
-                                        bullets.append(bullet)
-                                        print("Added server bullet", bullet)
->>>>>>>>> Temporary merge branch 2
+                            # send_data = players
+                            send_data["bullets"] = fire_data
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
