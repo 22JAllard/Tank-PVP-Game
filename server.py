@@ -116,7 +116,7 @@ def client_thread(conn):
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
                 recieved_data = pickle.loads(data)
-                print("Received data = ",recieved_data)
+                # print("Received data = ",recieved_data)
 
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
@@ -135,6 +135,7 @@ def client_thread(conn):
                     "bullets": response_bullets
                 }
                 # print(response_data)
+                print("Sending data: ",response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
                 sent_bullets.update(response_bullets.keys())
 

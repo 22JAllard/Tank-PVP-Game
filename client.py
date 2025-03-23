@@ -176,7 +176,7 @@ def game():
         # print("PLAYER: ",player)
         # send_data = player
         send_data['players'] = player
-        print(send_data)
+        # print(send_data)
         player.colour = client_colour
         
         #player.shrink(screen_height)
@@ -255,9 +255,19 @@ def game():
 
             # print("Send_data = ",send_data)
             # print(player)
-            print("Sending data: ",send_data)
-            players = network.send(send_data)
-            # print(players)
+            # print("Sending data: ",send_data)
+            received_data = network.send(send_data)
+            received_players = received_data["players"]
+            received_bullets = received_data["bullets"]
+            print(received_players)
+
+            for player_id, player_data in received_players.items():
+                tank = player_data['players']
+                if isinstance(tank, Tank):
+                    tank.draw(window, scale)
+                else:
+                    print(f"Error: Player {player_id} has invalid data: {tank}")
+
             pygame.display.update()
             
     except Exception as e:
