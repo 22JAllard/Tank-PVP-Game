@@ -228,6 +228,7 @@ def game():
                             #             print("Added server bullet", bullet)
                             # send_data = players
                             send_data["bullets"] = fire_data
+                            print(send_data)
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
@@ -268,6 +269,12 @@ def game():
 
             if "bullets" in received_data:
                 received_bullets = received_data["bullets"]
+                # print(received_bullets)
+                for player_id, bullet in received_bullets.items():
+                    if hasattr(bullet, 'draw'):  # Make sure it's a Tank object
+                        bullet.draw(window, scale)
+                    else:
+                        print(f"Invalid bullet data for player {player_id}: {bullet}")
 
             pygame.display.update()
             
