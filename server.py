@@ -122,12 +122,16 @@ def client_thread(conn):
                     bullet_data = recieved_data[1] #might need to be a [1:]??
                     tank_fired(player_id, bullet_data)
                 else:
-                    players[player_id] = recieved_data
+                    if isinstance(recieved_data, dict) and 'players' in recieved_data:
+                        players[player_id] = recieved_data['players']
+                    else:
+                        players[player_id] = recieved_data
                     #print(f"Receied tank data from {player_id}")
 
                 response_bullets = {bid: bullet for bid, bullet in bullets.items() 
                                   if bid not in sent_bullets}
 
+                print(players) #currently {0: {'players': <tank.Tank object at 0x00000120DF6A0FA0>}, 1: <tank.Tank object at 0x00000120DF6A0700>} #should be 0: <tank.Tank>, 1: <tank.Tank>
                 # send_bullets = bullets
                 # print("Send_bullets: ", send_bullets)
                 response_data = {
@@ -135,7 +139,7 @@ def client_thread(conn):
                     "bullets": response_bullets
                 }
                 # print(response_data)
-                print("Sending data: ",response_data)
+                # print("Sending data: ",response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
                 sent_bullets.update(response_bullets.keys())
 

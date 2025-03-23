@@ -257,16 +257,17 @@ def game():
             # print(player)
             # print("Sending data: ",send_data)
             received_data = network.send(send_data)
-            received_players = received_data["players"]
-            received_bullets = received_data["bullets"]
-            print(received_players)
+            if "players" in received_data:
+                received_players = received_data["players"]
+                # Now received_players should be the dictionary of all player tanks
+                for player_id, tank in received_players.items():
+                    if hasattr(tank, 'draw'):  # Make sure it's a Tank object
+                        tank.draw(window, scale)
+                    else:
+                        print(f"Invalid tank data for player {player_id}: {tank}")
 
-            for player_id, player_data in received_players.items():
-                tank = player_data['players']
-                if isinstance(tank, Tank):
-                    tank.draw(window, scale)
-                else:
-                    print(f"Error: Player {player_id} has invalid data: {tank}")
+            if "bullets" in received_data:
+                received_bullets = received_data["bullets"]
 
             pygame.display.update()
             
