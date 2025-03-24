@@ -116,7 +116,7 @@ def client_thread(conn):
                     print(f"Client {player_id} sent empty data, closing the connection")
                     break
                 recieved_data = pickle.loads(data)
-                # print("Received data = ",recieved_data)
+                print("Received data = ",recieved_data)
 
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
@@ -131,7 +131,7 @@ def client_thread(conn):
                 response_bullets = {bid: bullet for bid, bullet in bullets.items() 
                                   if bid not in sent_bullets}
 
-                print(players) #currently {0: {'players': <tank.Tank object at 0x00000120DF6A0FA0>}, 1: <tank.Tank object at 0x00000120DF6A0700>} #should be 0: <tank.Tank>, 1: <tank.Tank>
+                # print(players) #currently {0: {'players': <tank.Tank object at 0x00000120DF6A0FA0>}, 1: <tank.Tank object at 0x00000120DF6A0700>} #should be 0: <tank.Tank>, 1: <tank.Tank>
                 # send_bullets = bullets
                 # print("Send_bullets: ", send_bullets)
                 response_data = {

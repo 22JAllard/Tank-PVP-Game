@@ -276,6 +276,7 @@ def game():
                     else:
                         print(f"Invalid bullet data for player {player_id}: {bullet}")
 
+            send_data['bullets'] = () 
             pygame.display.update()
             
     except Exception as e:
