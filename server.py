@@ -121,11 +121,17 @@ def client_thread(conn):
                 if isinstance(recieved_data, tuple) and recieved_data[0] == "Bullet":
                     bullet_data = recieved_data[1] #might need to be a [1:]??
                     tank_fired(player_id, bullet_data)
-                else:
-                    if isinstance(recieved_data, dict) and 'players' in recieved_data:
+                elif isinstance(recieved_data, dict):
+                    if 'players' in recieved_data:
                         players[player_id] = recieved_data['players']
                     else:
                         players[player_id] = recieved_data
+                    
+                    if 'bullets' in recieved_data and recieved_data['bullets'] and not (isinstance(recieved_data['bullets'], tuple) and len(recieved_data['bullets']) == 0):
+                        bullet_data = recieved_data['bullets']
+                        tank_fired(player_id, bullet_data)
+                else:
+                    players[player_id] = recieved_data
                     #print(f"Receied tank data from {player_id}")
 
                 response_bullets = {bid: bullet for bid, bullet in bullets.items() 
