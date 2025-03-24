@@ -228,7 +228,7 @@ def game():
                             #             print("Added server bullet", bullet)
                             # send_data = players
                             send_data["bullets"] = fire_data
-                            print(send_data)
+                            # print(send_data)
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
@@ -258,6 +258,7 @@ def game():
             # print(player)
             # print("Sending data: ",send_data)
             received_data = network.send(send_data)
+            print(received_data)
             if "players" in received_data:
                 received_players = received_data["players"]
                 # Now received_players should be the dictionary of all player tanks
@@ -269,8 +270,10 @@ def game():
 
             if "bullets" in received_data:
                 received_bullets = received_data["bullets"]
+                print("B recieved bullets", received_bullets)
                 # print(received_bullets)
                 for player_id, bullet in received_bullets.items():
+                    print("c")
                     if hasattr(bullet, 'draw'):  # Make sure it's a Tank object
                         bullet.draw(window, scale)
                     else:
