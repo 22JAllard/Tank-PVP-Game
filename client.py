@@ -256,12 +256,11 @@ def game():
 
             # print("Send_data = ",send_data)
             # print(player)
-            print("Sending data: ",send_data)
+            # print("Sending data: ",send_data)
             received_data = network.send(send_data)
             # print(received_data)
             if "players" in received_data:
                 received_players = received_data["players"]
-                # Now received_players should be the dictionary of all player tanks
                 for player_id, tank in received_players.items():
                     if hasattr(tank, 'draw'):  # Make sure it's a Tank object
                         tank.draw(window, scale)
@@ -270,12 +269,10 @@ def game():
 
             if "bullets" in received_data:
                 received_bullets = received_data["bullets"]
-                print("B recieved bullets", received_bullets)
                 # print(received_bullets)
                 for player_id, bullet in received_bullets.items():
-                    print("c")
                     if hasattr(bullet, 'draw'):  # Make sure it's a Tank object
-                        bullet.draw(window, scale)
+                        bullet.draw(window)
                     else:
                         print(f"Invalid bullet data for player {player_id}: {bullet}")
 

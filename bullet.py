@@ -22,6 +22,7 @@ class Bullet:
     def draw(self, win):
         if self.firetime > 0:
             pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
+            print(self.firetime)
 
 #move function
     def move(self, wall_rects):
