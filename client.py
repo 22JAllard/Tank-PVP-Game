@@ -256,9 +256,9 @@ def game():
 
             # print("Send_data = ",send_data)
             # print(player)
-            # print("Sending data: ",send_data)
+            print("Sending data: ",send_data)
             received_data = network.send(send_data)
-            print(received_data)
+            # print(received_data)
             if "players" in received_data:
                 received_players = received_data["players"]
                 # Now received_players should be the dictionary of all player tanks
