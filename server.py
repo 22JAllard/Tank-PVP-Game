@@ -166,7 +166,7 @@ def client_thread(conn):
                 print(response_data)
                 # print("Sending data: ",response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
-                response_bullets = ()
+                response_bullets = {}
                 # sent_bullets.update(response_bullets.keys())
 
 
