@@ -239,7 +239,7 @@ def game():
             bullets_remove = []
             for bullet in bullets[:]:
                 if hasattr(bullet, 'draw') and bullet.firetime > 0:
-                    bullet.draw(window)
+                    bullet.draw(window) ##
                     bullet.firetimer(wall_rects)
                     pygame.display.update()
                     
