@@ -40,6 +40,7 @@ saved = False
 loaded = False
 save_button_colour = (255,255,255)
 load_button_colour = (255,255,255)
+loaded_username = None
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -316,6 +317,7 @@ def customise_menu():
     load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, load_button_colour, (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu)
     load_button.draw(window)
     load_button.click(event)
+    check_loaded()
 
     save_button = Button(screen_width//2 + 50, screen_height - 125, 150, 60, save_button_colour, (0,0,0), "Save", "Arial", 35, save_preferences, customise_menu)
     save_button.draw(window)
@@ -341,7 +343,7 @@ def enter_username():
                 username = username + str(event.unicode)
 
 def load_preferences():
-    global client_colour, load_button_colour, loaded
+    global client_colour, load_button_colour, loaded, loaded_username
     if username != "Type to enter username" and loaded == False:
         with open('preferences.txt', 'r') as file:
             records = file.readlines()
@@ -351,12 +353,17 @@ def load_preferences():
                     #load colour
                     saved_colour = line.split(',', 1)[1].strip()
                     client_colour = ast.literal_eval(saved_colour)
-                    print(f"Loading Preferences...\nSaved Colour for Username: {username}: {client_colour}")
+                    print("1", client_colour)
+                    print(f"Loading Preferences...\nSaved Colour for {username}: {client_colour}")
                     load_button_colour = (0,255,0)
                     loaded_username = username
                     loaded = True
+
+def check_loaded():
+    global loaded, load_button_colour
     if loaded_username != username:
         loaded = False
+        load_button_colour = (255,255,255)
         
 def save_preferences():
     if username != "Type to enter username":
