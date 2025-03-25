@@ -5,6 +5,8 @@ import pickle
 from os import path
 from tank import Tank
 from bullet import Bullet
+import time
+import ast
 #from map import Map
 
 pygame.init()
@@ -35,7 +37,9 @@ send_data = {}
 last_fire = False
 username = "Type to enter username"
 saved = False
+loaded = False
 save_button_colour = (255,255,255)
+load_button_colour = (255,255,255)
 
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
@@ -309,7 +313,7 @@ def customise_menu():
     back_button.draw(window)
     back_button.click(event)
 
-    load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, (255,255,255), (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu)
+    load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, load_button_colour, (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu)
     load_button.draw(window)
     load_button.click(event)
 
@@ -337,27 +341,41 @@ def enter_username():
                 username = username + str(event.unicode)
 
 def load_preferences():
-    print("loading preferences")
-
+    if username != "Type to enter username":
+        with open('preferences.txt', 'r') as file:
+            records = file.readlines()
+            for line in records:
+                saved_user = line.split(',')[0].strip()
+                if saved_user == username:
+                    #load colour
+                    global client_colour, load_button_colour, loaded
+                    saved_colour = line.split(',', 1)[1].strip()
+                    client_colour = ast.literal_eval(saved_colour)
+                    print(f"Loading Preferences...\nSaved Colour for Username: {username}: {client_colour}")
+                    load_button_colour = (0,255,0)
+                    loaded = True
+        
 def save_preferences():
-    global save_button_colour, saved
-    with open('preferences.txt', 'r') as file:
-        records = file.readlines()
-    with open('preferences.txt', 'w') as file:
-        for line in records:
-            saved_user = line.split(',')[0].strip()
-            if saved_user == username:
+    if username != "Type to enter username":
+        global save_button_colour, saved
+        with open('preferences.txt', 'r') as file:
+            records = file.readlines()
+        with open('preferences.txt', 'w') as file:
+            for line in records:
+                saved_user = line.split(',')[0].strip()
+                if saved_user == username:
+                    file.write(f'{username}, {client_colour}\n')
+                    print(f"Updating Preferences for {username}...\nColour: {client_colour}")
+                    save_button_colour = (0,255,0)
+                    saved = True
+                else:
+                    file.write(line)
+        if not saved:
+            print(f"Saving Preferences...\nUsername: {username}, Colour: {client_colour}")
+            with open('preferences.txt', 'a') as file:
                 file.write(f'{username}, {client_colour}\n')
                 save_button_colour = (0,255,0)
                 saved = True
-            else:
-                file.write(line)
-    if not saved:
-        print(f"Saving Preferences...\nUsername: {username}, Colour: {client_colour}")
-        with open('preferences.txt', 'a') as file:
-            file.write(f'{username}, {client_colour}\n')
-            save_button_colour = (0,255,0)
-            saved = True
 
 def settings_menu():
     global menu; menu = settings_menu
