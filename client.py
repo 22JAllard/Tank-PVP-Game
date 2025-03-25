@@ -13,13 +13,20 @@ pygame.init()
 run = True
 network = None
 
-window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+# window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+
+native_width = 1920
+native_height = 1080
+
+window = pygame.Surface((native_width, native_height))
 
 #stores info about client screen size
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 scale = screen_height//50
+
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 
 clock = pygame.time.Clock()
 mapnumber = None
@@ -526,6 +533,9 @@ while run:
             run = False
         for button in buttons:
                 button.click(event)
+
+    scaled_window = pygame.transform.scale(window, (screen_width, screen_height))
+    screen.blit(scaled_window, (0,0))
 
     pygame.display.update()
 pygame.display.quit()
