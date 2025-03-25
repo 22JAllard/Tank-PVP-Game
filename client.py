@@ -341,19 +341,22 @@ def enter_username():
                 username = username + str(event.unicode)
 
 def load_preferences():
-    if username != "Type to enter username":
+    global client_colour, load_button_colour, loaded
+    if username != "Type to enter username" and loaded == False:
         with open('preferences.txt', 'r') as file:
             records = file.readlines()
             for line in records:
                 saved_user = line.split(',')[0].strip()
                 if saved_user == username:
                     #load colour
-                    global client_colour, load_button_colour, loaded
                     saved_colour = line.split(',', 1)[1].strip()
                     client_colour = ast.literal_eval(saved_colour)
                     print(f"Loading Preferences...\nSaved Colour for Username: {username}: {client_colour}")
                     load_button_colour = (0,255,0)
+                    loaded_username = username
                     loaded = True
+    if loaded_username != username:
+        loaded = False
         
 def save_preferences():
     if username != "Type to enter username":
