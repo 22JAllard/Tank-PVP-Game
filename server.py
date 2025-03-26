@@ -41,12 +41,12 @@ def player_connected(client_colour, scale):
     position_index = len(players) % len(player_positions) #working out which position to give the new tank
     x, y = player_positions[position_index] #where the tank spawns
     
+    player_id = current_id #which number is the player
+    current_id += 1
+
     # Create new tank
     new_tank = Tank(x, y, client_colour, scale, player_id)  
     players[current_id] = new_tank #stores the new tank data in the servers player array. as a tuple with x co-ordinate, y co-ordinate, the colour, and the scale value for the client
-    
-    player_id = current_id #which number is the player
-    current_id += 1
     return player_id
 
 def tank_fired(player_id, bullet_data): #only run if fire_data being sent is not none
