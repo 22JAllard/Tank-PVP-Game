@@ -40,10 +40,10 @@ class Bullet:
         self.last_redraw_time = time.time()
 
 
-        # factored_speed = self.delta_time / self.bullet_speed
-        factored_speed = self.bullet_speed
-        # factored_diagonal_speed = self.delta_time / self.bullet_speed
-        factored_diagonal_speed =  self.bullet_speed
+        factored_speed = self.delta_time / self.bullet_speed
+        # factored_speed = self.bullet_speed
+        factored_diagonal_speed = self.delta_time / self.bullet_speed
+        # factored_diagonal_speed =  self.bullet_speed
         #print("welcome to bullet move")
         if self.angle == 0: 
             dy = factored_speed #self.bullet_speed
