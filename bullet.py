@@ -1,4 +1,4 @@
-
+import time
 import pygame
 pygame.init()
 
@@ -15,11 +15,15 @@ class Bullet:
         self.firetime = 60
         self.angle = angle #known as rotation in the tank class
         self.rect = pygame.Rect(self.x, self.y, self.radius, self.radius)
+        self.last_redraw_time = time.time()
         #self.player = player
 
 
 #draw function
     def draw(self, win, scale):
+        self.current_time = time.time()
+        self.delta_time = self.current_time - self.last_redraw_time
+        self.last_redraw_time = time.time()
         if self.firetime > 0:
             pygame.draw.circle(win, self.colour, (self.x * scale, self.y * scale), self.radius)
             print(self.firetime)
