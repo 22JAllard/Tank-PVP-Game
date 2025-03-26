@@ -23,7 +23,7 @@ bullets = {}
 response_bullets = {}
 bullet_count = 0
 current_id = 0
-
+client_bullet_count = 0
 
 player_positions = [
 
@@ -114,6 +114,9 @@ def client_thread(conn):
             try:
                 conn.setblocking(True)
 
+                player_count = len(players)
+                # print(player_count)
+
                 data = conn.recv(4096) #just all the tank pos
                 if not data:
                     print(f"Client {player_id} sent empty data, closing the connection")
@@ -131,6 +134,7 @@ def client_thread(conn):
                         players[player_id] = recieved_data
                     
                     if 'bullets' in recieved_data and recieved_data['bullets'] and not (isinstance(recieved_data['bullets'], tuple) and len(recieved_data['bullets']) == 0):
+                        global client_bullet_count
                         bullet_data = recieved_data['bullets']
                         # tank_fired(player_id, bullet_data)
                         # print(bullet_data) #(45.2, 97, 0, (255, 0, 0))
@@ -142,9 +146,12 @@ def client_thread(conn):
                         print("Created new bullet, ID:", bid)
                         bullet_count += 1
                         response_bullets[bid] = new_bullet #this should be right but is dependent on ^^
+                        client_bullet_count = player_count
+
                         # print(response_bullets)
                 else:
                     players[player_id] = recieved_data
+
                     #print(f"Receied tank data from {player_id}")
                 
                 # response_bullets = {bid: bullet for bid, bullet in bullets.items() 
@@ -163,10 +170,13 @@ def client_thread(conn):
                 #     response_data = {
                 #         "players": players
                 #     }
-                print(response_data)
+                # print(response_data)
                 # print("Sending data: ",response_data)
                 conn.sendall(pickle.dumps(response_data)) #this is sending the bullet again every single time, needs to send once and delete.
-                response_bullets = {}
+                if client_bullet_count > 0:
+                    client_bullet_count -= 1
+                if client_bullet_count == 0:
+                    response_bullets = {}
                 # sent_bullets.update(response_bullets.keys())
 
 
