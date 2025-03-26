@@ -31,12 +31,13 @@ class Bullet:
     def move(self, wall_rects, scale):
         dx = 0
         dy = 0
-        self.current_time = time.time()
+
         if self.created:
             self.created = False
+            self.last_redraw_time = time.time()
             return
 
-        self.delta_time = self.current_time - self.last_redraw_time
+        self.delta_time = time.time() - self.last_redraw_time
         self.last_redraw_time = time.time()
 
 
