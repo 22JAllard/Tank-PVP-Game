@@ -17,6 +17,7 @@ class Bullet:
         self.rect = pygame.Rect(self.x, self.y, self.radius, self.radius)
         self.last_redraw_time = time.time()
         #self.player = player
+        self.created = True
 
 
 #draw function
@@ -31,8 +32,13 @@ class Bullet:
         dx = 0
         dy = 0
         self.current_time = time.time()
+        if self.created:
+            self.created = False
+            return
+
         self.delta_time = self.current_time - self.last_redraw_time
         self.last_redraw_time = time.time()
+
 
         # factored_speed = self.delta_time / self.bullet_speed
         factored_speed = self.bullet_speed
