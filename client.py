@@ -292,7 +292,6 @@ def game():
                         # pygame.quit()
                         died_text = CenteredText(100, (255,0,0), "You got shot", 60, "Arial")
                         died_text.draw(window)
-                        pygame.time.delay(3000)
                     # pygame.display.update()
                     
                     if bullet.firetime <= 0:
