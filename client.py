@@ -252,7 +252,6 @@ def game():
                 if hasattr(bullet, 'draw'):
                     bullet.draw(window, scale) ##
                     bullet.firetimer(wall_rects, scale)
-                    clock.tick(60)
                     # pygame.display.update()
                     
                     if bullet.firetime <= 0:
