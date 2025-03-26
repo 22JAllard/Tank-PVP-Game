@@ -51,7 +51,7 @@ class Tank:
         #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
         self.image = pygame.transform.scale(self.image, (scale *(0.6), scale))
         self.image = pygame.transform.rotate(self.image, self.rotation)
-        win.blit(self.image,(self.x, self.y))
+        win.blit(self.image,(self.x * scale, self.y * scale))
 
     def move(self, map_grid, scale, wall_rects):
         keys = pygame.key.get_pressed()
@@ -141,12 +141,12 @@ class Tank:
     def shrink(self, screen_height):
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
 
-    def scalee(self, scale):
-        self.x = scale * self.x
-        self.y = scale * self.y
-        self.width = scale
-        self.height = scale
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+    # def scalee(self, scale):
+    #     self.x = scale * self.x
+    #     self.y = scale * self.y
+    #     self.width = scale
+    #     self.height = scale
+    #     self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
     
     def is_solid_tile(self, tile):
         try:

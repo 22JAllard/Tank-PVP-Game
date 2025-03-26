@@ -87,11 +87,13 @@ class Map:
             window.blit(tile, rect)
 
 def server_connect():
+
     global input_active
     server_connect_text = CenteredText(350, (255,255,255), "Enter server IP", 50, "Arial")
     server_connect_text.draw(window)
 
     global entered_ip
+    entered_ip = "192.168.1.137"
     entered_ip_text = CenteredText(400, (255,255,255), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
@@ -187,7 +189,7 @@ def game():
         #player.shrink(screen_height)
         global scale
         scale = int(scale)
-        player.scalee(scale)
+        # player.scalee(scale) ####
         running = True
         #Add network.connected check
         while network.connected and running:
