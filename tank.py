@@ -19,7 +19,7 @@ class Tank:
         self.width = 50  
         self.height = 50  
         self.colour = colour
-        self.vel = 1
+        self.vel = 0.5
         self.rotation = 0
         self.image_path = TANK_IMAGES.get(self.colour)
         self.rect = pygame.Rect(x, y, self.width, self.height)
@@ -117,13 +117,15 @@ class Tank:
 
         self.collision_rect = self.rect.move(dx, dy)
 
-        self.scaled_x = self.collision_rect[0]//scale 
-        self.scaled_y = self.collision_rect[1]//scale #get the x and y co ordinates based off map tile grid.
+        self.scaled_x = self.collision_rect[0] 
+        self.scaled_y = self.collision_rect[1] #get the x and y co ordinates based off map tile grid.
 
-        if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
-            self.x += dx
-            self.y += dy
+        # if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
+        #     self.x += dx
+        #     self.y += dy
 
+        self.x += dx
+        self.y += dy
         self.update()
 
     def fired(self):
