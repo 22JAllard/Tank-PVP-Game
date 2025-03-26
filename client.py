@@ -258,7 +258,7 @@ def game():
                     # print(bullet.rect)
                     # print(tank.rect)
                     if (bullet.rect[0] > tank.rect[0] and bullet.rect[0] < tank.rect[0] + tank.rect[2]) and (bullet.rect[1] > tank.rect[1] and bullet.rect[1] < tank.rect[1] + tank.rect[3]):
-                        if tank.id == initial_data["player_id"]:
+                        if tank.id != initial_data["player_id"]:
                             pygame.display.quit()
                             pygame.quit()
                     # pygame.display.update()
