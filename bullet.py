@@ -21,9 +21,7 @@ class Bullet:
 
 #draw function
     def draw(self, win, scale):
-        self.current_time = time.time()
-        self.delta_time = self.current_time - self.last_redraw_time
-        self.last_redraw_time = time.time()
+
         if self.firetime > 0:
             pygame.draw.circle(win, self.colour, (self.x * scale, self.y * scale), self.radius)
             print(self.firetime)
@@ -32,37 +30,43 @@ class Bullet:
     def move(self, wall_rects, scale):
         dx = 0
         dy = 0
+        self.current_time = time.time()
+        self.delta_time = self.current_time - self.last_redraw_time
+        self.last_redraw_time = time.time()
+
+        factored_speed = self.delta_time / self.bullet_speed
+        factored_diagonal_speed = self.delta_time / self.bullet_speed
         #print("welcome to bullet move")
         if self.angle == 0: 
-            dy = self.bullet_speed
+            dy = factored_speed #self.bullet_speed
             # self.y += self.bullet_speed
         elif self.angle == 45:
-            dx = self.bullet_diagonal_speed
-            dy = self.bullet_diagonal_speed
+            dx = factored_diagonal_speed
+            dy = factored_diagonal_speed
             # self.x += self.bullet_diagonal_speed
             # self.y += self.bullet_diagonal_speed
         elif self.angle == 90:
-            dx = self.bullet_speed
+            dx = factored_speed
             # self.x += self.bullet_speed
         elif self.angle == 135:
-            dx = self.bullet_diagonal_speed
-            dy = -self.bullet_diagonal_speed
+            dx = factored_diagonal_speed
+            dy = -factored_diagonal_speed
             # self.x += self.bullet_diagonal_speed
             # self.y -= self.bullet_diagonal_speed
         elif self.angle == 180:
-            dy = -self.bullet_speed
+            dy = -factored_speed
             # self.y -= self.bullet_speed
         elif self.angle == 225:
-            dx = -self.bullet_diagonal_speed
-            dy = -self.bullet_diagonal_speed
+            dx = -factored_diagonal_speed
+            dy = -factored_diagonal_speed
             # self.x -= self.bullet_diagonal_speed
             # self.y -= self.bullet_diagonal_speed
         elif self.angle == 270:
-            dx = -self.bullet_speed
+            dx = -factored_speed
             # self.x -= self.bullet_speed
         elif self.angle == 315:
-            dx = -self.bullet_diagonal_speed
-            dy = self.bullet_diagonal_speed
+            dx = -factored_diagonal_speed
+            dy = factored_diagonal_speed
             # self.x -= self.bullet_diagonal_speed
             # self.y += self.bullet_diagonal_speed
         #self.draw()
