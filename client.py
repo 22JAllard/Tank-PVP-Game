@@ -136,6 +136,7 @@ def play_menu(): #ip entering screen
             global network
             network = Network(server_ip, client_colour, scale) #creates a new instance of the network class, also where the connecting stuff is
 
+            global initial_data
             initial_data = network.initial_data
             if initial_data:
                 global mapnumber 
@@ -257,7 +258,9 @@ def game():
                     # print(bullet.rect)
                     # print(tank.rect)
                     if (bullet.rect[0] > tank.rect[0] and bullet.rect[0] < tank.rect[0] + tank.rect[2]) and (bullet.rect[1] > tank.rect[1] and bullet.rect[1] < tank.rect[1] + tank.rect[3]):
-                        print("ow")
+                        if tank.id == initial_data["player_id"]:
+                            pygame.display.quit()
+                            pygame.quit()
                     # pygame.display.update()
                     
                     if bullet.firetime <= 0:

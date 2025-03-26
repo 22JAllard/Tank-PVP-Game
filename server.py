@@ -42,7 +42,7 @@ def player_connected(client_colour, scale):
     x, y = player_positions[position_index] #where the tank spawns
     
     # Create new tank
-    new_tank = Tank(x, y, client_colour, scale)  
+    new_tank = Tank(x, y, client_colour, scale, player_id)  
     players[current_id] = new_tank #stores the new tank data in the servers player array. as a tuple with x co-ordinate, y co-ordinate, the colour, and the scale value for the client
     
     player_id = current_id #which number is the player

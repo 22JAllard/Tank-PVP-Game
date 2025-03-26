@@ -12,7 +12,7 @@ TANK_IMAGES = {
 }
 
 class Tank:
-    def __init__(self, x, y, colour, scale):
+    def __init__(self, x, y, colour, scale, id):
 
         self.x = x
         self.y = y
@@ -30,6 +30,7 @@ class Tank:
         self.load_image()
         self.firetimer = 0
         self.fire_cooldown = 60
+        self.id = id
     
     def load_image(self):
         if hasattr(self, 'image_path') and self.image_path:
