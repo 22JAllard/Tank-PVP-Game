@@ -245,32 +245,7 @@ def game():
                 last_fire = False
                 # send_data = players
 
-            bullets_remove = []
-            # print("Bullets: ", bullets)
-            # print(len(bullets))
-            for bullet in bullets[:]:
-                # if hasattr(bullet, 'draw') and bullet.firetime > 0:
-                if hasattr(bullet, 'draw'):
-                    bullet.draw(window, scale) ##
-                    bullet.firetimer(wall_rects, scale)
-
-                    ######
-                    # print(bullet.rect)
-                    # print(tank.rect)
-                    if (bullet.rect[0] > tank.rect[0] and bullet.rect[0] < tank.rect[0] + tank.rect[2]) and (bullet.rect[1] > tank.rect[1] and bullet.rect[1] < tank.rect[1] + tank.rect[3]):
-                        if tank.id != initial_data["player_id"]:
-                            pygame.display.quit()
-                            pygame.quit()
-                    # pygame.display.update()
-                    
-                    if bullet.firetime <= 0:
-                        bullets_remove.append(bullet)
-                else:
-                    bullets_remove.append(bullet)
-
-            for bullet in bullets_remove:
-                if bullet in bullets:
-                    bullets.remove(bullet)
+            
 
 # Send player data and get updated players
 
@@ -282,6 +257,8 @@ def game():
             if "players" in received_data:
                 received_players = received_data["players"]
                 for player_id, tank in received_players.items():
+                    if player_id == initial_data["player_id"]:
+                        mytank = tank
                     if hasattr(tank, 'draw'):  # Make sure it's a Tank object
                         tank.draw(window, scale)
                     else:
@@ -296,6 +273,34 @@ def game():
                         bullets.append(bullet)
                     else:
                         print(f"Invalid bullet data for player {player_id}: {bullet}")
+
+            bullets_remove = []
+            # print("Bullets: ", bullets)
+            # print(len(bullets))
+            for bullet in bullets[:]:
+                # if hasattr(bullet, 'draw') and bullet.firetime > 0:
+                if hasattr(bullet, 'draw'):
+                    bullet.draw(window, scale) ##
+                    bullet.firetimer(wall_rects, scale)
+
+                    ######
+                    # print(bullet.rect)
+                    # print(tank.rect)
+                    if (bullet.x >= mytank.x and bullet.x <= mytank.x + 1) and (bullet.y >= mytank.y and bullet.y <= mytank.y + 1):
+                        # if tank.id != initial_data["player_id"]:
+                        # pygame.display.quit()
+                        # pygame.quit()
+                        print("a")
+                    # pygame.display.update()
+                    
+                    if bullet.firetime <= 0:
+                        bullets_remove.append(bullet)
+                else:
+                    bullets_remove.append(bullet)
+
+            for bullet in bullets_remove:
+                if bullet in bullets:
+                    bullets.remove(bullet)
 
             send_data['bullets'] = () 
             pygame.display.update()
