@@ -91,18 +91,18 @@ class Tank:
             dx = -self.vel
             self.rotation = 270
             self.bullet_x_start = self.x -1 
-            self.bullet_y_start = self.y + 0.5
+            self.bullet_y_start = self.y + 0.3
 
         elif keys[pygame.K_RIGHT]:
             dx = self.vel
             self.rotation = 90
             self.bullet_x_start = self.x + 1 +1
-            self.bullet_y_start = self.y + 0.5
+            self.bullet_y_start = self.y + 0.3
 
         elif keys[pygame.K_UP]:
             dy = -self.vel
             self.rotation = 180
-            self.bullet_x_start = self.x + 0.5 
+            self.bullet_x_start = self.x + 0.3 
             self.bullet_y_start = self.y -1
 
         elif keys[pygame.K_DOWN]:

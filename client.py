@@ -290,7 +290,8 @@ def game():
                         # if tank.id != initial_data["player_id"]:
                         # pygame.display.quit()
                         # pygame.quit()
-                        print("a")
+                        died_text = CenteredText(100, (255,0,0), "You Died", 60, "Arial")
+                        died_text.draw()
                     # pygame.display.update()
                     
                     if bullet.firetime <= 0:
