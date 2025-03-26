@@ -70,17 +70,18 @@ class Map:
                 if char == '0':
                     img = pygame.transform.scale(self.wood_block_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = x
-                    img_rect.y = y
+                    img_rect.x = x 
+                    img_rect.y = y 
                     self.tile_list.append((img, img_rect))
                     wall_rects.append(img_rect)
 
                 elif char == '1':
                     img = pygame.transform.scale(self.dirt_path_image, (self.tile_size, self.tile_size))
                     img_rect = img.get_rect()
-                    img_rect.x = x
-                    img_rect.y = y
+                    img_rect.x = x 
+                    img_rect.y = y 
                     self.tile_list.append((img, img_rect))
+
 
     def draw(self, window):
         for tile, rect in self.tile_list:

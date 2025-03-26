@@ -115,17 +115,23 @@ class Tank:
         originalx = self.x
         originaly = self.y
 
-        self.collision_rect = self.rect.move(dx, dy)
+        self.scaled_rect = self.rect
+        self.scaled_rect[0] = self.rect[0] * scale 
+        self.scaled_rect[1] = self.rect[1] * scale
+        self.scaled_rect[2] = 21 
+        self.scaled_rect[3] = 21
+        self.collision_rect = self.scaled_rect.move(dx * scale, dy * scale) 
 
         self.scaled_x = self.collision_rect[0] 
         self.scaled_y = self.collision_rect[1] #get the x and y co ordinates based off map tile grid.
 
-        # if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
-        #     self.x += dx
-        #     self.y += dy
+        # print(wall_rects)
+        if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
+            self.x += dx
+            self.y += dy
 
-        self.x += dx
-        self.y += dy
+        # self.x += dx
+        # self.y += dy
         self.update()
 
     def fired(self):
