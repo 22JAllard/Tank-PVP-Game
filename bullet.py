@@ -10,7 +10,7 @@ class Bullet:
         self.y = y
         self.radius = 3
         self.colour = colour
-        self.bullet_speed = 4
+        self.bullet_speed = 0.25
         self.bullet_diagonal_speed = ((2 ** 0.5) ** -2) * self.bullet_speed #1 should be hypotenuse, and x/y less than 1
         self.firetime = 60
         self.angle = angle #known as rotation in the tank class
@@ -19,13 +19,13 @@ class Bullet:
 
 
 #draw function
-    def draw(self, win):
+    def draw(self, win, scale):
         if self.firetime > 0:
-            pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
+            pygame.draw.circle(win, self.colour, (self.x * scale, self.y * scale), self.radius)
             print(self.firetime)
 
 #move function
-    def move(self, wall_rects):
+    def move(self, wall_rects, scale):
         dx = 0
         dy = 0
         #print("welcome to bullet move")
@@ -63,7 +63,13 @@ class Bullet:
             # self.y += self.bullet_diagonal_speed
         #self.draw()
 
-        if any(self.rect.colliderect(wall) for wall in wall_rects):
+        self.scaled_rect = self.rect
+        self.scaled_rect[0] = self.rect[0] * scale 
+        self.scaled_rect[1] = self.rect[1] * scale
+        self.scaled_rect[2] = scale 
+        self.scaled_rect[3] = scale
+        self.collision_rect = self.scaled_rect.move(dx * scale, dy * scale) 
+        if any(self.scaled_rect.colliderect(wall) for wall in wall_rects):
             self.firetime = 0
         else:
             self.x += dx
@@ -73,9 +79,9 @@ class Bullet:
         self.rect.y = self.y
 
 #lifetime function
-    def firetimer(self, wall_rects):
+    def firetimer(self, wall_rects, scale):
         if self.firetime > 0:
-            self.move(wall_rects)
+            self.move(wall_rects, scale)
             self.firetime -= 1
         return self.firetime > 0
 
