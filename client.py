@@ -291,7 +291,7 @@ def game():
                         # pygame.display.quit()
                         # pygame.quit()
                         died_text = CenteredText(100, (255,0,0), "You Died", 60, "Arial")
-                        died_text.draw()
+                        died_text.draw(window)
                     # pygame.display.update()
                     
                     if bullet.firetime <= 0:
