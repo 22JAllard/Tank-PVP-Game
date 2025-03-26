@@ -269,7 +269,7 @@ def game():
             # print(player)
             # print("Sending data: ",send_data)
             received_data = network.send(send_data)
-            print(received_data)
+            # print(received_data)
             if "players" in received_data:
                 received_players = received_data["players"]
                 for player_id, tank in received_players.items():
