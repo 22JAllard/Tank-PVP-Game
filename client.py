@@ -94,7 +94,6 @@ def server_connect():
     server_connect_text.draw(window)
 
     global entered_ip
-    entered_ip = "192.168.1.137"
     entered_ip_text = CenteredText(400, (255,255,255), entered_ip, 30, "Arial")
     entered_ip_text.draw(window)
 
