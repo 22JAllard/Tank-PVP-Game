@@ -49,7 +49,6 @@ class Tank:
         self.load_image()
 
     def draw(self, win, scale):
-        #pygame.draw.rect(win, self.colour, self.rect) #modify to have tank graphic once we have a tank yk
         self.image = pygame.transform.scale(self.image, (scale *(0.6), scale))
         self.image = pygame.transform.rotate(self.image, self.rotation)
         win.blit(self.image,(self.x * scale, self.y * scale))
@@ -111,10 +110,6 @@ class Tank:
             self.bullet_x_start = self.x + 0.3
             self.bullet_y_start = self.y + 1 + 1
 
-
-        originalx = self.x
-        originaly = self.y
-
         self.scaled_rect = self.rect
         self.scaled_rect[0] = self.rect[0] * scale 
         self.scaled_rect[1] = self.rect[1] * scale
@@ -125,13 +120,10 @@ class Tank:
         self.scaled_x = self.collision_rect[0] 
         self.scaled_y = self.collision_rect[1] #get the x and y co ordinates based off map tile grid.
 
-        # print(wall_rects)
         if not any(self.collision_rect.colliderect(wall) for wall in wall_rects):
             self.x += dx
             self.y += dy
 
-        # self.x += dx
-        # self.y += dy
         self.update()
 
     def fired(self):
@@ -148,13 +140,6 @@ class Tank:
 
     def shrink(self, screen_height):
         self.image = pygame.transform.scale(self.image, (screen_height//50, screen_height//50))
-
-    # def scalee(self, scale):
-    #     self.x = scale * self.x
-    #     self.y = scale * self.y
-    #     self.width = scale
-    #     self.height = scale
-    #     self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
     
     def is_solid_tile(self, tile):
         try:

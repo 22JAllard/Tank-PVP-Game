@@ -1,47 +1,51 @@
-#client
+#import libraries
 import pygame
 from network import Network
 import pickle
 from os import path
 from tank import Tank
 from bullet import Bullet
-import time
 import ast
-#from map import Map
 
+#initialise pygame
 pygame.init()
+
+#set run to true as client is running, and network to none as the network is not currently connected to server
 run = True
 network = None
 
+#set up the pygame window to styart at (0,0) (top left), and make it full screen
 window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
-#stores info about client screen size
+#store info about client screen size
 display = pygame.display.Info()
 screen_width = display.current_w
 screen_height = display.current_h
 scale = screen_height//50
 
-clock = pygame.time.Clock()
-mapnumber = None
-input_active = True
-no_map_number = True
+#define variables
+clock = pygame.time.Clock() #set up the clock
+mapnumber = None 
+input_active = True  
+no_map_number = True 
 entered_ip = ""
 colour_pos = 0
-tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)]
-client_colour = tank_colours[colour_pos]
-wall_rects = []
+tank_colours = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,127,11), (255,21,123)] #define an array with all the colours of tanks available
+client_colour = tank_colours[colour_pos] #selects the client colour based on the position of the position in the array
+wall_rects = [] 
 fireable = False
 map_unloaded = True
 bullets = []
 send_data = {}
 last_fire = False
-username = "Type to enter username"
+username = "Type to enter username" #will later be set to an empty string to allow the user to type to it
 saved = False
 loaded = False
 save_button_colour = (255,255,255)
 load_button_colour = (255,255,255)
 loaded_username = None
 
+#load images for tanks
 zerotank = pygame.image.load('0tank.png')
 onetank = pygame.image.load('1tank.png')
 twotank = pygame.image.load('2tank.png')
@@ -51,69 +55,69 @@ fivetank = pygame.image.load('5tank.png')
 
 class Map:
     def __init__(self, data):
-        self.tile_list = []
-        self.tile_size = screen_height //50
+        self.tile_list = [] #create an empty array with all the tiles in
+        self.tile_size = screen_height //50 #calculate the size of each tile to fit the 50x50 tile grids on the screen
 
-        try:
+        try: #tries to load the two images for the map
             self.wood_block_image = pygame.image.load('0.png')
             self.dirt_path_image = pygame.image.load('1.png')
-        except pygame.error as error:
+        except pygame.error as error: #prints error message if the images could not be loaded correctly.
             print(f"Error loading images: {error}")
             return
 
-        global wall_rects
-        for row_index, row in enumerate(data):
-            for col_index, char in enumerate(row):
-                x = col_index * self.tile_size
-                y = row_index * self.tile_size
+        global wall_rects 
+        for row_index, row in enumerate(data): #for each row
+            for col_index, char in enumerate(row): #for each character in the row
+                x = col_index * self.tile_size #changes the x (left) of the tile to be drawn
+                y = row_index * self.tile_size #changes the y (top corner) of the tile to be drawn
 
-                if char == '0':
-                    img = pygame.transform.scale(self.wood_block_image, (self.tile_size, self.tile_size))
-                    img_rect = img.get_rect()
-                    img_rect.x = x 
+                if char == '0': #if the character is a 0
+                    img = pygame.transform.scale(self.wood_block_image, (self.tile_size, self.tile_size)) #edits the size of the tile image
+                    img_rect = img.get_rect() #creates the rectangle around the image
+                    img_rect.x = x #sets the x and y (below) to the current x and y values
                     img_rect.y = y 
-                    self.tile_list.append((img, img_rect))
-                    wall_rects.append(img_rect)
+                    self.tile_list.append((img, img_rect)) #adds the tile to the tile list
+                    wall_rects.append(img_rect) #adds the tile to the list of solid tiles (ie. causes collisions)
 
                 elif char == '1':
-                    img = pygame.transform.scale(self.dirt_path_image, (self.tile_size, self.tile_size))
-                    img_rect = img.get_rect()
-                    img_rect.x = x 
+                    img = pygame.transform.scale(self.dirt_path_image, (self.tile_size, self.tile_size)) #edits the size of the tile image
+                    img_rect = img.get_rect() #creates the rectangle around the image
+                    img_rect.x = x #sets the x and y (below) to the current x and y values 
                     img_rect.y = y 
-                    self.tile_list.append((img, img_rect))
+                    self.tile_list.append((img, img_rect)) #adds the tile to the tile list
 
 
-    def draw(self, window):
-        for tile, rect in self.tile_list:
-            window.blit(tile, rect)
+    def draw(self, window): 
+        for tile, rect in self.tile_list: #for each tile in the tile_list
+            window.blit(tile, rect) #draw it to the window, based on the tile's rect.
 
 def server_connect():
 
     global input_active
-    server_connect_text = CenteredText(350, (255,255,255), "Enter server IP", 50, "Arial")
-    server_connect_text.draw(window)
+    server_connect_text = CenteredText(350, (255,255,255), "Enter server IP", 50, "Arial") #create an instance of the CenteredText class, with y value 350, colour white, text as "Enter server IP", size 50 and font "Arial"
+    server_connect_text.draw(window) #draw the instance to window
 
     global entered_ip
-    entered_ip_text = CenteredText(400, (255,255,255), entered_ip, 30, "Arial")
-    entered_ip_text.draw(window)
+    entered_ip_text = CenteredText(400, (255,255,255), entered_ip, 30, "Arial") #create another instance of the CenteredText class which will have y value 400, colour white, text as the contents of entered_ip, size 30 and font "Arial"
+    entered_ip_text.draw(window) #draw the instance to the window
 
-    pygame.display.update()
+    pygame.display.update() #update the pygame window
 
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and input_active:
-            if event.key == pygame.K_RETURN:
-                input_active = False
+    for event in pygame.event.get(): #checks for an event 
+        if event.type == pygame.KEYDOWN and input_active: #if there is an event, check if the event is a key being pressed and the input_active value is still true
+            if event.key == pygame.K_RETURN: #if the key pressed if Return/Enter
+                input_active = False #set input_active to false, and prevent any more keys being pressed
                 return entered_ip
-            elif event.key == pygame.K_BACKSPACE:
-                entered_ip = entered_ip[:-1]
+            elif event.key == pygame.K_BACKSPACE: 
+                entered_ip = entered_ip[:-1] #if the key pressed is backspace, delete the last character in the entered_ip string
             else:
-                entered_ip = entered_ip + str(event.unicode)
+                entered_ip = entered_ip + str(event.unicode) #if the key pressed is not an enter or a backspace, add the button press to the entered_ip string
 
 def load_level():
-    map_file = f'map{mapnumber}.txt'
-    with open(map_file, 'r') as file:
-        map_data = [list(line.strip()) for line in file]
-    print(f"Loaded map data")
+    map_file = f'map{mapnumber}.txt' #sets the map_file to the map number given (ie 'map1.txt')
+    with open(map_file, 'r') as file: #open the file in read mode, to prevent any accidental changes to the file
+        map_data = [list(line.strip()) for line in file] #store the map data, by reading through and stripping lines of enters
+    print(f"Loaded map data") 
     return map_data
 
 def play_menu(): #ip entering screen
@@ -121,37 +125,37 @@ def play_menu(): #ip entering screen
     global network; global no_map_number
 
     menu_bg = pygame.image.load('menu_bg.png')
-    window.blit(menu_bg, (0,0))
+    window.blit(menu_bg, (0,0)) #draw the menu image to the screen
 
-    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, play_menu)
-    back_button.draw(window)
-    back_button.click(event)
+    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, play_menu) #create an instance of the button class with x value 50, y 50, width 50. height 50, button colour white, text colour black, text "<" (as in an arrow), font "Arial", size 25, the function to be called if clicked as main_menu and the screen it is to be drawn on as play_menu
+    back_button.draw(window) #draw instance of button
+    back_button.click(event) #check for the button being clicked
 
-    server_ip = server_connect()
+    server_ip = server_connect() #call the clients server_connect function and store the returned value in server_ip
     global no_map_number
-    if server_ip and no_map_number:
+    if server_ip and no_map_number: #checks that there is a value in server and no_map_number
         try:
-            print("Attempting to connect to server. IP: ", server_ip)
+            print("Attempting to connect to server. IP: ", server_ip) #print the server ip the client is trying to connect to
             global network
-            network = Network(server_ip, client_colour, scale) #creates a new instance of the network class, also where the connecting stuff is
+            network = Network(server_ip, client_colour, scale) #creates a new instance of the network class
 
             global initial_data
-            initial_data = network.initial_data
-            if initial_data:
+            initial_data = network.initial_data #stores the initial_data as the contents of the networks intial data
+            if initial_data: #if the contents of the initial_data is not empty
                 global mapnumber 
-                mapnumber = initial_data["map_number"] #searching the recieved data from the server for the value with "map_number"
-                print("Selected map", mapnumber)
+                mapnumber = initial_data["map_number"] #searching the recieved data dictionary from the server for the value with "map_number"
+                print("Selected map", mapnumber) 
                 no_map_number = False  
                 
                 global map_unloaded
-                if map_unloaded:
+                if map_unloaded: 
                     map_unloaded = False
                     global world_data
-                    world_data = load_level()
+                    world_data = load_level() #stores the returned data from the load_level function in world_data
                 
-                if world_data:
-                    game_map = Map(world_data)
-                    game()  
+                if world_data: #if world_data is not empty
+                    game_map = Map(world_data) #creates an instance of the map class, sending it the world_data, and stores any returned data in game_map
+                    game()  #calls the game function 
                 else:
                     print("Failed to load map data :(")
             else:
@@ -164,168 +168,121 @@ def game():
     global menu; menu = game
     global players, scale, world_data, wall_rects, network
     map_data = world_data
-    game_map = Map(map_data)
+    game_map = Map(map_data) #creates a new instance of the map class, sending it the map data and storing returned data in game_map
 
-    if not network or not network.connected:
+    if not network or not network.connected: #if there is no network, or the network is not connected, return and set the active menu to main_menu
         print("No network connected")
         menu = main_menu
         return
     
-    if 'players' not in globals():
+    if 'players' not in globals(): 
         players={}
 
     bullets = []
-    last_fire = []
+    last_fire = [] #create bullets and last_fire as empty arrays
 
-#Get player tank through network
-    try:
-        game_map = Map(map_data) #
-        player = network.initial_data["tank"]
-        # print("PLAYER: ",player)
-        # send_data = player
-        send_data['players'] = player
-        # print(send_data)
-        player.colour = client_colour
+    #Get player tank through network
+    try: 
+        game_map = Map(map_data) #creates a new instance of the map class, sending it the map data and storing returned data in game_map
+        player = network.initial_data["tank"] #store the value in the tank section of the intial data from network in players
+        send_data['players'] = player #put the player in the data to be sent to the server, in the 'players' section
+        player.colour = client_colour #set the players colour to the client colour
         
-        #player.shrink(screen_height)
         global scale
-        scale = int(scale)
-        # player.scalee(scale) ####
+        scale = int(scale) #makes the scale an integer
         running = True
-        #Add network.connected check
-        while network.connected and running:
+        while network.connected and running: #while the network is connected and client running
             
-            for event in pygame.event.get():
+            for event in pygame.event.get(): 
                 if event.type == pygame.QUIT:
                     running = False
                     network.disconnect()
                     
-            map_grid = game_map.tile_list 
-            player.move(map_grid, scale, wall_rects)
-
-            #send something about a bullet being fired??
+            map_grid = game_map.tile_list #store the tile list in the map_grid variable
+            player.move(map_grid, scale, wall_rects) #call the move function in the tank code
 
             # Clear screen and draw map
-            window.fill((0, 0, 0))
-            game_map.draw(window)
+            window.fill((0, 0, 0)) #create a black backdrop on the pygame window
+            game_map.draw(window) #draw the map data onto the window
             
-            # #  player drawing
-            # if 'players' in players:
-            #     # print(players)
-            #     for player_id, tank in players['players'].items():
-            #         tank.draw(window, scale)
-            
-            keys = pygame.key.get_pressed()
+            keys = pygame.key.get_pressed() #store the key if a key is pressed
 
             global fireable
-            if keys[pygame.K_f] and not last_fire:
-                if player.check_fireable():
-                    fire_data = player.fired() #this then needs to be sent to the server to make a new instance of bullet
-                    if fire_data:
+            if keys[pygame.K_f] and not last_fire: #if the key pressed is f, and not last fire
+                if player.check_fireable(): #check if the player can fire
+                    fire_data = player.fired() #store the return from the fired function in fire_data
+                    if fire_data: #if there is anything in fire_data
                         try:
-                            # bullet_x, bullet_y, angle, colour = fire_data
-                            # new_bullet = Bullet(bullet_x, bullet_y, colour, angle)
-                            # bullets.append(new_bullet)
-                            # print(f"New bullet created at ({bullet_x}, {bullet_y}) with angle {angle}")
-                            # network_reponse = network.send_bullet(fire_data)
-                            # if network_reponse and 'bullets' in network_reponse:
-                            #     server_bullets = list(network_reponse['bullets'].values())
-                            #     for bullet in server_bullets:
-                            #         if bullet not in bullets:
-                            #             bullets.append(bullet)
-                            #             print("Added server bullet", bullet)
-                            # send_data = players
-                            send_data["bullets"] = fire_data
-                            # print(send_data)
+                            send_data["bullets"] = fire_data #store the fire data in the send_data dictionary 'bullets' section
                         except ValueError:
                             print("Invalid fire_data format")
                     last_fire = True
-            elif not keys[pygame.K_f]:
+            elif not keys[pygame.K_f]: #if the key pressed is not f, put last_fire to False
                 last_fire = False
-                # send_data = players
 
-            
-
-# Send player data and get updated players
-
-            # print("Send_data = ",send_data)
-            # print(player)
-            # print("Sending data: ",send_data)
-            received_data = network.send(send_data)
-            # print(received_data)
-            if "players" in received_data:
-                received_players = received_data["players"]
-                for player_id, tank in received_players.items():
-                    if player_id == initial_data["player_id"]:
-                        mytank = tank
-                    if hasattr(tank, 'draw'):  # Make sure it's a Tank object
-                        tank.draw(window, scale)
+            received_data = network.send(send_data) #store the returned data from sending the send_data to server
+            if "players" in received_data: #if 'players' are in the received_data
+                received_players = received_data["players"] #store the values in the received data players section in recieved_players
+                for player_id, tank in received_players.items(): #for player id and tank in the received_players
+                    if player_id == initial_data["player_id"]: #if the players id of the player in received_players is matching to the clients personal player id, received in the initial data
+                        mytank = tank #store that tanks data in mytank
+                    if hasattr(tank, 'draw'):  #checks it is a tank object that can be drawn
+                        tank.draw(window, scale) #if it is, draw it to the window, with the correct scale
                     else:
                         print(f"Invalid tank data for player {player_id}: {tank}")
 
-            if "bullets" in received_data:
-                received_bullets = received_data["bullets"]
-                # print(received_bullets)
-                for player_id, bullet in received_bullets.items():
-                    if hasattr(bullet, 'draw'):  # Make sure it's a Tank object
-                        # bullet.draw(window)
-                        bullets.append(bullet)
+            if "bullets" in received_data: #if 'bullets' are in the received_data
+                received_bullets = received_data["bullets"] #store the values in the 'bullets' section of the received_data in received_bullets
+                for player_id, bullet in received_bullets.items(): #for each player id and bullet in recieved bullets
+                    if hasattr(bullet, 'draw'):  #checks it is a bullet object that can be drawn
+                        bullets.append(bullet) #if it is, add it to the bullets list
                     else:
                         print(f"Invalid bullet data for player {player_id}: {bullet}")
 
             bullets_remove = []
-            # print("Bullets: ", bullets)
-            # print(len(bullets))
-            for bullet in bullets[:]:
-                # if hasattr(bullet, 'draw') and bullet.firetime > 0:
-                if hasattr(bullet, 'draw'):
-                    bullet.draw(window, scale) ##
-                    bullet.firetimer(wall_rects, scale)
+            for bullet in bullets[:]:#checks for each bullet in a copy of the bullets list
+                if hasattr(bullet, 'draw'): #if it is an instance of the bullet class and has the attribute draw
+                    bullet.draw(window, scale) #draw the bullet to the screen
+                    bullet.firetimer(wall_rects, scale) #call the bullet firetimer function, sending the wall_rects and also scale
 
-                    ######
-                    # print(bullet.rect)
-                    # print(tank.rect)
-                    if (bullet.x >= mytank.x and bullet.x <= mytank.x + 1) and (bullet.y >= mytank.y and bullet.y <= mytank.y + 1):
-                        # if tank.id != initial_data["player_id"]:
-                        # pygame.display.quit()
-                        # pygame.quit()
-                        died_text = CenteredText(100, (255,0,0), "You got shot", 60, "Arial")
-                        died_text.draw(window)
-                    # pygame.display.update()
+                    if (bullet.x >= mytank.x and bullet.x <= mytank.x + 1) and (bullet.y >= mytank.y and bullet.y <= mytank.y + 1): #checks if the bullet collides with the clients own tank
+
+                        died_text = CenteredText(100, (255,0,0), "You got shot", 60, "Arial") #create an instance of the CenteredText function, with y value 100, text colour red, text "You got shot", size 60 and font "Arial"
+                        died_text.draw(window) #draw the instance to screen
                     
-                    if bullet.firetime <= 0:
-                        bullets_remove.append(bullet)
+                    if bullet.firetime <= 0: #if the bullets firetime value is less than or equal to zero
+                        bullets_remove.append(bullet) #add the bullet to the bullets_remove list
                 else:
-                    bullets_remove.append(bullet)
+                    bullets_remove.append(bullet) #if it cannot be drawn, add it to the remove list anyway
 
-            for bullet in bullets_remove:
+            for bullet in bullets_remove: #searches through each bullet in the bullets remove list, and removes it
                 if bullet in bullets:
                     bullets.remove(bullet)
 
-            send_data['bullets'] = () 
-            pygame.display.update()
+            send_data['bullets'] = ()  #send an empty tuple in the bullets section
+            pygame.display.update() #update the pygame window
             
     except Exception as e:
         print(f"Error in game: {e}")
-    finally:  # Added cleanup in finally block
-        if network:
-            network.disconnect()
-        menu = main_menu
+    finally:  #once the try loop is exited
+        if network: 
+            network.disconnect() #disconnect from the network
+        menu = main_menu #and set the menu back to main_menu
     
 def customise_menu():
     global menu; menu = customise_menu
-    customise_bg = pygame.image.load('warehouse.png')
-    customise_bg = pygame.transform.scale(customise_bg, (screen_width, screen_height))
-    window.blit(customise_bg, (0,0))
+    customise_bg = pygame.image.load('warehouse.png') #load the background image
+    customise_bg = pygame.transform.scale(customise_bg, (screen_width, screen_height)) #change the image size to the size of the client screen
+    window.blit(customise_bg, (0,0)) #draw the image to screen
 
-    customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial")
-    customise_text.draw(window)
+    customise_text = CenteredText(30, (0,0,0), "Customise", 100, "Arial") #create a new instance of the CenteredText class with y value 30, colour black, text "Customise", size 100 and font "Arial"
+    customise_text.draw(window) #draw the text to screen
  
-    enter_username()
+    enter_username() #call the enter username function
 
-    colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour)
-    colour_button.draw(window)
-    colour_button.arrow_click()
+    colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour) #creates a new instance of the ColourButton with x value half the screen width + 50, y value 300, width 550, height 80, colour black, text colour "Colour", font "Arial", size 80, and background colour the clients colour
+    colour_button.draw(window) #draw the button to screen
+    colour_button.arrow_click() #check for a click of the buttom
 
     back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu)
     back_button.draw(window)
@@ -367,7 +324,6 @@ def load_preferences():
             for line in records:
                 saved_user = line.split(',')[0].strip()
                 if saved_user == username:
-                    #load colour
                     saved_colour = line.split(',', 1)[1].strip()
                     client_colour = ast.literal_eval(saved_colour)
                     print("1", client_colour)
@@ -510,7 +466,6 @@ def main_menu():
     menu_bg = pygame.image.load('menu_bg.png')
     window.blit(menu_bg, (0,0))
 
-    #text
     title_text = CenteredText(30, (255,255,255), "Tank PVP Game", 100, "Arial")
     title_text.draw(window)
 
@@ -518,8 +473,6 @@ def main_menu():
     buttons = [
         CenteredButton(150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu, main_menu),
         CenteredButton(screen_height - 150, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu, main_menu),
-        #Button(screen_width - 150, screen_height - 150, 100, 100, (255, 255, 255), (0,0,0), "Exit", "Arial", 25, quit_menu, main_menu),
-        #Button(50, screen_height - 150, 100, 100, (255,255,255), (0,0,0), "Settings", "Arial", 25, settings_menu, main_menu)
     ]
 
     for button in buttons:
