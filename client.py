@@ -280,96 +280,87 @@ def customise_menu():
  
     enter_username() #call the enter username function
 
-    colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour) #creates a new instance of the ColourButton with x value half the screen width + 50, y value 300, width 550, height 80, colour black, text colour "Colour", font "Arial", size 80, and background colour the clients colour
+    colour_button = ColourButton(screen_width//2 + 50, 300, 550, 80, (0,0,0), "Colour", "Arial", 80, client_colour) #creates a new instance of the ColourButton class with x value half the screen width + 50, y value 300, width 550, height 80, colour black, text colour "Colour", font "Arial", size 80, and background colour the clients colour
     colour_button.draw(window) #draw the button to screen
     colour_button.arrow_click() #check for a click of the buttom
 
-    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu)
-    back_button.draw(window)
-    back_button.click(event)
+    back_button = Button(50, 50, 50, 50, (255,255,255), (0,0,0), "<", "Arial", 25, main_menu, customise_menu) #new instance of the Button class with x value 50, y value 50, width 50, height 50, background colour white, text colour black, text "<", font "Arial", size 25, calls main_menu and is drawn on the customise menu
+    back_button.draw(window) #draw button
+    back_button.click(event) #check for the button being clicked
 
-    load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, load_button_colour, (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu)
-    load_button.draw(window)
-    load_button.click(event)
-    check_loaded()
+    load_button = Button(screen_width//2 -50 -150, screen_height - 125, 150, 60, load_button_colour, (0,0,0), "Load", "Arial", 35, load_preferences, customise_menu) #new instance of Button class, with x value half screen width - 200, y value 125 less than screen height, width 150, height 60, colour of the contents of load_button_colour (either white or green), text colour black, text "Load", font "Arial", calls load_preferences function and on the customise menu
+    load_button.draw(window) #draw button
+    load_button.click(event) #check for click
+    check_loaded() #check if preferences have been loaded to change colour of the button
 
-    save_button = Button(screen_width//2 + 50, screen_height - 125, 150, 60, save_button_colour, (0,0,0), "Save", "Arial", 35, save_preferences, customise_menu)
-    save_button.draw(window)
-    save_button.click(event)
+    save_button = Button(screen_width//2 + 50, screen_height - 125, 150, 60, save_button_colour, (0,0,0), "Save", "Arial", 35, save_preferences, customise_menu) #new instance of Button, x value 50 plus the screen width, y 125 less than the screen height, width 150, height 60, colour of the contents of save_button_colour (white/green), text black, text "Save", font "Arial", calls save_preferences, on customise menu
+    save_button.draw(window) #draw button
+    save_button.click(event) #check for button click
 
 def enter_username(): 
     global username
-    username_text = CenteredText(200, (0,0,0), username, 50, "Arial")
-    username_text.draw(window)
+    username_text = CenteredText(200, (0,0,0), username, 50, "Arial") #create an instance of the CenteredText class, y value 200, colour black, text is contents of username, size 50 and font "Arial"
+    username_text.draw(window) #draw username text
 
     global input_active
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and input_active:
-            if username == "Type to enter username":
+    for event in pygame.event.get(): #check for an event
+        if event.type == pygame.KEYDOWN and input_active: #check if the event is a key press and if the input is active
+            if username == "Type to enter username": #if the username is unchanged, clear it when a key is pressed
                 username = ""
-                username = username + str(event.unicode)
-            elif event.key == pygame.K_RETURN:
+                username = username + str(event.unicode) #add the pressed key to the username string
+            elif event.key == pygame.K_RETURN: #if enter is pressed, disable input active
                 input_active = False
                 return username
-            elif event.key == pygame.K_BACKSPACE:
+            elif event.key == pygame.K_BACKSPACE: #delete the most recent character if backspace is pressed
                 username = username[:-1]
             else:
-                username = username + str(event.unicode)
+                username = username + str(event.unicode) #if none of the above apply, just add the pressed key to the username string
 
 def load_preferences():
     global client_colour, load_button_colour, loaded, loaded_username
-    if username != "Type to enter username" and loaded == False:
-        with open('preferences.txt', 'r') as file:
-            records = file.readlines()
-            for line in records:
-                saved_user = line.split(',')[0].strip()
-                if saved_user == username:
-                    saved_colour = line.split(',', 1)[1].strip()
-                    client_colour = ast.literal_eval(saved_colour)
-                    print("1", client_colour)
+    if username != "Type to enter username" and loaded == False: #check if the username is changed, and preferences are not loaded
+        with open('preferences.txt', 'r') as file: #read the preferences file to avoid accidental edits
+            records = file.readlines() #store the contents in a records variable
+            for line in records: #search each line in the records
+                saved_user = line.split(',')[0].strip() #just check the first section before the ,
+                if saved_user == username: #if the saved username matches the username the user has entered
+                    saved_colour = line.split(',', 1)[1].strip() #get the saved colour, which is after the ,
+                    client_colour = ast.literal_eval(saved_colour) #convert saved_colour string to client_colour
                     print(f"Loading Preferences...\nSaved Colour for {username}: {client_colour}")
-                    load_button_colour = (0,255,0)
+                    load_button_colour = (0,255,0) #change the colour of the load button
                     loaded_username = username
                     loaded = True
 
 def check_loaded():
     global loaded, load_button_colour
-    if loaded_username != username:
+    if loaded_username != username: #if the username that existed when preferences were loaded doesnt match the current username, turn the load button white again
         loaded = False
         load_button_colour = (255,255,255)
         
 def save_preferences():
-    if username != "Type to enter username":
+    if username != "Type to enter username": #make sure the user has entered a new username
         global save_button_colour, saved
-        with open('preferences.txt', 'r') as file:
-            records = file.readlines()
-        with open('preferences.txt', 'w') as file:
-            for line in records:
-                saved_user = line.split(',')[0].strip()
-                if saved_user == username:
-                    file.write(f'{username}, {client_colour}\n')
+        with open('preferences.txt', 'r') as file: #open the file in read mode as it doesn't need to be changed
+            records = file.readlines() #read each line and store it in records
+        with open('preferences.txt', 'w') as file: #open the file in write mode
+            for line in records: #search each line in the record
+                saved_user = line.split(',')[0].strip() #check the username of each line (ie before the ,)
+                if saved_user == username: #if the saved user matches the username which data is being saved for
+                    file.write(f'{username}, {client_colour}\n') #overwrite the current saved data for that username
                     print(f"Updating Preferences for {username}...\nColour: {client_colour}")
-                    save_button_colour = (0,255,0)
+                    save_button_colour = (0,255,0) #change colour of the save button
                     saved = True
                 else:
-                    file.write(line)
-        if not saved:
+                    file.write(line) #if there is not a record with that username, add one
+        if not saved: #if its not saved but the button is clicked
             print(f"Saving Preferences...\nUsername: {username}, Colour: {client_colour}")
-            with open('preferences.txt', 'a') as file:
-                file.write(f'{username}, {client_colour}\n')
+            with open('preferences.txt', 'a') as file: #open the file in append mode 
+                file.write(f'{username}, {client_colour}\n') #save the username and colour to file
                 save_button_colour = (0,255,0)
                 saved = True
 
-def settings_menu():
-    global menu; menu = settings_menu
-    print("settings")
-
-def quit_menu():
-    global menu; menu = quit_menu
-    print("exit")
-
 class ColourButton():
-    def __init__ (self, x, y, width, height, text_colour, text, font, size, selected_colour):
+    def __init__ (self, x, y, width, height, text_colour, text, font, size, selected_colour): #define the values which are needed for a new instance of the class
         self.x = x
         self.y = y
         self.width = width
@@ -379,10 +370,10 @@ class ColourButton():
         self.text_colour = text_colour
         self.text = text
         self.size = size
-        self.font = pygame.font.SysFont(font, self.size)
+        self.font = pygame.font.SysFont(font, self.size) #change the size and font to an actual pygame font
 
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.label = self.font.render(self.text, True, self.text_colour)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height) #create the rectangle for the button based on the 
+        self.label = self.font.render(self.text, True, self.text_colour) #create the label of text based on the font and text (and it's colour)
 
     def draw(self, window):
         pygame.draw.rect(window, self.button_colour, self.rect)
