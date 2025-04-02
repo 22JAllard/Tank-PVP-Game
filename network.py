@@ -1,3 +1,4 @@
+#import libraries
 import socket
 import pickle
 
@@ -38,25 +39,25 @@ class Network:
             
     def receive_map_number(self): 
         try:
-            data = self.client.recv(8192) 
+            data = self.client.recv(8192) #receive and store data 
             if data:
-                return pickle.loads(data)
+                return pickle.loads(data) #return the unserialised data
             else:
-                print("No data received from server")
+                print("No data received from server") 
                 return None
             
         except Exception as e:
             print("Error receiving map number:", e)
             return None
         
-    def send(self, data): #sends tank
-        if not self.connected:
+    def send(self, data): 
+        if not self.connected: #only runs if the network is connected
             return None
             
         try:
-            self.client.send(pickle.dumps(data))
-            self.client.setblocking(True)
-            received_data = self.client.recv(4096)
+            self.client.send(pickle.dumps(data)) #send the data passed into the function to server
+            self.client.setblocking(True) #sets the socket to blocking mode, means send and receive calls wait until data is available
+            received_data = self.client.recv(4096) #receive and store data from the client
 
             if not received_data:
                 print("No data received from server")
@@ -78,8 +79,8 @@ class Network:
             return None
 
     def disconnect(self):
-        self.connected = False
+        self.connected = False 
         try:
-            self.client.close()
+            self.client.close() #close the connection
         except:
             pass
