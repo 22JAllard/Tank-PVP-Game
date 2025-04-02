@@ -377,34 +377,34 @@ class ColourButton():
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height) #create the rectangle for the button based on the 
         self.label = self.font.render(self.text, True, self.text_colour) #create the label of text based on the font and text (and it's colour)
 
-    def draw(self, window):
-        pygame.draw.rect(window, self.button_colour, self.rect)
+    def draw(self, window): #create the draw function for the ColourButton class
+        pygame.draw.rect(window, self.button_colour, self.rect) #draw the rectangle to window, with the button's own colour and rect
 
-        self.arrow_left = self.font.render("<", True, self.text_colour)
+        self.arrow_left = self.font.render("<", True, self.text_colour) #create the left and right arrows
         self.arrow_right = self.font.render(">", True, self.text_colour)
 
-        window.blit(self.arrow_left, (self.x + 10, self.y + (self.height - self.label.get_height())//2))
+        window.blit(self.arrow_left, (self.x + 10, self.y + (self.height - self.label.get_height())//2)) #draw the left and right arrows with a 10 pixel gap from either end of the button
         window.blit(self.arrow_right, (self.x + self.width - 10 - self.arrow_right.get_width(), self.y + (self.height - self.label.get_height())//2))
 
-        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
+        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2)) #draw the button label
     
     def arrow_click(self):
         global colour_pos
-        if pygame.mouse.get_pressed()[0] == 1:
-            if pygame.mouse.get_pos()[0] > self.x and pygame.mouse.get_pos()[0] < (self.x + self.click_width) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.height):
-                if colour_pos == 0:
-                    colour_pos = 5
+        if pygame.mouse.get_pressed()[0] == 1: #if the mouse is clicked and it's the left button clicked
+            if pygame.mouse.get_pos()[0] > self.x and pygame.mouse.get_pos()[0] < (self.x + self.click_width) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.height): #check if the left arrow is clicked
+                if colour_pos == 0: #prevents the colour_pos from being less than 0, and leaving the valid range for the colour array
+                    colour_pos = 5 #rather than it becoming -1
+                else: 
+                    colour_pos -= 1 #subtracts one from the colour_pos, but stays in the valid range (0-5 inc.)
+            elif pygame.mouse.get_pos()[0] > (self.x  + self.width - self.click_width) and pygame.mouse.get_pos()[0] < (self.x + self.width) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.height): #checks if the right arrow is clicked
+                if colour_pos == 5: #prevents the colour_pos from leaving the valid range (without this it would go to 6)
+                    colour_pos = 0 
                 else:
-                    colour_pos -= 1
-            elif pygame.mouse.get_pos()[0] > (self.x  + self.width - self.click_width) and pygame.mouse.get_pos()[0] < (self.x + self.width) and pygame.mouse.get_pos()[1] > self.y and pygame.mouse.get_pos()[1] < (self.y + self.height):
-                if colour_pos == 5:
-                    colour_pos = 0
-                else:
-                    colour_pos += 1
+                    colour_pos += 1 #adds one to the colour_pos and remains in the valid range (0-5)
             global client_colour
-            client_colour = tank_colours[colour_pos]
+            client_colour = tank_colours[colour_pos] #updates the clients colour based on the new colour_pos
 
-class Button(): 
+class Button(): #define the main Button class
     def __init__ (self, x, y, width, height, button_colour, text_colour, text, font, size, function, what_menu):
         self.x = x
         self.y = y
@@ -415,81 +415,81 @@ class Button():
         self.text = text
         self.size = size
         self.font = pygame.font.SysFont(font, self.size)
-        self.function = function
-        self.menu = what_menu
+        self.function = function #what function is called if the button is clicked
+        self.menu = what_menu #what menu the button should be displayed on
 
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.label = self.font.render(self.text, True, self.text_colour)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height) #creates the rectangle around the button
+        self.label = self.font.render(self.text, True, self.text_colour) #creates the label with the selected text, font and colour
 
-    def draw(self, window):
-        pygame.draw.rect(window, self.button_colour, self.rect)
-        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2))
+    def draw(self, window): #Button draw function
+        pygame.draw.rect(window, self.button_colour, self.rect) #draw the button to the window, with the chosen colour and the button's rect
+        window.blit(self.label, (self.x + (self.width - self.label.get_width())//2, self.y + (self.height - self.label.get_height())//2)) #add the label to the button, and ensuring it is centered on the button
     
-    def click(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and menu == self.menu:
-            if self.rect.collidepoint(event.pos):
-                self.function()
+    def click(self, event): #called when an event happens with the button, when it is clicked
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and menu == self.menu: #checks if a mouse button is clicked, that the button clicked is the left click, and the current menu is the menu the button is drawn on
+            if self.rect.collidepoint(event.pos): 
+                self.function() #calls the function attached to that button
 
-class CenteredButton(Button):
-    def __init__(self, y, width, height, button_colour, text_colour, text, font, size, function, what_menu):
-        x = screen_width // 2 - width // 2
-        super().__init__(x, y, width, height, button_colour, text_colour, text, font, size, function, what_menu)
+class CenteredButton(Button): #Cenetered button class, which is a child class of Button using inheritance
+    def __init__(self, y, width, height, button_colour, text_colour, text, font, size, function, what_menu): #requires the same parameters as the normal Button class, except no x value
+        x = screen_width // 2 - width // 2 #x value is calculated based on the screen width and width of the button, and is made central to the screen
+        super().__init__(x, y, width, height, button_colour, text_colour, text, font, size, function, what_menu) #then uses inheritance to reuse Button code
 
-class Text():
-    def __init__ (self, x, y, colour, message, size, font):
+class Text(): #creates the text class
+    def __init__ (self, x, y, colour, message, size, font): #requires the x and y of the top left corner of the text placement, the colour of the writing, the actual text to be displayed, and the size and font of the text
         self.x = x
         self.y = y
         self.colour = colour
         self.message = message
         self.size = size
 
-        self.font = pygame.font.SysFont(font, self.size)
-        self.text = self.font.render(self.message, True, self.colour)
+        self.font = pygame.font.SysFont(font, self.size) 
+        self.text = self.font.render(self.message, True, self.colour) #uses the font to store the text with the message, and the colour
     
     def draw(self, window):
-        window.blit(self.text, (self.x - self.text.get_width()//2, self.y)) 
+        window.blit(self.text, (self.x - self.text.get_width()//2, self.y))  #draws the text to the window
 
-class CenteredText(Text):
-    def __init__(self, y, colour, message, size, font):
-        x = screen_width //2
-        super().__init__(x, y, colour, message, size, font)
+class CenteredText(Text): #CenteredText, a subclass of the Text class
+    def __init__(self, y, colour, message, size, font): #requires same arguements as the parent Text class
+        x = screen_width //2 #calculates the x value based on the width of the screen
+        super().__init__(x, y, colour, message, size, font) #uses inheritance to reuse Text code
 
 def main_menu():
     global menu; menu = main_menu
-    menu_bg = pygame.image.load('menu_bg.png')
-    window.blit(menu_bg, (0,0))
+    menu_bg = pygame.image.load('menu_bg.png') #load the main menu background image
+    window.blit(menu_bg, (0,0)) #draw the background image from (0,0) (top left)
 
-    title_text = CenteredText(30, (255,255,255), "Tank PVP Game", 100, "Arial")
-    title_text.draw(window)
+    title_text = CenteredText(30, (255,255,255), "Tank PVP Game", 100, "Arial") #create an instance of the CenteredText class, with y value 30, white writing that says "Tank PVP Game", font size 100 and font Arial
+    title_text.draw(window) #draw the text to window
 
     global buttons
-    buttons = [
-        CenteredButton(150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu, main_menu),
-        CenteredButton(screen_height - 150, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu, main_menu),
+    buttons = [ #creates an array with all the buttons on the main menu which need to be drawn
+        CenteredButton(150, 400, 100, (255,255,255),(0,0,0), "Play", "Arial", 80, play_menu, main_menu), #creates an instance of the CenteredButton class, with y value 150, width 400, height 100, background colour black, text colour white, label "Play", in size 80 Arial font, calls the play function, and is active on the main menu
+        CenteredButton(screen_height - 150, 400, 100, (255,255,255), (0,0,0), "Customise", "Arial", 80, customise_menu, main_menu), #creates an instance of the CenteredButton class, which has a y value 150 above the bottom of the screen, width 400, height 100, background colour black, text colour white, label "Customise", in size 80 Arial font, calls the customise function, and is active on the main menu
     ]
 
     for button in buttons:
-        button.draw(window)
+        button.draw(window) #for each button in the buttons array, draw it to the window
     
     return buttons
 
 menu = main_menu
-while run:
-    clock.tick(60)
-    menu()
+while run: #main game loop
+    clock.tick(60) #limits fps to 60
+    menu() 
 
-    pygame.display.flip()
+    pygame.display.flip() #updates the pygame window
 
-    key = pygame.key.get_pressed()
-    if key[pygame.K_ESCAPE]:
+    key = pygame.key.get_pressed() #checks if a key has been pressed
+    if key[pygame.K_ESCAPE]: #if the key pressed is ESC, change run to False
         run = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for event in pygame.event.get(): #checks if an event happens
+        if event.type == pygame.QUIT: #if the event is closing the pygame program, turn run to false
             run = False
-        for button in buttons:
+        for button in buttons: #checks each button in buttons if it has been clicked
                 button.click(event)
 
-    pygame.display.update()
-pygame.display.quit()
+    pygame.display.update() #update the pygame window
+pygame.display.quit() #quit the pygame display and program
 pygame.quit()
