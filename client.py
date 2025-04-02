@@ -14,7 +14,7 @@ pygame.init()
 run = True
 network = None
 
-#set up the pygame window to styart at (0,0) (top left), and make it full screen
+#set up the pygame window to start at (0,0) (top left), and make it full screen
 window = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 
 #store info about client screen size
@@ -140,7 +140,7 @@ def play_menu(): #ip entering screen
             network = Network(server_ip, client_colour, scale) #creates a new instance of the network class
 
             global initial_data
-            initial_data = network.initial_data #stores the initial_data as the contents of the networks intial data
+            initial_data = network.initial_data #stores the initial_data as the contents of the networks initial data
             if initial_data: #if the contents of the initial_data is not empty
                 global mapnumber 
                 mapnumber = initial_data["map_number"] #searching the recieved data dictionary from the server for the value with "map_number"
