@@ -249,6 +249,8 @@ def game():
 
                         died_text = CenteredText(100, (255,0,0), "You got shot", 60, "Arial") #create an instance of the CenteredText function, with y value 100, text colour red, text "You got shot", size 60 and font "Arial"
                         died_text.draw(window) #draw the instance to screen
+                        pygame.time.wait(1000) #wait for a second
+                        network.disconnect() #disconnect from the server
                     
                     if bullet.firetime <= 0: #if the bullets firetime value is less than or equal to zero
                         bullets_remove.append(bullet) #add the bullet to the bullets_remove list
